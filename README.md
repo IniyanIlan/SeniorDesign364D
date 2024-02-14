@@ -1,9 +1,8 @@
-# Senior Design Project
-Project Description:
+# Project Description:
   - This is an app to accompany our gameboard and dice reader.
-Uses:
+# Uses:
   - Web Design (UI/UX)
   - Backend Work
   - Cloud Work
-Tools:
+# Tools:
   - Unreal Engine
