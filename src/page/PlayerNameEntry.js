@@ -83,7 +83,7 @@
 import React, { useState } from 'react';
 import {Link, useNavigate } from 'react-router-dom';
 
-const PlayerNameEntry = ({ numberOfPlayers = 5 }) => {
+const PlayerNameEntry = ({ numberOfPlayers = 6 }) => {
   const [playerNames, setPlayerNames] = useState(Array(numberOfPlayers).fill(''));
   const navigate = useNavigate();
 

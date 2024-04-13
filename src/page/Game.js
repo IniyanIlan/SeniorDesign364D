@@ -7,8 +7,10 @@ const Game = () => {
     return(
         <>
         <div>
-            <h1>Game Page</h1>
-            <p>Player Names: {state.playerNames.join(', ')}</p>
+            <h1 style={
+                {textAlign: 'center'}
+            }>Game Page</h1>
+            <Leaderboard playerNames={state.playerNames}/>
         </div>
         </>
     );
