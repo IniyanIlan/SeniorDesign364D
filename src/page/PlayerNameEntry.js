@@ -81,7 +81,7 @@
 // PlayerNameEntry.js
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate } from 'react-router-dom';
 
 const PlayerNameEntry = ({ numberOfPlayers = 5 }) => {
   const [playerNames, setPlayerNames] = useState(Array(numberOfPlayers).fill(''));
@@ -95,7 +95,12 @@ const PlayerNameEntry = ({ numberOfPlayers = 5 }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    navigate('/game', { state: { playerNames } });
+    <Link 
+      to={{
+        pathname: "/StartGame",
+        state: {playerNames} 
+      }}/>
+    navigate('/StartGame', { state: { playerNames } });
   };
 
   return (
