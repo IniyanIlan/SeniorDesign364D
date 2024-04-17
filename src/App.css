@@ -21,8 +21,8 @@
 }
 
 .pirate-image {
-  width: 200px;
-  height: 200px;
+  width: 400px;
+  height: 450px;
   margin-bottom: 1rem;
 }
 
@@ -35,8 +35,33 @@
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
+  margin-bottom: 10px; /* Add space below each button */
+}
+.button-top-left {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background-color: #FFD700; /* Gold */
+  color: #8B4513; /* Saddle Brown */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  position: fixed; /* Position the button relative to the viewport */
+  top: 20px; /* Adjust the distance from the top edge of the viewport */
+  right: 30px; /* Adjust the distance from the right edge of the viewport */
 }
 
 .button:hover {
   background-color: #DAA520; /* Goldenrod */
+}
+
+.pdf-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pdf-page {
+  max-width: 50%;
+  margin-bottom: 20px;
 }

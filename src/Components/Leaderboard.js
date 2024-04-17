@@ -3,23 +3,19 @@ import '../CSS/Leaderboard.css';
 
 function Leaderboard (props) {
   return (
-    <div className = "container">
+    <div className = "flex-container">
       <board>
         <rh>
-          <rowh>
-            <column>Rank</column>
-            <column>Player</column>
-            <columnL>Gold</columnL>
-          </rowh>
+          <rowh>Rank</rowh>
+          <rowh>Name</rowh>
+          <rowh>Score</rowh>
         </rh>
         {props.playerNames.map((player, index) => {
           return (
             <div key={index}>
-              <row>
-                <column>{index + 1}</column>
-                <column>{player}</column>
-                <columnL>{player.score}</columnL>
-              </row>
+              <row>{index + 1}</row>
+              <row>{player}</row>
+              <row>{player.score}</row>
             </div>
           );
         })}
