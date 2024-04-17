@@ -13,9 +13,11 @@ function Leaderboard (props) {
         {props.playerNames.map((player, index) => {
           return (
             <div key={index}>
-              <row>{index + 1}</row>
-              <row>{player}</row>
-              <row>{player.score}</row>
+              <row>
+                <column>{index + 1}</column>
+                <column>{player}</column>
+                <columnL>100</columnL>
+              </row>
             </div>
           );
         })}
