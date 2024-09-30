@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import Leaderboard from '../Components/Leaderboard';
-import Excavation from '../Components/Excavation';
+import Leaderboard from '../Tracking/Leaderboard';
+import Excavation from '../Action/Excavation';
 
 const Game = () => {
     const { state } = useLocation();

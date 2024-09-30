@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './page/Home';
-import PlayerNameEntry from './page/PlayerNameEntry';
-import Game from './page/Game';
-import Rules from './page/Rules';
+import Home from './app/SettingUp/Home';
+import PlayerNameEntry from './app/SettingUp/PlayerNameEntry';
+import Game from './app/SettingUp/Game';
+import Rules from './app/SettingUp/Rules';
 import './App.css';
 
 
