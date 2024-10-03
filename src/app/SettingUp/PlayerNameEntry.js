@@ -1,9 +1,11 @@
 // PlayerNameEntry.js
 
 import React, { useState } from 'react';
-import {Link, useNavigate } from 'react-router-dom';
+import {Link, useNavigate, useLocation} from 'react-router-dom';
 
-const PlayerNameEntry = ({ numberOfPlayers = 6 }) => {
+const PlayerNameEntry = () => {
+  const location = useLocation();
+  const { numberOfPlayers } = location.state || {}; // Make sure to get numberOfPlayers from state
   const [playerNames, setPlayerNames] = useState(Array(numberOfPlayers).fill(''));
   const navigate = useNavigate();
 
