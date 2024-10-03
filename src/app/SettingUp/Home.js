@@ -7,7 +7,7 @@ const Home = () => {
   const navigate = useNavigate();
   const handleEnterPlayGameButton = () => {
     // Navigate to another page
-    navigate('/PlayerEnterName');
+    navigate('/NumberPlayer');
   };
   const handleRulesButton = () => {
     // Navigate to another page
