@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from sklearn import cluster
+from picamera2 import Picamera2, Preview
 
 # Sources 
 # Site to help access webcam: https://www.opencvhelp.org/tutorials/advanced/how-to-access-webcam/
