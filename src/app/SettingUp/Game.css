@@ -1,0 +1,36 @@
+.game{
+    display: flex;
+    height: 100vh;
+    background-color: #E1FDFD;
+}
+
+.box{
+    background-color:#64A7A7;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    column-gap: 45px;
+    padding-left: 20px;
+    top: 0px;
+    left: 0px; 
+    width: 100%;
+    height: 5%;
+    font-size: 18px;
+    color: white;
+}
+
+.push {
+    margin-left: auto;
+    padding-right: 40px;
+}
+
+.leaderboard{
+    position: fixed;
+    top: 15%;
+    right: 15%;
+}
+
+a:visited {
+    text-decoration: none;
+    color:white;
+}

@@ -1,24 +1,7 @@
-.flex-container {
-    width: 400px;
-    height: 200px;
+.container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-left: 45px;
-}
-board {
-    background-color: white;
-    border: 2px solid black;    
     width: 400px;
-    height: 130px;
-}
-rh{
-    border-bottom: 2px solid black;
-}
-rowh{
-    border-bottom: 2px solid black;
-    margin: 46px;
-}
-row{
-    margin: 55px;
+    height: 300px;
+    border: 2px solid black;
+    background-color: #F0FFFF;
 }
