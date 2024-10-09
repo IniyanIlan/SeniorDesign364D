@@ -79,13 +79,12 @@ def overlay_info(frame, dice, blobs):
                     (int(d[1] - textsize[0] / 2),
                      int(d[2] + textsize[1] / 2)),
                     cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 2)
+        
 picam2 = Picamera2()
-cap = picam2.capture_array() # maybe capture array works
-
+picam2.start()
 while(True):
     # Grab the latest image from the video feed
-    cap = picam2.capture_array()
-    ret, frame = cap.read()
+    frame = picam2.capture_array()
 
     blobs = get_blobs(frame)
     dice = get_dice_from_blobs(blobs)
@@ -97,8 +96,10 @@ while(True):
 
     # Stop if the user presses "q" - Will need to change exit condition for dice and the game
     if res & 0xFF == ord('q'):
+        picam2.close()
         break
 # Release the webcam and close the window
+
 cap.release()
 cv2.destroyAllWindows()
 

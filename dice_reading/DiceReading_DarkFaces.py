@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from sklearn import cluster
-
+from picamera2 import Picamera2, Preview
 # Sources 
 # Site to help access webcam: https://www.opencvhelp.org/tutorials/advanced/how-to-access-webcam/
 # Site to help read dice with webcam: https://golsteyn.com/writing/dice
@@ -76,13 +76,12 @@ def overlay_info(frame, dice, blobs):
                      int(d[2] + textsize[1] / 2)),
                     cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 2)
 
-cap = cv2.VideoCapture(1) # change to 0 for front camera, 1 for back camera. Code will not like you if you don't have one of the cameras
-
+picam2 = Picamera2()
+picam2.start()
 while(True):
     # Grab the latest image from the video feed
-    ret, frame = cap.read()
+    frame = picam2.capture_array()
 
-    # We'll define these later
     blobs = get_blobs(frame)
     dice = get_dice_from_blobs(blobs)
     out_frame = overlay_info(frame, dice, blobs)
@@ -91,10 +90,11 @@ while(True):
 
     res = cv2.waitKey(1)
 
-    # Stop if the user presses "q" - Will need to change exit condition for dice ?
+    # Stop if the user presses "q" - Will need to change exit condition for dice and the game
     if res & 0xFF == ord('q'):
+        picam2.close()
         break
 # Release the webcam and close the window
-cap.release()
+
 cv2.destroyAllWindows()
 
