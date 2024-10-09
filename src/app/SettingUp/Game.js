@@ -7,19 +7,20 @@ import './Game.css';
 const Game = () => {
     const { state } = useLocation();
     return(
-        <div className = "game">
-            <div className = "box">
+        <div>
+            <div className = "banner">
                 <a href="/Rules" target="_blank">Rule Book</a>
                 <a href="/StartGame">Game Log</a>
                 <a href = "/NumberPlayer">Restart Game</a>
-                <a href = "/" class="push">Quit</a>
+                <a href = "/" className = "quit">Quit</a>
             </div>
             
-            <Excavation></Excavation>
-            <div className = "leaderboard">
-                <Leaderboard playerNames={state.playerNames}/>
+            <div className = "game-container">
+                <Excavation></Excavation>
+                <div className = "leaderboard">
+                    <Leaderboard playerNames={state.playerNames}/>
+                </div>
             </div>
-
         </div>
     );
 }

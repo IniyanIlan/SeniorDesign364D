@@ -3,7 +3,7 @@ import './Leaderboard.css';
 
 function Leaderboard (props) {
   return (
-    <div className = "container">
+    <div className = "leader-container">
         <h1>
           Leaderboard
         </h1>
