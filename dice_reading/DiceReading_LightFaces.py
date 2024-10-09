@@ -79,7 +79,7 @@ def overlay_info(frame, dice, blobs):
                     (int(d[1] - textsize[0] / 2),
                      int(d[2] + textsize[1] / 2)),
                     cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 2)
-
+picam2 = Picamera2()
 cap = picam2.capture_array() # maybe capture array works
 
 while(True):
