@@ -80,7 +80,7 @@ def overlay_info(frame, dice, blobs):
                      int(d[2] + textsize[1] / 2)),
                     cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 2)
 
-cap = cv2.VideoCapture(1) # change to 0 for front camera, 1 for back camera. Code will not like you if you don't have one of the cameras
+cap = picam2.capture_array() # maybe capture array works
 
 while(True):
     # Grab the latest image from the video feed
