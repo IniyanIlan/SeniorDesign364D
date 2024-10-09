@@ -84,6 +84,7 @@ cap = picam2.capture_array() # maybe capture array works
 
 while(True):
     # Grab the latest image from the video feed
+    cap = picam2.capture_array()
     ret, frame = cap.read()
 
     blobs = get_blobs(frame)
