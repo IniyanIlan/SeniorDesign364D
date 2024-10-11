@@ -14,8 +14,8 @@ const NumberPlayer = () => {
   };
 
   return (
-    <div className="App">
-      <h2>Enter Number of Players (Max 6)</h2>
+    <div className="container">
+      <h2 className="title"> Enter Number of Players (Max 6)</h2>
       <form onSubmit={handleSubmit}>
         <label>
           Number of Players:

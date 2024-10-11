@@ -26,8 +26,8 @@ const PlayerNameEntry = () => {
   };
 
   return (
-    <div>
-      <h2>Enter Player Names</h2>
+    <div className="container">
+      <h2 className="title"> Enter Player Names</h2>
       <form onSubmit={handleSubmit}>
         {playerNames.map((playerName, index) => ( // Renamed 'name' to 'playerName'
           <div key={index}>
