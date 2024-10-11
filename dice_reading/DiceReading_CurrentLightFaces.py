@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from sklearn import cluster
 from picamera2 import Picamera2, Preview
+import time
 # Sources 
 # Site to help access webcam: https://www.opencvhelp.org/tutorials/advanced/how-to-access-webcam/
 # Site to help read dice with webcam: https://golsteyn.com/writing/dice
@@ -81,15 +82,24 @@ picam2.start()
 while(True):
     # Grab the latest image from the video feed
     frame = picam2.capture_array()
-
+    frame = (frame.astype(np.float32)) * 0.75
+    frame = frame.astype(np.uint8)
+    
     blobs = get_blobs(frame)
     dice = get_dice_from_blobs(blobs)
     out_frame = overlay_info(frame, dice, blobs)
 
+    # Shows frame applet
     cv2.imshow("frame", frame)
 
+    # 
     res = cv2.waitKey(1)
 
+    if dice:        # Breaks the loop when a die is detected. Also works for multiple dice
+        time.sleep(0.5)
+        num_pips = sum(d[0] for d in dice)
+        print(num_pips)
+        #break
     # Stop if the user presses "q" - Will need to change exit condition for dice and the game
     if res & 0xFF == ord('q'):
         picam2.close()
