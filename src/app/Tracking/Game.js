@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import Leaderboard from '../Tracking/Leaderboard';
+import Leaderboard from './Leaderboard';
 import Excavation from '../Action/Excavation';
 import './Game.css';
 
