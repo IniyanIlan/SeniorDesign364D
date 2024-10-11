@@ -4,7 +4,7 @@ import time
 GPIO.setmode(GPIO.Board)
 GPIO.setwarnings(False)
 GPIO.setup(8,GPIO.OUT, initial=GPIO.LOW)
-GPIO.setup(10, GPIO.IN)
+GPIO.setup(10, GPIO.IN, GPIO.PUD_UP)
 
 while True:
     if GPIO.input(10):
