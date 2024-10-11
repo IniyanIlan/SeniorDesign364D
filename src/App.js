@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './app/SettingUp/Home';
 import PlayerNameEntry from './app/SettingUp/PlayerNameEntry';
-import Game from './app/SettingUp/Game';
+import Game from './app/Tracking/Game';
 import Rules from './app/SettingUp/Rules';
 import NumberPlayer from './app/SettingUp/NumberPlayer';
 import './App.css';
