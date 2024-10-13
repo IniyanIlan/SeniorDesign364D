@@ -3,21 +3,22 @@ import './Leaderboard.css';
 
 function Leaderboard (props) {
   return (
-    <div className = "leader-container">
+    <div className = "board-container">
         <h1>
           Leaderboard
         </h1>
-        {props.playerNames.map((player, index) => {
-          return (
-            <div key={index}>
-              <row>
-                <column>{index + 1}</column>
-                <column>{player}</column>
-                <column>100</column>
-              </row>
+        <div className = "stats">
+          {props.playerNames.map((player, index) => {
+            return (
+              <div className="row" key={index}>
+                <span className="column">{index + 1}.</span>
+                <span className="column player-name">{player}</span>
+                <span className="column player-score">100</span>
             </div>
-          );
-        })}
+            );
+          })}
+        </div>
+        
     </div>
     
   );
