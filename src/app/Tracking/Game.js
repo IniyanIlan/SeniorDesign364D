@@ -24,7 +24,7 @@ const Game = () => {
                 <Excavation chestList={chestList}></Excavation>
                 </div>
                 <div>
-                <Attack playerNames={state.playerNames} /> 
+                <Attack /> 
                 </div>
                 <div className = "game-button">
                     <Trigger></Trigger>
