@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Leaderboard from './Leaderboard';
 import Excavation from '../Action/Excavation';
+import Trigger from '../Action/TriggerDice';
 import './Game.css';
+
 
 const Game = () => {
     const { state } = useLocation();
@@ -17,6 +19,10 @@ const Game = () => {
             
             <div className = "game-container">
                 <Excavation></Excavation>
+                <div className = "game-button">
+                    <Trigger></Trigger>
+                </div>
+                
                 <div className = "leaderboard">
                     <Leaderboard playerNames={state.playerNames}/>
                 </div>
