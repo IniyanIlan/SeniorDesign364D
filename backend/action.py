@@ -29,5 +29,5 @@ def attack():
     their_roll = random.randint(0, 20) # placeholder for until we get dice reader input
     if your_roll > their_roll:
         return 0
-    else
+    else:
         return 1
