@@ -1,6 +1,10 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
 import DiceReading_CurrentLightFaces as dice_reader
+
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route("/")
 def home():
@@ -12,5 +16,6 @@ def roll_dice():
     return jsonify({'dice_roll': dice_roll})
 
 if __name__ == '__main__':
+    app.run(host='0.0.0.0', debug=False, port=5000)
     app.run(debug=True, port=5000)
 
