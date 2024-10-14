@@ -9,15 +9,21 @@ CORS(app)
 @app.route("/")
 def home():
     action.initialize_chests()
+    print(action.chest_list)
     return jsonify({"message": "Chests initialized", "chests": action.chest_list})
 
 @app.route("/excavate")
 def try_excavate():
     print(f"Chest list before excavation: {action.chest_list}")
     result = action.excavate()
+    print(result)
     if result == -1:
         return jsonify({"message": "No more chests to excavate!"}), 400
     return jsonify({"result": result})
+
+@app.route("/get_chest_list")
+def get_chest_list():
+    return jsonify({"result": action.chest_list})
 
 @app.route("/attack")
 def try_attack():

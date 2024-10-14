@@ -1,11 +1,11 @@
 // PlayerNameEntry.js
 
 import React, { useState } from 'react';
-import {Link, useNavigate, useLocation} from 'react-router-dom';
+import {useNavigate, useLocation} from 'react-router-dom';
 
 const PlayerNameEntry = () => {
   const location = useLocation();
-  const { numberOfPlayers } = location.state || {}; // Make sure to get numberOfPlayers from state
+  const { numberOfPlayers, chestList } = location.state || {}; // Make sure to get numberOfPlayers from state
   const [playerNames, setPlayerNames] = useState(Array(numberOfPlayers).fill(''));
   const navigate = useNavigate();
 
@@ -17,12 +17,12 @@ const PlayerNameEntry = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    <Link 
-      to={{
-        pathname: "/StartGame",
-        state: {playerNames} 
-      }}/>
-    navigate('/StartGame', { state: { playerNames } });
+    navigate('/StartGame', { 
+      state: { 
+        playerNames,   // Pass player names to Game.js
+        chestList      // Also pass the chest list to Game.js
+      } 
+    });
   };
 
   return (

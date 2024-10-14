@@ -1,15 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const NumberPlayer = () => {
   const [numberOfPlayers, setNumberOfPlayers] = useState(1); // Default to 1 player
+  const [chestList, setChestList] = useState([]);
   const navigate = useNavigate();
   const maxPlayers = 6;
 
   const handleSubmit = (event) => {
     event.preventDefault();
     if (numberOfPlayers <= maxPlayers) {
-      navigate('/PlayerEnterName', { state: { numberOfPlayers: parseInt(numberOfPlayers, 10) } });
+      fetch("http://localhost:5000/")
+        .then((response) => response.json())
+        .then((data) => {
+          setChestList(data.chestList);
+          // Navigate to PlayerEnterName with number of players and chestList
+          navigate('/PlayerEnterName', { 
+            state: { 
+              numberOfPlayers: parseInt(numberOfPlayers, 10), 
+              chestList: data.chestList // Pass chest list to next component
+            } 
+          }); 
+        })
+        .catch((error) => console.error("Error initializing chests:", error));
     }
   };
 

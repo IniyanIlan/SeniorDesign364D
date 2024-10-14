@@ -8,6 +8,7 @@ import './Game.css';
 
 const Game = () => {
     const { state } = useLocation();
+    const { playerNames, chestList } = state;
     return(
         <div>
             <div className = "banner">
@@ -18,7 +19,7 @@ const Game = () => {
             </div>
             
             <div className = "game-container">
-                <Excavation></Excavation>
+                <Excavation chestList={chestList}></Excavation>
                 <div className = "game-button">
                     <Trigger></Trigger>
                 </div>

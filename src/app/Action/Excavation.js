@@ -9,6 +9,7 @@ const Excavation = () => {
     try {
       const response = await fetch("http://localhost:5000/excavate");
       const data = await response.json();
+      console.log(data)
 
       if (response.ok) {
         if (data.result === 0) {
