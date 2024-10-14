@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 from sklearn import cluster
+from picamera2 import Picamera2, Preview
+import time
 
 # Sources 
 # Site to help access webcam: https://www.opencvhelp.org/tutorials/advanced/how-to-access-webcam/
@@ -17,8 +19,11 @@ detector = cv2.SimpleBlobDetector_create(params)
 # Function Definitions
 def get_blobs(frame):
     frame_blurred = cv2.medianBlur(frame, 7)
+    
     frame_gray = cv2.cvtColor(frame_blurred, cv2.COLOR_BGR2GRAY)
-    blobs = detector.detect(frame_gray)
+    
+    thresh = cv2.adaptiveThreshold(frame_gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
+    blobs = detector.detect(thresh)
 
     return blobs
 
@@ -34,7 +39,7 @@ def get_dice_from_blobs(blobs):
     X = np.asarray(X)
 
     if len(X) > 0:
-        # Important to set min_sample to 0, as a dice may only have one dot
+        # Program doesn't approve of min_samples being 0
         clustering = cluster.DBSCAN(eps=40, min_samples=1).fit(X)
 
         # Find the largest label assigned + 1, that's the number of dice found
@@ -75,14 +80,13 @@ def overlay_info(frame, dice, blobs):
                     (int(d[1] - textsize[0] / 2),
                      int(d[2] + textsize[1] / 2)),
                     cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 2)
-
-cap = cv2.VideoCapture(1) # change to 0 for front camera, 1 for back camera. Code will not like you if you don't have one of the cameras
-
+        
+picam2 = Picamera2()
+picam2.start()
 while(True):
     # Grab the latest image from the video feed
-    ret, frame = cap.read()
+    frame = picam2.capture_array()
 
-    # We'll define these later
     blobs = get_blobs(frame)
     dice = get_dice_from_blobs(blobs)
     out_frame = overlay_info(frame, dice, blobs)
@@ -91,10 +95,12 @@ while(True):
 
     res = cv2.waitKey(1)
 
-    # Stop if the user presses "q" - Will need to change exit condition for dice ?
+    # Stop if the user presses "q" - Will need to change exit condition for dice and the game
     if res & 0xFF == ord('q'):
+        picam2.close()
         break
 # Release the webcam and close the window
+
 cap.release()
 cv2.destroyAllWindows()
 
