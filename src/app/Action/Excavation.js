@@ -1,25 +1,31 @@
 import React from 'react';
 import { useState } from 'react';
-
+import axios from 'axios';
+import { useNavigate } from "react-router";
 
 function Excavation(){
-    const [prob, setProb] = useState('')
-    const excavateButton = () => {
-        var min = 1
-        var max = 10
-        var p = Math.random() * (max - min) + min //>= 1 and < 10
-        if(p > 5){
-            setProb('you found a bomb!')
+    const navigate = useNavigate();
+    const [result, setResult] = useState('');
+    const excavateButton = async () => {
+        try {
+            const response = await axios.post('http://localhost:3000/excavate', {
+            });
+            setResult(response.data.result);  // Set result to state
+          } catch (error) {
+            console.error('There was an error!', error);
+          }
+        if(result === 0){
+            /*found treasure */
+            navigate('/Excavate_Treasure')
         }
         else{
-            setProb("you found treasure!")
+            /*found bomb */
+            navigate('/Excavate_Bomb')
         }
     }
     return(
         <div style={{display:'flex', flexDirection:'row'}}>
             <button classname="button" onClick={excavateButton}>Excavate!</button>
-            <p>{prob}</p>
-            
         </div>
     );
 };
