@@ -8,6 +8,7 @@ import NumberPlayer from './app/SettingUp/NumberPlayer';
 import './App.css';
 import Excavate_Bomb from './app/Action/Excavate_Bomb';
 import Excavate_Treasure from './app/Action/Excavate_Treasure';
+import AttackSelection from './app/Action/AttackSelection';
 
 
 
@@ -23,6 +24,7 @@ function App() {
           <Route path="/Rules" element={<Rules />}/>
           <Route path="/Excavate_Bomb" element={<Excavate_Bomb/>}> </Route>
           <Route path="/Excavate_Treasure" element={<Excavate_Treasure/>}></Route>
+          <Route path="/AttackSelection" element={<AttackSelection />} />
         </Routes>
       </Router>
     </div>
