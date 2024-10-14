@@ -4,6 +4,7 @@ import Leaderboard from './Leaderboard';
 import Excavation from '../Action/Excavation';
 import Trigger from '../Action/TriggerDice';
 import './Game.css';
+import Attack from '../Action/Attack';
 
 
 const Game = () => {
@@ -19,7 +20,12 @@ const Game = () => {
             </div>
             
             <div className = "game-container">
+                <div>
                 <Excavation chestList={chestList}></Excavation>
+                </div>
+                <div>
+                <Attack playerNames={state.playerNames} /> 
+                </div>
                 <div className = "game-button">
                     <Trigger></Trigger>
                 </div>

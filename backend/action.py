@@ -16,6 +16,8 @@ def initialize_chests():
         chest_list.append(0)  # 0 for treasure
         chest_list.append(1)  # 1 for trap
 
+def get_chest_list():
+    return chest_list
 
 # EXCAVATION
 # set number of treasure chests: create list to keep track of number of chests 

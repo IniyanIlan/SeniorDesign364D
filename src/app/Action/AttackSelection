@@ -1,0 +1,52 @@
+// AttackSelection.js
+
+import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+
+
+const AttackSelection = () => {
+    const { state } = useLocation();
+    const { playerNames } = state; // Get player names from state
+    //const [selectedPlayer, setSelectedPlayer] = useState(playerNames[0]);
+    const navigate = useNavigate();
+    const [message, setMessage] = useState("");
+
+    const handleAttack = async () => {
+        try {
+            const response = await fetch("http://localhost:5000/attack");
+            const data = await response.json();
+            console.log(data);
+
+            if (response.ok) {
+                // Handle the result of the attack here
+                if (data.result === 0) {
+                    setMessage(`You attacked ${selectedPlayer} and won!`);
+                } else {
+                    setMessage(`You attacked ${selectedPlayer} and lost!`);
+                }
+            } else {
+                setMessage("Attack failed.");
+            }
+        } catch (error) {
+            console.error("Error during attack:", error);
+            setMessage("An error occurred.");
+        }
+    };
+
+    return (
+        <div>
+            <h2>Select a player to attack</h2>
+            <select value={selectedPlayer} onChange={(e) => setSelectedPlayer(e.target.value)}>
+                {playerNames.map((name, index) => (
+                    <option key={index} value={name}>
+                        {sanitizeString(name)}
+                    </option>
+                ))}
+            </select>
+            <button onClick={handleAttack}>Attack!</button>*/
+            {message && <p>{message}</p>}
+        </div>
+    );
+};
+
+export default AttackSelection;
