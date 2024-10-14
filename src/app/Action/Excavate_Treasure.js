@@ -1,13 +1,21 @@
 import React from 'react';
 import { useState } from 'react';
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 
-const Excavate_Treasure = () => {
+function Excavate_Treasure () {
+    const location = useLocation();
+    const navigate = useNavigate();
 
+    const { state } = useLocation();  // Get the playerNames from state
+    const playerNames = state?.playerNames || [];
+
+    const handleBackToGame = () => {
+        navigate('/StartGame', { state: { playerNames } });  // Pass playerNames back to the game page
+      };
     return(
         <div>
             <h1>you found treasure!</h1>
-            <a href = "/Game" className = "quit">Quit</a>
+            <button onClick={handleBackToGame}>Back to Game</button>
         </div>
     )
 }

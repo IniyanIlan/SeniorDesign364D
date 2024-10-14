@@ -37,6 +37,8 @@ def excavate():
 def attack():
     your_roll = random.randint(0, 20) # placeholder for until we get dice reader input
     their_roll = random.randint(0, 20) # placeholder for until we get dice reader input
+    print(your_roll)
+    print(their_roll)
     if your_roll > their_roll:
         return 0
     else:
@@ -64,6 +66,7 @@ def main():
     print(chest_list)
     excavate()
     print(chest_list)
+    attack()
 
 if __name__ == "__main__":
     main()
