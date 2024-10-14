@@ -4,5 +4,5 @@ from time import sleep
 picam2 = Picamera2()
 picam2.start_preview(Preview.QTGL)
 picam2.start()
-sleep(10)
+sleep(5)
 picam2.close()
