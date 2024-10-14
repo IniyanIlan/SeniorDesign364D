@@ -5,8 +5,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 
 const AttackSelection = () => {
-    const { state } = useLocation();
-    const { playerNames } = state; // Get player names from state
+    //const { state } = useLocation();
+    //const { playerNames } = state; // Get player names from state
     //const [selectedPlayer, setSelectedPlayer] = useState(playerNames[0]);
     const navigate = useNavigate();
     const [message, setMessage] = useState("");
@@ -18,11 +18,10 @@ const AttackSelection = () => {
             console.log(data);
 
             if (response.ok) {
-                // Handle the result of the attack here
                 if (data.result === 0) {
-                    setMessage(`You attacked ${selectedPlayer} and won!`);
+                    setMessage(`You attacked and won!`);
                 } else {
-                    setMessage(`You attacked ${selectedPlayer} and lost!`);
+                    setMessage(`You attacked and lost!`);
                 }
             } else {
                 setMessage("Attack failed.");
@@ -35,15 +34,6 @@ const AttackSelection = () => {
 
     return (
         <div>
-            <h2>Select a player to attack</h2>
-            <select value={selectedPlayer} onChange={(e) => setSelectedPlayer(e.target.value)}>
-                {playerNames.map((name, index) => (
-                    <option key={index} value={name}>
-                        {sanitizeString(name)}
-                    </option>
-                ))}
-            </select>
-            <button onClick={handleAttack}>Attack!</button>*/
             {message && <p>{message}</p>}
         </div>
     );

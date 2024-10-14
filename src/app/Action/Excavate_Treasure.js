@@ -12,6 +12,9 @@ function Excavate_Treasure () {
     const handleBackToGame = () => {
         navigate('/StartGame', { state: { playerNames } });  // Pass playerNames back to the game page
       };
+    const handleClick = () => {
+        navigate('/StartGame'); 
+      };
     return(
         <div>
             <h1>you found treasure!</h1>
