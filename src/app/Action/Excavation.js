@@ -1,27 +1,36 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
+const Excavation = () => {
+  const navigate = useNavigate();
+  const [message, setMessage] = useState("");
 
-function Excavation(){
-    const [prob, setProb] = useState('')
-    const excavateButton = () => {
-        var min = 1
-        var max = 10
-        var p = Math.random() * (max - min) + min //>= 1 and < 10
-        if(p > 5){
-            setProb('you found a bomb!')
+  const handleExcavate = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/excavate");
+      const data = await response.json();
+
+      if (response.ok) {
+        if (data.result === 0) {
+          navigate('/Excavate_Treasure');  // Navigate to the treasure component
+        } else if (data.result === 1) {
+          navigate('/Excavate_Bomb');  // Navigate to the bomb component
         }
-        else{
-            setProb("you found treasure!")
-        }
+      } else {
+        setMessage(data.message);  // Display error message if no more chests
+      }
+    } catch (error) {
+      console.error("Error excavating chest:", error);
+      setMessage("An error occurred.");
     }
-    return(
-        <div style={{display:'flex', flexDirection:'row'}}>
-            <button classname="button" onClick={excavateButton}>Excavate!</button>
-            <p>{prob}</p>
-            
-        </div>
-    );
+  };
+
+  return (
+    <div>
+      <button onClick={handleExcavate}>Excavate</button>
+      {message && <p>{message}</p>}
+    </div>
+  );
 };
 
-export default Excavation
+export default Excavation;
