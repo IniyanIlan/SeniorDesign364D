@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
+import DiceReading_CurrentLightFaces as dice_reader
 import action
-
 
 app = Flask(__name__)
 CORS(app)  
@@ -23,6 +23,11 @@ def try_excavate():
 def try_attack():
     result = action.attack()
     return jsonify({"result": result})
+
+@app.route("/trigger-dice", methods=['GET'])
+def roll_dice():
+    dice_roll = dice_reader.trigger_dice_reader()
+    return jsonify({'dice_roll': dice_roll})
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
