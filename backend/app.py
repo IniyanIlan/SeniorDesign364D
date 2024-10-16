@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
-#import DiceReading_CurrentLightFaces as dice_reader
+import DiceReading_CurrentLightFaces as dice_reader
 import action
 
 app = Flask(__name__)
@@ -30,10 +30,22 @@ def try_attack():
     result = action.attack()
     return jsonify({"result": result})
 
-#@app.route("/trigger-dice", methods=['GET'])
-#def roll_dice():
-#    dice_roll = dice_reader.trigger_dice_reader()
-#    return jsonify({'dice_roll': dice_roll})
+@app.route("/intialize-picam", methods=['GET'])
+def init_cam():
+    dice_reader.initialize_picam()
+    return jsonify({'message': 'Successfully turned on picam'})
+    
+@app.route("/stop-picam", methods=['POST'])
+def stop_cam():
+    dice_reader.initialize_picam()
+
+@app.route("/trigger-dice", methods=['GET'])
+def roll_dice():
+   dice_roll = dice_reader.trigger_dice_reader()
+   print("From API=======================================")
+   print(dice_roll)
+   print("=======================================")
+   return jsonify({'dice_roll': dice_roll})
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

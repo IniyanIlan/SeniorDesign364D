@@ -12,11 +12,12 @@ function Trigger(){
         console.log("Starting Dice Reader")
         try{
             const res = await axios.get("http://localhost:5000/trigger-dice")
-            setNumPips(res.data.value)
-            console.log("Dice value:", res.data.value)
+            setNumPips(res.data.dice_roll)
+            console.log("Dice value:", res.data.dice_roll)
         }
         catch(error){
             console.error('Error fetching dice value:', error);
+            setNumPips(0)
         }
     }
 

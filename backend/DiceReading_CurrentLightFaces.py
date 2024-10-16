@@ -7,7 +7,15 @@ import time
 # Site to help access webcam: https://www.opencvhelp.org/tutorials/advanced/how-to-access-webcam/
 # Site to help read dice with webcam: https://golsteyn.com/writing/dice
 
+picam2 = Picamera2()
+def initialize_picam():
+    picam2.start()
+    print("Starting camera")
 
+def close_picam():
+    picam2.close()
+    print("Starting camera")
+    
 # Function Definitions
 def get_blobs(detector, frame):
     frame_blurred = cv2.medianBlur(frame, 7)
@@ -78,13 +86,10 @@ def trigger_dice_reader():
     params.minInertiaRatio = 0.6
 
     detector = cv2.SimpleBlobDetector_create(params)
-
-    picam2 = Picamera2()
-    picam2.start()
     
     num_pips = 0
 
-    while(True):
+    while(num_pips == 0):
         # Grab the latest image from the video feed
         frame = picam2.capture_array()
         frame = (frame.astype(np.float32)) * 0.75
@@ -101,16 +106,17 @@ def trigger_dice_reader():
         res = cv2.waitKey(1)
 
         if dice:        # Breaks the loop when a die is detected. Also works for multiple dice
-            time.sleep(0.5)
+            time.sleep(1)
             num_pips = sum(d[0] for d in dice)
-            break
+            print("From DiceReader=======================================")
+            print(num_pips)
+            print("=======================================")
         # Stop if the user presses "q" - Will need to change exit condition for dice and the game
-        if res & 0xFF == ord('q'):
-            picam2.close()
-            break
+        # if res & 0xFF == ord('q'):
+        #     picam2.close()
+        #     break
     # Release the webcam and close the window
-
     cv2.destroyAllWindows()
-    return num_pips if num_pips != 0 else -1
+    return num_pips
 
 

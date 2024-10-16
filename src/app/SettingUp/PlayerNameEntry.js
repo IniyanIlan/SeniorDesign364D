@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import {useNavigate, useLocation} from 'react-router-dom';
+import axios from 'axios';
 
 const PlayerNameEntry = () => {
   const location = useLocation();
@@ -15,8 +16,20 @@ const PlayerNameEntry = () => {
     setPlayerNames(newPlayerNames);
   };
 
-  const handleSubmit = (event) => {
+  const cameraInit = async () =>{
+    console.log("Intializing camera")
+    try{
+      const res = axios.get("http://localhost:5000/intialize-picam")
+    }
+    catch(error){
+      console.error("Error setting up camera", error);
+    }
+  }
+
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    await cameraInit();
     navigate('/StartGame', { 
       state: { 
         playerNames,   // Pass player names to Game.js
