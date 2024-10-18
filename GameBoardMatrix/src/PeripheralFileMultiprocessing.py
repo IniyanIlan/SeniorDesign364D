@@ -2,6 +2,7 @@
 import sys
 import numpy as np
 from multiprocessing import shared_memory
+import time
 
 # Read shared memory name from command-line argument
 shm_name = sys.argv[1]
@@ -17,13 +18,20 @@ sharedInt = np.ndarray((1,), dtype=np.int32, buffer=sharedInt_shm.buf)
 
 
 print(f"Data in shared memory before modification: {shared_array}")
+print(f"Data in shared memory before modification: {sharedInt}")
 
 # Modify the shared array
 shared_array[0] = 100
 sharedInt[0] = sharedInt[0] + 1000
 print(f"Data in shared memory after modification: {shared_array}")
 print(f"Data in shared memory after modification: {sharedInt}")
+n = 0
+time.sleep(5)
+
+sharedInt[0] = 52
+    
 
 
 # Close the shared memory block (no need to unlink since Program 1 owns it)
 existing_shm.close()
+sharedInt_shm.close()
