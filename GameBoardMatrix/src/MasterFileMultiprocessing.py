@@ -1,10 +1,11 @@
 import numpy as np
 from multiprocessing import shared_memory
+from multiprocessing.managers import SharedMemoryManager
 import subprocess
 import time
 
 # Create a NumPy array with some initial data
-data = np.array([6, 3, 3, 4, 5, 10], dtype=np.int64)
+data = np.array([6, 3, 3, 4, 5], dtype=np.int64)
 # Declare an array of size one with int 32 type memory usage.
 num = np.array([0], dtype=np.int32)
 # Create a shared memory block
@@ -29,7 +30,7 @@ print(f"Shared memory name: {shm_int.name}")
 print(f"Data in shared memory: {sharedInt}")
 
 # Run Peripheral program from master program using subprocess, passing the shared memory name
-process = subprocess.Popen(['python', 'PeripheralFileMultiprocessing.py', shm.name, shm_int.name])
+process = subprocess.Popen(['python3', 'PeripheralFileMultiprocessing.py', shm.name, shm_int.name])
 
 
 
@@ -44,11 +45,16 @@ while(sharedInt[0] != 52):
 
 print(f"Integer was changed to {sharedInt[0]}!")
 
+time.sleep(1)
 process.wait()
 
 
+print(f"Name of shared mem1: {shm.name}")
+print(f"Name of shared mem2: {shm_int.name}")
 # Clean up shared memory HAVE TO RELEASE, DUH
 shm.close()
 shm.unlink()
 shm_int.close()
 shm_int.unlink()
+
+#time.sleep(2)

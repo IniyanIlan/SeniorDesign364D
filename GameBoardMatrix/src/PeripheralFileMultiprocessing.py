@@ -35,3 +35,5 @@ sharedInt[0] = 52
 # Close the shared memory block (no need to unlink since Program 1 owns it)
 existing_shm.close()
 sharedInt_shm.close()
+#existing_shm.unlink()
+#sharedInt_shm.unlink()
