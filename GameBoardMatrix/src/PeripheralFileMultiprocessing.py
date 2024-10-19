@@ -30,10 +30,15 @@ time.sleep(5)
 
 sharedInt[0] = 52
     
+print(f"name of first shared memory {existing_shm.name}")
+print(f"name of second shared memory {sharedInt_shm.name}")
 
+#time.sleep(10)
 
 # Close the shared memory block (no need to unlink since Program 1 owns it)
 existing_shm.close()
 sharedInt_shm.close()
 #existing_shm.unlink()
 #sharedInt_shm.unlink()
+
+time.sleep(5)

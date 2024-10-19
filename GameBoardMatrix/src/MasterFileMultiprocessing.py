@@ -51,10 +51,13 @@ process.wait()
 
 print(f"Name of shared mem1: {shm.name}")
 print(f"Name of shared mem2: {shm_int.name}")
+
+
+#time.sleep(10)
 # Clean up shared memory HAVE TO RELEASE, DUH
 shm.close()
 shm.unlink()
 shm_int.close()
 shm_int.unlink()
 
-#time.sleep(2)
+time.sleep(5)
