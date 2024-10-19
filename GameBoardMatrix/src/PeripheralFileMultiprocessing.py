@@ -1,6 +1,7 @@
 # program2.py
 import sys
 import numpy as np
+from multiprocessing.resource_tracker import unregister
 from multiprocessing import shared_memory
 import time
 
@@ -11,6 +12,8 @@ shm_int_name = sys.argv[2]
 # Access the existing shared memory block by name
 existing_shm = shared_memory.SharedMemory(name=shm_name)
 sharedInt_shm = shared_memory.SharedMemory(name=shm_int_name)
+
+
 
 # Create a NumPy array backed by the existing shared memory
 shared_array = np.ndarray((5,), dtype=np.int64, buffer=existing_shm.buf)
@@ -35,9 +38,13 @@ print(f"name of second shared memory {sharedInt_shm.name}")
 
 #time.sleep(10)
 
+
 # Close the shared memory block (no need to unlink since Program 1 owns it)
 existing_shm.close()
 sharedInt_shm.close()
+# Resource tracker cringe. It duplicated resource tracker for no reason and it makes me sad :(
+unregister(existing_shm._name, 'shared_memory')
+unregister(sharedInt_shm._name, 'shared_memory')
 #existing_shm.unlink()
 #sharedInt_shm.unlink()
 
