@@ -2,12 +2,24 @@ import cv2
 import numpy as np
 from sklearn import cluster
 from picamera2 import Picamera2, Preview
+import sys
+import numpy as np
+from multiprocessing.resource_tracker import unregister
+from multiprocessing import shared_memory
 import time
 # Sources 
 # Site to help access webcam: https://www.opencvhelp.org/tutorials/advanced/how-to-access-webcam/
 # Site to help read dice with webcam: https://golsteyn.com/writing/dice
 
 picam2 = Picamera2()
+shmRequest_Name = sys.argv[1]
+shmData_Name = sys.argv[2]
+existingRequest = shared_memory.SharedMemory(name=shmRequest_Name)
+existingData = shared_memory.SharedMemory(name=shmData_Name)
+diceRequest = np.ndarray(1, dtype=np.int8, buffer=existingRequest.buf)
+diceData = np.ndarray(1, dtype=np.int8, buffer=existingData.buf)
+
+
 def initialize_picam():
     picam2.start()
     print("Starting camera")
@@ -77,19 +89,16 @@ def overlay_info(frame, dice, blobs):
                     (int(d[1] - textsize[0] / 2),
                      int(d[2] + textsize[1] / 2)),
                     cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 2)
+params = cv2.SimpleBlobDetector_Params()
 
-def trigger_dice_reader():
-    # Parameters
-    params = cv2.SimpleBlobDetector_Params()
+params.filterByInertia
+params.minInertiaRatio = 0.6
 
-    params.filterByInertia
-    params.minInertiaRatio = 0.6
+detector = cv2.SimpleBlobDetector_create(params)
 
-    detector = cv2.SimpleBlobDetector_create(params)
-    
-    num_pips = 0
-
-    while(num_pips == 0):
+num_pips = 0
+def camera_loop():
+    while(diceRequest[0] == 1):
         # Grab the latest image from the video feed
         frame = picam2.capture_array()
         frame = (frame.astype(np.float32)) * 0.75
@@ -108,6 +117,8 @@ def trigger_dice_reader():
         if dice:        # Breaks the loop when a die is detected. Also works for multiple dice
             time.sleep(1)
             num_pips = sum(d[0] for d in dice)
+            diceRequest[0] = 0
+            diceData[0] = num_pips
             print("From DiceReader=======================================")
             print(num_pips)
             print("=======================================")
@@ -117,6 +128,12 @@ def trigger_dice_reader():
         #     break
     # Release the webcam and close the window
     cv2.destroyAllWindows()
-    return num_pips
+
+if __name__ == "__main__":
+    picam2.open()
+    while(True): # might add shutdown flag later
+        camera_loop()
+    picam2.close()
+    print("Camera closed")
 
 
