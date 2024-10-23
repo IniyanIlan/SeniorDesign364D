@@ -16,6 +16,8 @@ diceRequest = None
 diceData = None
 shmRequest = None
 shmDiceData = None
+shmShutdown = none
+shutdown = None
 
 @app.route("/")
 def home():
@@ -57,10 +59,14 @@ def try_attack():
 def gameBoard_Init():
     tempdiceRequest = np.array([0], dtype=np.int8)
     tempdiceData = np.array([-1], dtype=np.int8)
+    tempShutdown = np.array([0], dtype=np.int8)
     shmRequest = shared_memory.SharedMemory(create=True, size=tempdiceRequest.nbytes)
     shmDiceData = shared_memory.SharedMemory(create=True, size=tempdiceData.nbytes)
+    shmShutdown = shared_memory.SharedMemory(create=True, size=tempShutdown.nbytes)
     diceRequest = np.ndarray(tempdiceRequest.shape, dtype=tempdiceRequest.dtype, buffer=shmRequest.buf)
     diceData = np.ndarray(tempdiceData.shape, dtype=tempdiceData.dtype, buffer=shmDiceData.buf)
+    shutdown = np.ndarray(tempdiceData.shape, dtype=tempShutdown.dtype, buffer=shmShutdown.buf)
+    shutdown[:] = tempShutdown[:]
     diceRequest[:] = tempdiceRequest[:]
     diceData[:] = tempdiceData[:]
     
@@ -68,7 +74,14 @@ def gameBoard_Init():
 
 if __name__ == '__main__':
     gameBoard_Init()
-    process = subprocess.Popen(['python3', 'DiceReading_CurrentLightFaces.py', shmRequest.name, shmDiceData.name])
+    process = subprocess.Popen(['python3', 'DiceReading_CurrentLightFaces.py', 
+                                shmRequest.name, shmDiceData.name, shmShutdown.name])
+    shmDiceData.close()
+    shmRequest.close()
+    shmShutdown.close()
+    shmDiceData.unlink()
+    shmRequest.unlink()
+    shmShutdown.unlink()
     app.run(debug=True, port=5000)
     
     

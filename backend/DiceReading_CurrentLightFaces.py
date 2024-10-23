@@ -14,10 +14,13 @@ import time
 picam2 = Picamera2()
 shmRequest_Name = sys.argv[1]
 shmData_Name = sys.argv[2]
+shmShutdown_Name = sys.argv[3]
 existingRequest = shared_memory.SharedMemory(name=shmRequest_Name)
 existingData = shared_memory.SharedMemory(name=shmData_Name)
+existingShutdown = shared_memory.SharedMemory(name=shmShutdown_Name)
 diceRequest = np.ndarray(1, dtype=np.int8, buffer=existingRequest.buf)
 diceData = np.ndarray(1, dtype=np.int8, buffer=existingData.buf)
+shutdown = np.ndarray(1, dtype=np.int8, buffer=existingShutdown)
 
 
 def initialize_picam():
@@ -131,9 +134,17 @@ def camera_loop():
 
 if __name__ == "__main__":
     picam2.open()
-    while(True): # might add shutdown flag later
+    while(shutdown[0] == 0): # might add shutdown flag later
         camera_loop()
     picam2.close()
+    # Close shared memory
+    existingRequest.close()
+    existingData.close()
+    existingShutdown.close()
+    # Unregister from manager
+    unregister(existingRequest._name, 'shared_memory')
+    unregister(existingData._name, 'shared_memory')
+    unregister(existingShutdown._name, 'shared_memory')
     print("Camera closed")
 
 
