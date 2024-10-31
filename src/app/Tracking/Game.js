@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Leaderboard from './Leaderboard';
 import Excavation from '../Action/Excavation';
@@ -20,18 +20,18 @@ const Game = () => {
             </div>
             
             <div className = "game-container">
-                <div>
+                <div className = "game-button">
                 <Excavation chestList={chestList}></Excavation>
                 </div>
-                <div>
+                <div className = "game-button">
                 <Attack /> 
                 </div>
-                <div className = "game-button">
+                <div >
                     <Trigger></Trigger>
                 </div>
                 
                 <div className = "leaderboard">
-                    <Leaderboard playerNames={state.playerNames}/>
+                    <Leaderboard playerNames={playerNames}/>
                 </div>
             </div>
         </div>

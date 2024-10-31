@@ -12,7 +12,7 @@ import Attack from './app/Action/Attack';
 
 function App() {
   return (
-    <div className="App">
+      <div className="App">
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -25,7 +25,8 @@ function App() {
           <Route path="/Attack" element={<Attack />} />
         </Routes>
       </Router>
-    </div>
+    </div>  
+    
   );
 }
 

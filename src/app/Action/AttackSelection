@@ -9,8 +9,7 @@ const AttackSelection = () => {
     //const { playerNames } = state; // Get player names from state
     //const [selectedPlayer, setSelectedPlayer] = useState(playerNames[0]);
     const navigate = useNavigate();
-    const [message, setMessage] = useState("");
-
+    const [message, setMessage] = useState<string | null>(null);
     const handleAttack = async () => {
         try {
             const response = await fetch("http://localhost:5000/attack");

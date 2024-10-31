@@ -10,10 +10,18 @@ body {
 .game-container {
     display: flex;
     flex-direction: row;
-    margin-top: 50px;
-    column-gap: 300px;
+    margin: 5vh auto; /* Top and bottom margins are relative to viewport height */
+    padding: 0 5vw;   /* Left and right padding are relative to viewport width */
+    column-gap: 5vw;  /* Space between elements in viewport width units */
     justify-content: center;
     align-items: center;
+    max-width: 90%;   /* Constrains the width relative to the screen size */
+}
+
+.game-button{
+    padding-left: 100px;
+    justify-content: center;
+
 }
 
 /* Header Section */

@@ -36,7 +36,7 @@ const PlayerNameEntry = () => {
               type="text"
               value={playerName} // Updated 'name' to 'playerName'
               onChange={(event) => handleInputChange(index, event)}
-              required
+              required i
             />
           </div>
         ))}
