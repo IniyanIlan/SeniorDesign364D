@@ -41,7 +41,7 @@ const NumberPlayer = () => {
             required
           />
         </label>
-        <button type="submit" disabled={numberOfPlayers > maxPlayers}>Next</button>
+        <button className='button' type="submit" disabled={numberOfPlayers > maxPlayers}>Next</button>
         {numberOfPlayers > maxPlayers && (
           <p style={{ color: 'red' }}>The maximum number of players is 6.</p>
         )}

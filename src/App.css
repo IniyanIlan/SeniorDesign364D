@@ -30,8 +30,8 @@
 .button {
   padding: 0.5rem 1rem;
   font-size: 1rem;
-  background-color: #FFD700; /* Gold */
-  color: #8B4513; /* Saddle Brown */
+  background-color: #64A7A7; /* teal */
+  color: white; 
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -41,8 +41,8 @@
 .button-top-left {
   padding: 0.5rem 1rem;
   font-size: 1rem;
-  background-color: #FFD700; /* Gold */
-  color: #8B4513; /* Saddle Brown */
+  background-color: #64A7A7; /* teal */
+  color: white; 
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -53,7 +53,7 @@
 }
 
 .button:hover {
-  background-color: #DAA520; /* Goldenrod */
+  background-color: #528585; /* Goldenrod */
 }
 
 .pdf-container {

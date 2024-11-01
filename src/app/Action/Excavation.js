@@ -28,7 +28,7 @@ const Excavation = () => {
 
   return (
     <div>
-      <button onClick={handleExcavate}>Excavate</button>
+      <button  className='button'onClick={handleExcavate}>Excavate</button>
       {message && <p>{message}</p>}
     </div>
   );

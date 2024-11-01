@@ -23,7 +23,7 @@ function Trigger(){
 
     return (
         <div>
-            <button onClick={handleTrigger}>
+            <button className='button' onClick={handleTrigger}>
                 Trigger Dice
             </button>
             {numPips !== null && <h2>Dice Value: {numPips}</h2>}

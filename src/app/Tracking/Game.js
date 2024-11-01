@@ -19,17 +19,12 @@ const Game = () => {
                 <a href = "/" className = "quit">Quit</a>
             </div>
             
-            <div className = "game-container">
-                <div>
-                <Excavation chestList={chestList}></Excavation>
+            <div className='game-container'>
+                <div className='game-button'>
+                    <div><Excavation chestList={chestList}></Excavation></div>
+                    <div ><Attack /> </div>
+                    <div><Trigger></Trigger></div>
                 </div>
-                <div>
-                <Attack /> 
-                </div>
-                <div className = "game-button">
-                    <Trigger></Trigger>
-                </div>
-                
                 <div className = "leaderboard">
                     <Leaderboard playerNames={state.playerNames}/>
                 </div>

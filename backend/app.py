@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
-import DiceReading_CurrentLightFaces as dice_reader
+#import DiceReading_CurrentLightFaces as dice_reader
 import action
 
 app = Flask(__name__)

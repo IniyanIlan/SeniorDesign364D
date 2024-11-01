@@ -53,7 +53,7 @@ const PlayerNameEntry = () => {
             />
           </div>
         ))}
-        <button type="submit">Start Game</button>
+        <button className='button' type="submit">Start Game</button>
       </form>
     </div>
   );

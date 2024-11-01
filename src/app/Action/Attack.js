@@ -28,7 +28,7 @@ const Attack = () => {
 
     return (
         <div>
-           <button onClick={handleAttackClick}>Attack!</button>
+           <button className='button' onClick={handleAttackClick}>Attack!</button>
            {message && <p>{message}</p>}
         </div>
     );
