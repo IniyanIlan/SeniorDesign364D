@@ -11,25 +11,20 @@ import time
 # Site to help access webcam: https://www.opencvhelp.org/tutorials/advanced/how-to-access-webcam/
 # Site to help read dice with webcam: https://golsteyn.com/writing/dice
 
-picam2 = Picamera2()
-shmRequest_Name = sys.argv[1]
-shmData_Name = sys.argv[2]
-shmShutdown_Name = sys.argv[3]
+file = open("shm_file.txt", "r")
+lines = [line.strip() for line in file]
+file.close()
+
+shmRequest_Name = lines[0]
+shmData_Name = lines[1]
+shmShutdown_Name = lines[2]
 existingRequest = shared_memory.SharedMemory(name=shmRequest_Name)
 existingData = shared_memory.SharedMemory(name=shmData_Name)
 existingShutdown = shared_memory.SharedMemory(name=shmShutdown_Name)
 diceRequest = np.ndarray(1, dtype=np.int8, buffer=existingRequest.buf)
 diceData = np.ndarray(1, dtype=np.int8, buffer=existingData.buf)
-shutdown = np.ndarray(1, dtype=np.int8, buffer=existingShutdown)
+shutdown = np.ndarray(1, dtype=np.int8, buffer=existingShutdown.buf)
 
-
-def initialize_picam():
-    picam2.start()
-    print("Starting camera")
-
-def close_picam():
-    picam2.close()
-    print("Starting camera")
     
 # Function Definitions
 def get_blobs(detector, frame):
@@ -99,8 +94,8 @@ params.minInertiaRatio = 0.6
 
 detector = cv2.SimpleBlobDetector_create(params)
 
-num_pips = 0
-def camera_loop():
+def camera_loop(picam2):
+    num_pips = 0
     while(diceRequest[0] == 1):
         # Grab the latest image from the video feed
         frame = picam2.capture_array()
@@ -118,25 +113,32 @@ def camera_loop():
         res = cv2.waitKey(1)
 
         if dice:        # Breaks the loop when a die is detected. Also works for multiple dice
-            time.sleep(1)
+            #time.sleep(1)
             num_pips = sum(d[0] for d in dice)
-            diceRequest[0] = 0
-            diceData[0] = num_pips
             print("From DiceReader=======================================")
             print(num_pips)
             print("=======================================")
+            diceRequest[0] = 0
+            diceData[0] = num_pips
+        #cv2.destroyAllWindows()
         # Stop if the user presses "q" - Will need to change exit condition for dice and the game
         # if res & 0xFF == ord('q'):
         #     picam2.close()
         #     break
     # Release the webcam and close the window
-    cv2.destroyAllWindows()
+    #cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    picam2.open()
+    picam2 = Picamera2()
+    picam2.start()
+    #picam2.start_preview(Preview=None)
+    print("Starting Pi Cam....")
+    #picam2.start()
+    print("Capturing camera content.....")
     while(shutdown[0] == 0): # might add shutdown flag later
-        camera_loop()
-    picam2.close()
+        camera_loop(picam2)
+        cv2.destroyAllWindows()
+    #picam2.close()
     # Close shared memory
     existingRequest.close()
     existingData.close()

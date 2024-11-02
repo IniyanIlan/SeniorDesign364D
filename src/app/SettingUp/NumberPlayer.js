@@ -10,7 +10,7 @@ const NumberPlayer = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (numberOfPlayers <= maxPlayers) {
-      fetch("http://localhost:5000/")
+      fetch("http://localhost:5001/")
         .then((response) => response.json())
         .then((data) => {
           setChestList(data.chestList);

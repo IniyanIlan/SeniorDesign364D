@@ -16,20 +16,19 @@ const PlayerNameEntry = () => {
     setPlayerNames(newPlayerNames);
   };
 
-  const cameraInit = async () =>{
-    console.log("Intializing camera")
-    try{
-      const res = axios.get("http://localhost:5000/intialize-picam")
-    }
-    catch(error){
-      console.error("Error setting up camera", error);
-    }
-  }
+  // const cameraInit = async () =>{
+  //   console.log("Intializing camera")
+  //   try{
+  //     const res = axios.get("http://localhost:5001/intialize-picam")
+  //   }
+  //   catch(error){
+  //     console.error("Error setting up camera", error);
+  //   }
+  // }
 
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await cameraInit();
     navigate('/StartGame', { 
       state: { 
         playerNames,   // Pass player names to Game.js
