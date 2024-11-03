@@ -7,7 +7,7 @@ const Excavation = () => {
 
   const handleExcavate = async () => {
     try {
-      const response = await fetch("http://localhost:5000/excavate");
+      const response = await fetch("http://localhost:5001/excavate");
       const data = await response.json();
       console.log(data)
 

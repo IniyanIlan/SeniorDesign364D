@@ -7,7 +7,7 @@ const Attack = () => {
 
     const handleAttackClick = async () => {
         try {
-            const response = await fetch("http://localhost:5000/attack"); // Call the backend API
+            const response = await fetch("http://localhost:5001/attack"); // Call the backend API
             const data = await response.json(); // Parse the JSON response
             
             if (response.ok) {

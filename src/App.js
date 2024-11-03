@@ -9,6 +9,7 @@ import './App.css';
 import Excavate_Bomb from './app/Action/Excavate_Bomb';
 import Excavate_Treasure from './app/Action/Excavate_Treasure';
 import Attack from './app/Action/Attack';
+import TurnTracking from './app/Tracking/TurnTracking';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/Excavate_Bomb" element={<Excavate_Bomb/>}> </Route>
           <Route path="/Excavate_Treasure" element={<Excavate_Treasure/>}></Route>
           <Route path="/Attack" element={<Attack />} />
+          <Route path="/TurnTracking" element={<TurnTracking />}/>
         </Routes>
       </Router>
     </div>

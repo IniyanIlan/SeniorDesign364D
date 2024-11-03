@@ -11,7 +11,7 @@ function Trigger(){
     const handleTrigger = async () => {
         console.log("Starting Dice Reader")
         try{
-            const res = await axios.get("http://localhost:5000/trigger-dice")
+            const res = await axios.get("http://localhost:5001/trigger-dice")
             setNumPips(res.data.dice_roll)
             console.log("Dice value:", res.data.dice_roll)
         }
