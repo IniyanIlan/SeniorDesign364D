@@ -13,7 +13,7 @@ function Leaderboard (props) {
               <div className="row" key={index}>
                 <span className="column">{index + 1}.</span>
                 <span className="column player-name">{player}</span>
-                <span className="column player-score">100</span>
+                <span className="column player-score">0</span>
             </div>
             );
           })}

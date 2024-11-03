@@ -5,7 +5,16 @@ body {
     padding: 0;
     background-color: #E1FDFD; /* Light blue background */
 }
-
+p {
+    font-size: 1.2rem;
+    color: #333333;
+    text-align: center;
+    margin: 15px 0;
+    padding: 10px;
+    background-color: #f0f8ff; /* Light background color */
+    border-radius: 8px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
 /* Game Container */
 .game-container {
     display: flex;
