@@ -2,4 +2,5 @@
   (version 7)
   (lib (name "ECE445L")(type "KiCad")(uri "${KIPRJMOD}/Symbols/symbols/ECE445L.kicad_sym")(options "")(descr ""))
   (lib (name "8to1_MUX")(type "KiCad")(uri "${KIPRJMOD}/Symbols/SN74HC151DR/KiCADv6/2024-10-28_02-08-16.kicad_sym")(options "")(descr ""))
+  (lib (name "2024-11-04_04-34-16")(type "KiCad")(uri "${KIPRJMOD}/Symbols/CL21B103KBANNNC/KiCADv6/2024-11-04_04-34-16.kicad_sym")(options "")(descr ""))
 )
