@@ -3433,6 +3433,138 @@
 		(color 0 0 0 0)
 		(uuid "fe0abaeb-4394-438e-b701-1e2a6e51e387")
 	)
+	(no_connect
+		(at 201.93 35.56)
+		(uuid "0615e3ec-f136-4b16-aa6b-0ba85201151f")
+	)
+	(no_connect
+		(at 22.86 119.38)
+		(uuid "17e25f66-07ec-484f-adf2-dca8f2796e78")
+	)
+	(no_connect
+		(at 22.86 101.6)
+		(uuid "1fb64c56-fa89-4a5c-b9bf-fcb91c117ff7")
+	)
+	(no_connect
+		(at 271.78 35.56)
+		(uuid "2cffe770-a0f7-4436-95d8-76063198ad8d")
+	)
+	(no_connect
+		(at 22.86 104.14)
+		(uuid "36b3c74b-548c-48db-bb51-7ea1071cee46")
+	)
+	(no_connect
+		(at 49.53 121.92)
+		(uuid "39d00b3f-95bd-48e2-9a91-3358fc08fffa")
+	)
+	(no_connect
+		(at 49.53 119.38)
+		(uuid "42fc26fa-d5de-4fe1-bef6-3e3fd95540dd")
+	)
+	(no_connect
+		(at 22.86 109.22)
+		(uuid "44c88305-9998-4e08-abee-538404e2d553")
+	)
+	(no_connect
+		(at 49.53 111.76)
+		(uuid "475b5d20-baba-4c4b-9bd8-472055345ec4")
+	)
+	(no_connect
+		(at 52.07 35.56)
+		(uuid "476e4190-e66e-4697-8678-26f248f58f23")
+	)
+	(no_connect
+		(at 124.46 35.56)
+		(uuid "54c4f5a1-513c-42c7-80af-55283b0ea87b")
+	)
+	(no_connect
+		(at 49.53 127)
+		(uuid "607dcdfd-41b5-40a9-9224-bf9bfd3f020e")
+	)
+	(no_connect
+		(at 49.53 132.08)
+		(uuid "62829c42-76e8-4052-b7e9-fe2ad15f3880")
+	)
+	(no_connect
+		(at 22.86 106.68)
+		(uuid "63517bb0-64c5-403c-b7c3-378727d04847")
+	)
+	(no_connect
+		(at 49.53 86.36)
+		(uuid "74f2e21d-8f3b-4820-8b02-c82567ed73f9")
+	)
+	(no_connect
+		(at 22.86 111.76)
+		(uuid "7cca7203-d809-473f-8b4b-69bd3e5718df")
+	)
+	(no_connect
+		(at 336.55 38.1)
+		(uuid "7fe262b5-2a72-4367-be3d-94c186e11fe9")
+	)
+	(no_connect
+		(at 49.53 104.14)
+		(uuid "884346b8-accc-4473-a058-231362e371ec")
+	)
+	(no_connect
+		(at 49.53 109.22)
+		(uuid "9425f014-fa36-444b-9665-11a3408b88e3")
+	)
+	(no_connect
+		(at 49.53 129.54)
+		(uuid "9bcd9eae-c2d8-4ad5-882e-74fb766726b0")
+	)
+	(no_connect
+		(at 22.86 116.84)
+		(uuid "a2663b40-b248-4529-8ce6-22f359e7c3f5")
+	)
+	(no_connect
+		(at 22.86 124.46)
+		(uuid "a55295dd-c58f-4ec2-9187-c158f019049b")
+	)
+	(no_connect
+		(at 49.53 99.06)
+		(uuid "ae0633ee-041e-420a-a9ab-944f96124b8b")
+	)
+	(no_connect
+		(at 49.53 124.46)
+		(uuid "b561b157-5f4a-43af-b9b6-d55b1d2d0eaf")
+	)
+	(no_connect
+		(at 22.86 93.98)
+		(uuid "ba9e0229-f68c-4b90-8107-ab795b403bc3")
+	)
+	(no_connect
+		(at 49.53 114.3)
+		(uuid "c652f2c9-1999-4d18-bc11-5a3fe132e006")
+	)
+	(no_connect
+		(at 49.53 106.68)
+		(uuid "cf93936a-e59e-4575-affc-ec8b102c9991")
+	)
+	(no_connect
+		(at 49.53 116.84)
+		(uuid "d2ced5d8-bb14-4ece-a233-5aa8bc302cde")
+	)
+	(no_connect
+		(at 22.86 121.92)
+		(uuid "e6eca912-2121-4146-9ede-ef469ce08006")
+	)
+	(no_connect
+		(at 22.86 127)
+		(uuid "e71daece-7e9e-4a81-9078-476fb4ff383a")
+	)
+	(no_connect
+		(at 49.53 101.6)
+		(uuid "e83b5c64-2499-4abc-9b8b-0954489b7fa1")
+	)
+	(no_connect
+		(at 22.86 129.54)
+		(uuid "edf484c6-a5c3-4fde-9230-43ee8f64b47d")
+	)
+	(no_connect
+		(at 22.86 83.82)
+		(uuid "fe41b52d-6472-4102-884b-3868d0bed1a7")
+	)
 	(wire
 		(pts
 			(xy 138.43 107.95) (xy 138.43 119.38)
@@ -11775,7 +11907,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 228.6 107.9499 0)
 			(effects
 				(font
@@ -11842,7 +11974,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 185.42 144.7799 0)
 			(effects
 				(font
@@ -12313,7 +12445,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 262.89 144.7799 0)
 			(effects
 				(font
@@ -12957,7 +13089,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 262.89 60.9599 0)
 			(effects
 				(font
@@ -13974,7 +14106,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 298.45 144.7799 0)
 			(effects
 				(font
@@ -14242,7 +14374,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 19.05 132.0799 90)
 			(effects
 				(font
@@ -14649,7 +14781,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 151.13 60.9599 0)
 			(effects
 				(font
@@ -15605,7 +15737,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 78.74 144.7799 0)
 			(effects
 				(font
@@ -15672,7 +15804,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 78.74 107.9499 0)
 			(effects
 				(font
@@ -15851,7 +15983,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 262.89 181.6099 0)
 			(effects
 				(font
@@ -15901,16 +16033,16 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 49.53 106.68 90)
+		(at 22.86 114.3 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
-		(uuid "4fe317e1-784f-46bb-b2c2-87af2f404cb5")
-		(property "Reference" "#PWR058"
-			(at 55.88 106.68 0)
+		(uuid "533cc865-083b-467f-840b-343ea413bbc3")
+		(property "Reference" "#PWR059"
+			(at 16.51 114.3 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15919,7 +16051,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 53.34 106.6799 90)
+			(at 19.05 114.2999 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15928,7 +16060,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 49.53 106.68 0)
+			(at 22.86 114.3 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15937,7 +16069,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 49.53 106.68 0)
+			(at 22.86 114.3 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15946,7 +16078,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 49.53 106.68 0)
+			(at 22.86 114.3 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15955,12 +16087,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "80ee757a-e63c-438e-93bb-557f8d7fa9ef")
+			(uuid "5c3df7fe-43d7-40c2-bf84-9559244fff08")
 		)
 		(instances
 			(project "GameBoardMatrix"
 				(path "/9d3426d5-ea43-4c5f-a6f3-0e43e3aa0b83"
-					(reference "#PWR058")
+					(reference "#PWR059")
 					(unit 1)
 				)
 			)
@@ -16060,7 +16192,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 332.74 107.9499 0)
 			(effects
 				(font
@@ -16270,7 +16402,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 363.22 63.4999 0)
 			(effects
 				(font
@@ -16313,73 +16445,6 @@
 			(project "GameBoardMatrix"
 				(path "/9d3426d5-ea43-4c5f-a6f3-0e43e3aa0b83"
 					(reference "#PWR038")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 22.86 93.98 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "59601cb0-fae4-4ee6-bb2f-3e2cbe42812f")
-		(property "Reference" "#PWR055"
-			(at 16.51 93.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 19.05 93.9799 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" ""
-			(at 22.86 93.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 22.86 93.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 22.86 93.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "b76c1fd1-7524-494d-aebf-571e4d0341bd")
-		)
-		(instances
-			(project "GameBoardMatrix"
-				(path "/9d3426d5-ea43-4c5f-a6f3-0e43e3aa0b83"
-					(reference "#PWR055")
 					(unit 1)
 				)
 			)
@@ -16547,7 +16612,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 78.74 58.4199 0)
 			(effects
 				(font
@@ -16757,7 +16822,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 363.22 184.1499 0)
 			(effects
 				(font
@@ -17110,7 +17175,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 228.6 60.9599 0)
 			(effects
 				(font
@@ -17177,7 +17242,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 332.74 181.6099 0)
 			(effects
 				(font
@@ -17387,7 +17452,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 228.6 144.7799 0)
 			(effects
 				(font
@@ -17529,7 +17594,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 113.03 107.9499 0)
 			(effects
 				(font
@@ -17731,7 +17796,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 363.22 147.3199 0)
 			(effects
 				(font
@@ -18803,7 +18868,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 185.42 181.6099 0)
 			(effects
 				(font
@@ -19305,7 +19370,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 78.74 181.6099 0)
 			(effects
 				(font
@@ -19575,7 +19640,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 397.51 147.3199 0)
 			(effects
 				(font
@@ -19642,7 +19707,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 332.74 144.7799 0)
 			(effects
 				(font
@@ -20132,7 +20197,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 332.74 60.9599 0)
 			(effects
 				(font
@@ -20474,7 +20539,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 298.45 107.9499 0)
 			(effects
 				(font
@@ -20779,73 +20844,6 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 49.53 99.06 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "ae04a8de-0531-43ff-8526-c0bdfd57b4fe")
-		(property "Reference" "#PWR053"
-			(at 55.88 99.06 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 53.34 99.0599 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" ""
-			(at 49.53 99.06 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 49.53 99.06 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 49.53 99.06 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "1cc62644-ab70-40d9-b22f-715ea43bd193")
-		)
-		(instances
-			(project "GameBoardMatrix"
-				(path "/9d3426d5-ea43-4c5f-a6f3-0e43e3aa0b83"
-					(reference "#PWR053")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
 		(at 148.59 109.22 180)
 		(unit 1)
 		(exclude_from_sim no)
@@ -20863,7 +20861,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 151.13 107.9499 0)
 			(effects
 				(font
@@ -21374,7 +21372,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 151.13 181.6099 0)
 			(effects
 				(font
@@ -21509,7 +21507,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 151.13 144.7799 0)
 			(effects
 				(font
@@ -21576,7 +21574,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND3"
 			(at 49.53 248.285 0)
 			(effects
 				(font
@@ -21642,7 +21640,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 397.51 110.4899 0)
 			(effects
 				(font
@@ -21776,7 +21774,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 262.89 107.9499 0)
 			(effects
 				(font
@@ -21843,7 +21841,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 298.45 181.6099 0)
 			(effects
 				(font
@@ -22127,7 +22125,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND3"
 			(at 53.34 88.8999 90)
 			(effects
 				(font
@@ -22194,7 +22192,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 54.61 60.3249 90)
 			(effects
 				(font
@@ -22396,7 +22394,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 185.42 60.9599 0)
 			(effects
 				(font
@@ -22531,7 +22529,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 397.51 63.4999 0)
 			(effects
 				(font
@@ -23138,7 +23136,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 185.42 107.9499 0)
 			(effects
 				(font
@@ -23205,7 +23203,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 363.22 110.4899 0)
 			(effects
 				(font
@@ -23527,7 +23525,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 397.51 184.1499 0)
 			(effects
 				(font
@@ -24066,7 +24064,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 298.45 60.9599 0)
 			(effects
 				(font
@@ -24283,7 +24281,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 113.03 144.7799 0)
 			(effects
 				(font
@@ -24350,7 +24348,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 113.03 60.9599 0)
 			(effects
 				(font
@@ -24560,7 +24558,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 228.6 181.6099 0)
 			(effects
 				(font
@@ -24603,73 +24601,6 @@
 			(project "GameBoardMatrix"
 				(path "/9d3426d5-ea43-4c5f-a6f3-0e43e3aa0b83"
 					(reference "#PWR022")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 49.53 124.46 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "f428600c-4c0e-4332-a46d-fb47260ddf2d")
-		(property "Reference" "#PWR057"
-			(at 55.88 124.46 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 53.34 124.4599 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" ""
-			(at 49.53 124.46 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 49.53 124.46 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 49.53 124.46 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "eed4543a-2678-48c4-a127-10dd71d974a2")
-		)
-		(instances
-			(project "GameBoardMatrix"
-				(path "/9d3426d5-ea43-4c5f-a6f3-0e43e3aa0b83"
-					(reference "#PWR057")
 					(unit 1)
 				)
 			)
@@ -25122,7 +25053,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GND"
+		(property "Value" "GND2"
 			(at 113.03 181.6099 0)
 			(effects
 				(font
