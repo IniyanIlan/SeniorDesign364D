@@ -74,9 +74,9 @@
 			(subtractmaskfromsilk no)
 			(outputformat 1)
 			(mirror no)
-			(drillshape 1)
+			(drillshape 0)
 			(scaleselection 1)
-			(outputdirectory "")
+			(outputdirectory "../GameBoardGerber/")
 		)
 	)
 	(net 0 "")
@@ -10587,7 +10587,7 @@
 			)
 		)
 		(property "Footprint" "footprints:CAP_CL21_SAM-M"
-			(at 0 0 -90)
+			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "985e1df9-c913-483f-82ac-0909d81638f1")
@@ -10599,7 +10599,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 0 0 -90)
+			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "adff1693-a2c5-4e89-91b6-08f5acf0f137")
@@ -10611,7 +10611,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 0 0 -90)
+			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "41594cba-b40d-43e6-9d7b-36c17a524078")
@@ -21468,7 +21468,7 @@
 			(size 6.5 6.5)
 			(drill 6.5)
 			(layers "*.Cu" "*.Mask")
-			(uuid "229c2625-77fd-4f25-84d2-f4478236172b")
+			(uuid "70e987fc-33f3-4d76-871a-1a47cde834be")
 		)
 	)
 	(footprint "ECE445L:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal"
@@ -27059,7 +27059,7 @@
 			(size 6.5 6.5)
 			(drill 6.5)
 			(layers "*.Cu" "*.Mask")
-			(uuid "229c2625-77fd-4f25-84d2-f4478236172b")
+			(uuid "62544d76-8ee4-4c28-afa1-feca7def2367")
 		)
 	)
 	(footprint "ECE445L:Testpoint_1x02_P2.54mm"
@@ -36665,7 +36665,7 @@
 			(size 6.5 6.5)
 			(drill 6.5)
 			(layers "*.Cu" "*.Mask")
-			(uuid "229c2625-77fd-4f25-84d2-f4478236172b")
+			(uuid "b950e3cb-ba44-47e1-b9ac-53a207b66669")
 		)
 	)
 	(footprint "A3144HallEffect:1x03_P1.50mm_Vertical_A3144HallEffect"
@@ -43454,7 +43454,7 @@
 			(uuid "6c0cf4d8-865e-4286-b2d9-fdd5c03a01d3")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 1.27 360)
+			(at 0 1.27 0)
 			(layer "F.Fab")
 			(uuid "961e0325-006b-4003-b50c-36dd8338bdc4")
 			(effects
@@ -61722,14 +61722,6 @@
 		(uuid "2a8550dd-b40b-4bc6-979f-5e963c07e9d3")
 	)
 	(segment
-		(start 34.34 53.12)
-		(end 28.46 47.24)
-		(width 0.5)
-		(layer "F.Cu")
-		(net 79)
-		(uuid "4464f696-e8dd-4c70-bea0-6db323cb7719")
-	)
-	(segment
 		(start 28.46 47.24)
 		(end 28.46 39.25)
 		(width 0.5)
@@ -61738,12 +61730,36 @@
 		(uuid "4d03bb7a-5656-4d9b-9e54-f29f89b8b742")
 	)
 	(segment
+		(start 31.485 50.265)
+		(end 28.46 47.24)
+		(width 0.5)
+		(layer "F.Cu")
+		(net 79)
+		(uuid "5d8eae6d-b29d-4f39-9f38-426170b4461a")
+	)
+	(segment
+		(start 31.485 50.265)
+		(end 31.86 50.64)
+		(width 0.5)
+		(layer "F.Cu")
+		(net 79)
+		(uuid "668e6bc5-3f70-47ae-b4cb-dbe0b4025d9b")
+	)
+	(segment
 		(start 28.46 27.4025)
 		(end 26.3 25.2425)
 		(width 0.5)
 		(layer "F.Cu")
 		(net 79)
 		(uuid "7c8c40e0-e427-48c1-a3db-abf6ff0949ed")
+	)
+	(segment
+		(start 34.34 53.12)
+		(end 31.485 50.265)
+		(width 0.5)
+		(layer "F.Cu")
+		(net 79)
+		(uuid "9f847d9b-ee89-4569-a62f-0b89e71b5e36")
 	)
 	(segment
 		(start 155.165 101.7)

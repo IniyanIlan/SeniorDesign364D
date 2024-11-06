@@ -1,0 +1,7 @@
+### Footprint positions - created on 2024-11-05T19:59:40-0600 ###
+### Printed by KiCad version 8.0.6
+## Unit = mm, Angle = deg.
+## Side : bottom
+# Ref     Val               Package                               PosX       PosY       Rot  Side
+J1        RPI_5_HeaderPins  PinSocket_2x20_P2.54mm_Vertical    31.8000   -53.1200  180.0000  bottom
+## End
