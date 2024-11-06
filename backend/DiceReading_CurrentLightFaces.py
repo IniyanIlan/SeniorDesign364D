@@ -7,6 +7,7 @@ import numpy as np
 from multiprocessing.resource_tracker import unregister
 from multiprocessing import shared_memory
 import time
+import math
 # Sources 
 # Site to help access webcam: https://www.opencvhelp.org/tutorials/advanced/how-to-access-webcam/
 # Site to help read dice with webcam: https://golsteyn.com/writing/dice
@@ -110,16 +111,20 @@ def camera_loop(picam2):
         cv2.imshow("frame", frame)
 
         # 
-        res = cv2.waitKey(1)
-
+        res = cv2.waitKey(100)
+        time.sleep(1)
         if dice:        # Breaks the loop when a die is detected. Also works for multiple dice
-            #time.sleep(1)
-            num_pips = sum(d[0] for d in dice)
+            sumPip=0
+            for x in range (5):
+                num_pips = sum(d[0] for d in dice)
+                sumPip = sumPip + num_pips
+            avePip = math.ceil(sumPip / 5)    
+            
             print("From DiceReader=======================================")
-            print(num_pips)
+            print(avePip)
             print("=======================================")
             diceRequest[0] = 0
-            diceData[0] = num_pips
+            diceData[0] = avePip
         #cv2.destroyAllWindows()
         # Stop if the user presses "q" - Will need to change exit condition for dice and the game
         # if res & 0xFF == ord('q'):
