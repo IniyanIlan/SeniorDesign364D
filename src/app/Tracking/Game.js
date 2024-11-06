@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 import Leaderboard from './Leaderboard';
 import Excavation from '../Action/Excavation';
 import Trigger from '../Action/TriggerDice';
@@ -11,6 +12,7 @@ const Game = () => {
     const { state } = useLocation();
     const navigate = useNavigate();
     const { playerNames, currentPlayerIndex, chestList } = state;
+    const currentPlayer = playerNames[currentPlayerIndex];
 
     const handleDone = () => {
         navigate('/TurnTracking', { state: { 
@@ -18,6 +20,18 @@ const Game = () => {
             chestList,
             currentPlayerIndex : (currentPlayerIndex + 1) % playerNames.length, 
             nextTurn: true } });
+    };
+
+    const handleGoldUpdate = async (amount) => {
+        try {
+            await axios.post("http://localhost:5001/update_gold", {
+                playerName: currentPlayer,
+                goldChange: amount
+            });
+            console.log(`Updated ${currentPlayer}'s gold by ${amount}`);
+        } catch (error) {
+            console.error("Error updating gold:", error);
+        }
     };
 
     return(
@@ -36,9 +50,13 @@ const Game = () => {
                     <div><Trigger></Trigger></div>
                 </div>
                 <div className = "leaderboard">
-                    <Leaderboard playerNames={playerNames}/>
+                    <Leaderboard />
                 </div>
                 <button onClick={handleDone}>Done</button>
+                <div>
+                    <button onClick={() => handleGoldUpdate(10)}>Plus 10 Gold</button>
+                    <button onClick={() => handleGoldUpdate(-10)}>Minus 10 Gold</button>
+                </div>
             </div>
         </div>
     );

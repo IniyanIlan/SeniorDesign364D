@@ -27,15 +27,30 @@ const PlayerNameEntry = () => {
   // }
 
 
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   // await cameraInit();
+  //   navigate('/TurnTracking', { 
+  //     state: { 
+  //       playerNames,   // Pass player names to Game.js
+  //       chestList      // Also pass the chest list to Game.js
+  //     } 
+  //   });
+  // };
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // await cameraInit();
-    navigate('/TurnTracking', { 
-      state: { 
-        playerNames,   // Pass player names to Game.js
-        chestList      // Also pass the chest list to Game.js
-      } 
-    });
+
+    try {
+      await axios.post("http://localhost:5001/init_leaderboard", { playerNames });
+      navigate('/TurnTracking', { 
+        state: { 
+          playerNames,  
+          chestList
+        }
+      });
+    } catch (error) {
+      console.error("Error initializing players on backend:", error);
+    }
   };
 
   return (

@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from multiprocessing.resource_tracker import unregister
 from multiprocessing import shared_memory
@@ -11,6 +11,9 @@ import os
 
 app = Flask(__name__)
 CORS(app)  
+
+# Initialize a global dictionary for leaderboard
+leaderboard_dict = {}
 
 tempdiceRequest = np.array([0], dtype=np.int8)
 tempdiceData = np.array([-1], dtype=np.int8)
@@ -30,6 +33,37 @@ def home():
     action.initialize_chests()
     print(action.chest_list)
     return jsonify({"message": "Chests initialized", "chests": action.chest_list})
+
+@app.route("/init_leaderboard", methods=["POST"])
+def init_leaderboard():
+    data = request.json
+    player_names = data.get("playerNames", [])
+    
+    # Initialize each player's score to 0
+    global leaderboard_dict
+    leaderboard_dict = {name: 0 for name in player_names}
+    print(f"Leaderboard initialized: {leaderboard_dict}")
+    return jsonify({"message": "Leaderboard initialized", "leaderboard": leaderboard_dict})
+
+@app.route("/update_gold", methods=["POST"])
+def update_gold():
+    data = request.json
+    player_name = data.get("playerName")
+    gold_change = data.get("goldChange", 0)
+    
+    if player_name in leaderboard_dict:
+        leaderboard_dict[player_name] += gold_change
+        print(f"{player_name}'s score updated, new_score: {leaderboard_dict[player_name]}")
+        print(f"Leaderboard Updated: {leaderboard_dict}")
+        return jsonify({"message": f"{player_name}'s score updated", "new_score": leaderboard_dict[player_name]})
+    else:
+        return jsonify({"message": "Player not found"}), 404
+
+@app.route("/get_leaderboard", methods=["GET"])
+def get_leaderboard():
+    sorted_leaderboard = sorted(leaderboard_dict.items(), key=lambda item: item[1], reverse=True)
+    print(f"Sorted Leaderboard: {sorted_leaderboard}")
+    return jsonify(sorted_leaderboard)
 
 @app.route("/excavate")
 def try_excavate():
