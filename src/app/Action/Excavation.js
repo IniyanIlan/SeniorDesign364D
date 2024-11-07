@@ -1,9 +1,23 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-const Excavation = () => {
+const Excavation = ({ chestList, currentPlayer, currentPlayerIndex, playerNames  }) => {
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
+
+  const handleGoldUpdate = async (amount) => {
+    try {
+        await axios.post("http://localhost:5001/update_gold", {
+            playerName: currentPlayer,
+            goldChange: amount
+        });
+        console.log(`Updated ${currentPlayer}'s gold by ${amount}`);
+    } catch (error) {
+        console.error("Error updating gold:", error);
+    }
+  };
 
   const handleExcavate = async () => {
     try {
@@ -13,9 +27,22 @@ const Excavation = () => {
 
       if (response.ok) {
         if (data.result === 0) {
-          navigate('/Excavate_Treasure');  // Navigate to the treasure component
+          handleGoldUpdate(100);
+          navigate('/Excavate_Treasure', { 
+            state: { 
+              playerNames,
+              currentPlayer, 
+              currentPlayerIndex
+            } 
+          });  // Navigate to the treasure component
         } else if (data.result === 1) {
-          navigate('/Excavate_Bomb');  // Navigate to the bomb component
+          navigate('/Excavate_Bomb', { 
+            state: { 
+              playerNames,
+              currentPlayer, 
+              currentPlayerIndex
+            } 
+          });
         }
       } else {
         setMessage(data.message);  // Display error message if no more chests

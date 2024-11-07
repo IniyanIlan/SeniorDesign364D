@@ -45,7 +45,11 @@ const Game = () => {
             <p>It's {playerNames[currentPlayerIndex]}'s turn! Let's play!</p>
             <div className='game-container'>
                 <div className='game-button'>
-                    <div><Excavation chestList={chestList}></Excavation></div>
+                    <div><Excavation chestList={chestList} 
+                             currentPlayer={currentPlayer}
+                             currentPlayerIndex={currentPlayerIndex}
+                             playerNames={playerNames}
+                                     ></Excavation></div>
                     <div ><Attack /> </div>
                     <div><Trigger></Trigger></div>
                 </div>
