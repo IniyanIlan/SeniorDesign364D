@@ -1,0 +1,52 @@
+.winner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    /* background: linear-gradient(135deg, #ff7e5f, #feb47b); */
+    color: #e4474a;
+  }
+  
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-family: 'Arial', sans-serif;
+    /* text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5); */
+  }
+  
+  .congrats-message {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .play-again-button, .quit-button {
+    padding: 0.8rem 2rem;
+    margin: 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .play-again-button {
+    background-color: #4CAF50;
+    color: #fff;
+  }
+  
+  .quit-button {
+    background-color: #f44336;
+    color: #fff;
+  }
+  
+  .play-again-button:hover {
+    background-color: #45a049;
+  }
+  
+  .quit-button:hover {
+    background-color: #e53935;
+  }
