@@ -14,6 +14,7 @@ CORS(app)
 
 # Initialize a global dictionary for leaderboard
 leaderboard_dict = {}
+winning_gold = 500
 
 tempdiceRequest = np.array([0], dtype=np.int8)
 tempdiceData = np.array([-1], dtype=np.int8)
@@ -104,6 +105,15 @@ def trigger_dice():
     print(f"We got a value: {dice_roll}")
     diceData[0] = -1
     return jsonify(value = int(dice_roll))
+
+@app.route("/get_winner", methods=["GET"])
+def get_winner():
+    for player, score in leaderboard_dict.items():
+        if score >= winning_gold:
+            print(f"Winner found: {player} with score {score}")
+            return jsonify({"winner": player})
+    print("No winner yet.")
+    return jsonify({"winner": None})
 
 if __name__ == '__main__':
     print("Opening DiceReader file")

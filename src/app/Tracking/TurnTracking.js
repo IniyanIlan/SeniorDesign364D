@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation , useNavigate } from 'react-router-dom';
 import '../Tracking/Game.css';
+import axios from 'axios';
+
 
 const TurnTracking = () => {
   const location = useLocation();
@@ -15,12 +17,36 @@ const TurnTracking = () => {
     navigate('/StartGame', { state: { playerNames, currentPlayerIndex, nextTurn: false, chestList} });
   };
 
+  // useEffect(() => {
+  //   if (location.state.nextTurn) {
+  //     console.log("useEffect: currentPlayerIndex:", location.state.currentPlayerIndex);
+  //     setCurrentPlayerIndex(location.state.currentPlayerIndex);
+  //   }
+  // }, [location.state.nextTurn]);
+
   useEffect(() => {
+    const checkForWinner = async () => {
+      try {
+        const response = await axios.get("http://localhost:5001/get_winner");
+        const { winner } = response.data;
+
+        if (winner) {
+          console.log("Winner found:", winner);
+          navigate('/Winner', { state: { winner } });
+        } else {
+          console.log("useEffect: currentPlayerIndex:", location.state.currentPlayerIndex);
+          setCurrentPlayerIndex(location.state.currentPlayerIndex); // Continue to next player
+        }
+      } catch (error) {
+        console.error("Error checking for winner:", error);
+      }
+    };
+
     if (location.state.nextTurn) {
-      console.log("useEffect: currentPlayerIndex:", location.state.currentPlayerIndex);
-      setCurrentPlayerIndex(location.state.currentPlayerIndex);
+      checkForWinner(); // Call /get_winner if it's the next turn
     }
   }, [location.state.nextTurn]);
+
 
   return (
     <div>

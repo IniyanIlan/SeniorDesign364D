@@ -10,6 +10,7 @@ import Excavate_Bomb from './app/Action/Excavate_Bomb';
 import Excavate_Treasure from './app/Action/Excavate_Treasure';
 import Attack from './app/Action/Attack';
 import TurnTracking from './app/Tracking/TurnTracking';
+import Winner from './app/Tracking/Winner';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/Excavate_Treasure" element={<Excavate_Treasure/>}></Route>
           <Route path="/Attack" element={<Attack />} />
           <Route path="/TurnTracking" element={<TurnTracking />}/>
+          <Route path="/Winner" element={<Winner />}/>
         </Routes>
       </Router>
     </div>
