@@ -60,6 +60,21 @@ shmPastMatrix = shared_memory.SharedMemory(create=True, size=nbytes, name='PastM
 # Create a 2D NumPy array backed by the shared memory
 pastMatrix = np.ndarray(array_shape, dtype=array_dtype, buffer=shmMatrix.buf)
 
+# Data Ready/Request Flags For Matrix
+tempMatrixRequest = np.array([0], dtype=np.int8)
+tempMatrixDataReady = np.array([0], dtype=np.int8)
+shmMatrixRequest = shared_memory.SharedMemory(create=True, size=tempMatrixRequest.nbytes, name='MatrixRequest')
+shmMatrixDataReady = shared_memory.SharedMemory(create=True, size=tempMatrixDataReady.nbytes, name='MatrixDataReady')
+matrixRequest = np.ndarray(tempMatrixRequest.shape, dtype=tempMatrixRequest.dtype, buffer=shmMatrixRequest.buf)
+matrixDataReady = np.ndarray(tempMatrixDataReady.shape, dtype=tempMatrixDataReady.dtype, buffer=shmMatrixDataReady.buf)
+# Use the values below.
+diceRequest[:] = tempMatrixRequest[:]
+diceData[:] = tempMatrixDataReady[:]
+
+
+
+
+
 @app.route("/")
 def home():
     action.initialize_chests()
