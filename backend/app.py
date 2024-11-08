@@ -29,6 +29,26 @@ shutdown[:] = tempShutdown[:]
 diceRequest[:] = tempdiceRequest[:]
 diceData[:] = tempdiceData[:]
 
+# Hall effect Matrix Init
+
+# Define the shape and data type of your 2D array
+array_shape = (5, 8)  # For example, a 5x5 array
+array_dtype = np.int8  # Specify the data type
+
+# Array Size
+nbytes = np.prod(array_shape) * np.dtype(array_dtype).itemsize
+
+# Create the shared memory block
+shmMatrix = shared_memory.SharedMemory(create=True, size=nbytes)
+
+# Create a 2D NumPy array backed by the shared memory
+shared_array = np.ndarray(array_shape, dtype=array_dtype, buffer=shmMatrix.buf)
+
+# Initialize the array with some values
+shared_array[:] = np.arange(np.prod(array_shape)).reshape(array_shape)
+
+print(shared_array)
+
 @app.route("/")
 def home():
     action.initialize_chests()
@@ -93,6 +113,8 @@ def try_attack():
     # shmDiceData.unlink()
     # shmRequest.unlink()
     # shmShutdown.unlink()
+    #shmMatrix.close()
+    #shmMatrix.unlink()
 
 @app.route("/trigger-dice", methods=['GET'])
 def trigger_dice():
