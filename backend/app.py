@@ -101,8 +101,30 @@ def get_chest_list():
 
 @app.route("/attack")
 def try_attack():
-    result = action.attack()
-    return jsonify({"result": result})
+    player_rolls = []
+    
+    while len(player_rolls) < 2:
+        diceRequest[0] = 1
+        while(diceData[0] == -1):
+            pass
+        player_rolls.append(diceData[0])
+        diceData[0] = -1
+        
+    result = action.attack(player_rolls[0], player_rolls[1])
+    
+    if result > 0:
+        return jsonify({
+            "winner": "Player 1", 
+            "result": result
+            })
+    elif result < 0:
+        return jsonify({
+            "winner": "Player 2", 
+            "result": result})
+    else:
+        return jsonify({
+            "winner": "Tie",
+            "result": result})
     
 # @app.route("/stop-picam", methods=['POST'])
 # def stop_cam():
@@ -119,9 +141,14 @@ def try_attack():
 @app.route("/trigger-dice", methods=['GET'])
 def trigger_dice():
     diceRequest[0] = 1
+    timeout = time.time() + 15
     print("API waiting for result.....")
     while diceData[0] == -1:
-        x = 1
+        if time.time() > timeout:
+            diceRequest[0] = 0
+            print("Timeout")
+            return jsonify({"message": "Timeout"}), 408
+        pass
     dice_roll = diceData[0]
     print("+++++++++++++++++++++")
     print(f"We got a value: {dice_roll}")

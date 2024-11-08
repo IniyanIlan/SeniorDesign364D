@@ -16,8 +16,13 @@ function Trigger(){
             console.log("Dice value:", res.data.value)
         }
         catch(error){
-            console.error('Error fetching dice value:', error);
-            setNumPips(0)
+            if (error.code === 'ECONNABORTED' || error.response?.status === 408) {
+                console.error("Timeout error: The request took too long to complete.");
+            } 
+            else{
+                console.error("Error: unable to recieve dice request");
+            }
+            setNumPips(0);  // Set default or handle accordingly
         }
     }
 
