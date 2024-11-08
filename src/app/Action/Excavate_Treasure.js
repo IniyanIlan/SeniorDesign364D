@@ -16,9 +16,12 @@ function Excavate_Treasure () {
         navigate('/StartGame'); 
       };
     return(
-        <div>
-            <h1>you found treasure!</h1>
-            <button onClick={handleBackToGame}>Back to Game</button>
+        <div className='center-container'>
+          <div className='centered-content'>
+          <h1>you found treasure!</h1>
+          <p>+ 100 gold</p>
+          <button onClick={handleBackToGame}>Next Player</button>
+          </div>
         </div>
     )
 }

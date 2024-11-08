@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { useNavigate, useLocation } from "react-router";
+import Timer from './Timer';
 
 const Excavate_Bomb = () => {
     const navigate = useNavigate();
@@ -12,9 +13,12 @@ const Excavate_Bomb = () => {
         navigate('/StartGame', { state: { playerNames } });  // Pass playerNames back to the game page
       };
     return(
-        <div>
-            <h1 className='title'>you found a bomb!</h1>
-            <button onClick={handleBackToGame}>Back to Game</button>
+        <div className='center-container'>
+            <div className='centered-content'>
+                <h1 className='title'>you found a bomb!</h1>
+                <Timer></Timer>
+                <button onClick={handleBackToGame}>Back to Game</button>
+            </div>
         </div>
     )
 }
