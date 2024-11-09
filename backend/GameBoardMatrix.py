@@ -4,6 +4,19 @@ from multiprocessing.resource_tracker import unregister
 from multiprocessing import shared_memory
 import numpy as np
 
+class player:
+    x = 0
+    y = 0
+    def __init__(self):
+        self.x = -1
+        self.y = -1
+
+
+player1 = player()
+player2 = player()
+player3 = player()
+player4 = player()
+
 
 # Access the shared memory by name
 shm_name = 'PresentMatrix'  # Replace with actual shm.name from main process
@@ -32,6 +45,8 @@ existingRequest = shared_memory.SharedMemory(name='MatrixRequest')
 existingData = shared_memory.SharedMemory(name='MatrixDataReady')
 matrixRequest = np.ndarray(1, dtype=np.int8, buffer=existingRequest.buf)
 matrixDataReady = np.ndarray(1, dtype=np.int8, buffer=existingData.buf)
+existingDiceData = shared_memory.SharedMemory(name='DiceData')
+diceData = np.ndarray(1, dtype=np.int8, buffer=existingDiceData.buf)
 
 
 #Variables
@@ -93,23 +108,61 @@ def countRow():
         presentMatrix[1][0] = GPIO.input(7)
         presentMatrix[1][1] = GPIO.input(11)
     row += 1
-    if(row > 1):
-        row = 0
 
 
 
 
 def countSpots():
     playerSpots = 0
-    
+    for i, row in enumerate(presentMatrix):
+        for j, element in enumerate(row):
+            if element == 1:
+                playerSpots += 1
     return spots
 
-def walk():
-    countRow()
+
+def walk(currentPlayer):
+    # Add code here that extracts details from request data flag
+    distance = diceData[0]
+    while(row < 2):
+        countRow()
+    row = 0
+    
+    # Board has been scanned. Check for valid change
+    # Valid Change is confirmed by seeing if there are only 2 pieces, and that only one piece has moved (the correct player)
+    spots = countSpots
+    if(spots != 2): # invalid number of players. 
+        return # try again on the next loop
+    # Now check if only one player has moved
+    # Find the difference between present and past matrices to detect movement
+    changed_positions = []
+    for i in range(array_shape[0]):
+        for j in range(array_shape[1]):
+            if presentMatrix[i][j] != pastMatrix[i][j]:
+                changed_positions.append((i, j))
+
+    # Valid change occurs if exactly one piece moved, resulting in exactly two changes
+    # (one position went from 1 to 0, another from 0 to 1)
+    if len(changed_positions) != 2:
+        print("Invalid move: multiple or no changes detected.")
+        return  # Retry on the next scan
+
+    # Check that only one player's position has changed
+    (old_x, old_y), (new_x, new_y) = changed_positions
+    if presentMatrix[old_x][old_y] == 0 and presentMatrix[new_x][new_y] == 1:
+        # Update currentPlayer position in the player instance
+        currentPlayer.x, currentPlayer.y = new_x, new_y
+        print(f"Player {currentPlayer} moved to ({new_x}, {new_y})")
+
+    # Update pastMatrix with the new state for the next check
+    pastMatrix[:, :] = presentMatrix[:, :]
+
+
+    
+
 
 def attack():
     countRow()
-
 
 def excavate():
     countRow()
@@ -118,12 +171,13 @@ def excavate():
 if __name__ == "__main__":
     matrixInit()
     while(not GPIO.input(15)):
-        if(matrixRequest[0] == 1):
-            walk()
-        elif(matrixRequest[0] == 2):
-            attack()
-        elif(matrixRequest[0] == 3):
-            excavate()
+        if((matrixRequest[0] % 10) == 1):
+            walk(matrixRequest[0] / 10)
+        elif((matrixRequest[0] % 10) == 2):
+            attack(matrixRequest[0] / 10)
+        elif((matrixRequest[0] % 10) == 3):
+            excavate(matrixRequest[0] / 10)
         # Scan matrix for spots
         spots = countSpots()
         time.sleep(0.01)
+
