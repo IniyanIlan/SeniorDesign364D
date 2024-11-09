@@ -20,7 +20,7 @@ tempdiceRequest = np.array([0], dtype=np.int8)
 tempdiceData = np.array([-1], dtype=np.int8)
 tempShutdown = np.array([0], dtype=np.int8)
 shmRequest = shared_memory.SharedMemory(create=True, size=tempdiceRequest.nbytes)
-shmDiceData = shared_memory.SharedMemory(create=True, size=tempdiceData.nbytes)
+shmDiceData = shared_memory.SharedMemory(create=True, size=tempdiceData.nbytes, name='DiceData')
 shmShutdown = shared_memory.SharedMemory(create=True, size=tempShutdown.nbytes)
 diceRequest = np.ndarray(tempdiceRequest.shape, dtype=tempdiceRequest.dtype, buffer=shmRequest.buf)
 diceData = np.ndarray(tempdiceData.shape, dtype=tempdiceData.dtype, buffer=shmDiceData.buf)
@@ -31,23 +31,53 @@ diceData[:] = tempdiceData[:]
 
 # Hall effect Matrix Init
 
-# Define the shape and data type of your 2D array
+# Define the shape and data type of the Present 2D array
 array_shape = (5, 8)  # For example, a 5x5 array
 array_dtype = np.int8  # Specify the data type
 
 # Array Size
-nbytes = np.prod(array_shape) * np.dtype(array_dtype).itemsize
+nbytes = int(np.prod(array_shape) * np.dtype(array_dtype).itemsize)
 
 # Create the shared memory block
-shmMatrix = shared_memory.SharedMemory(create=True, size=nbytes)
+shmMatrix = shared_memory.SharedMemory(create=True, size=nbytes, name='PresentMatrix')
 
 # Create a 2D NumPy array backed by the shared memory
-shared_array = np.ndarray(array_shape, dtype=array_dtype, buffer=shmMatrix.buf)
+presentMatrix = np.ndarray(array_shape, dtype=array_dtype, buffer=shmMatrix.buf)
 
 # Initialize the array with some values
-shared_array[:] = np.arange(np.prod(array_shape)).reshape(array_shape)
+presentMatrix[:] = 1
+print(presentMatrix)
 
-print(shared_array)
+
+# Past Array Matrix Initialization
+
+# Define the shape and data type of your 2D array
+pastArraySshape = (5, 8)  # For example, a 5x5 array
+array_dtype = np.int8  # Specify the data type
+
+# Array Size
+nbytes = int(np.prod(array_shape) * np.dtype(array_dtype).itemsize)
+
+# Create the shared memory block
+shmPastMatrix = shared_memory.SharedMemory(create=True, size=nbytes, name='PastMatrix')
+
+# Create a 2D NumPy array backed by the shared memory
+pastMatrix = np.ndarray(array_shape, dtype=array_dtype, buffer=shmMatrix.buf)
+
+# Data Ready/Request Flags For Matrix
+tempMatrixRequest = np.array([0], dtype=np.int8)
+tempMatrixDataReady = np.array([0], dtype=np.int8)
+shmMatrixRequest = shared_memory.SharedMemory(create=True, size=tempMatrixRequest.nbytes, name='MatrixRequest')
+shmMatrixDataReady = shared_memory.SharedMemory(create=True, size=tempMatrixDataReady.nbytes, name='MatrixDataReady')
+matrixRequest = np.ndarray(tempMatrixRequest.shape, dtype=tempMatrixRequest.dtype, buffer=shmMatrixRequest.buf)
+matrixDataReady = np.ndarray(tempMatrixDataReady.shape, dtype=tempMatrixDataReady.dtype, buffer=shmMatrixDataReady.buf)
+# Use the values below.
+diceRequest[:] = tempMatrixRequest[:]
+diceData[:] = tempMatrixDataReady[:]
+
+
+
+
 
 @app.route("/")
 def home():
@@ -176,7 +206,10 @@ if __name__ == '__main__':
     file.close()
 
     # process = subprocess.Popen(['python3', '../backend/DiceReading_CurrentLightFaces.py', 
-    #                             shmRequest.name, shmDiceData.name, shmShutdown.name],preexec_fn=os.setpgrp)
+    #                             shmRequest.name, shmDiceData.name, shmShutdown.name],preexec_fn=os.setpgrp)\
+
+    # Run Game Board Matrix code
+    process = subprocess.Popen(['python3', '../backend/GameBoardMatrix.py'])
     
     app.run(debug=True, port=5001)
     
