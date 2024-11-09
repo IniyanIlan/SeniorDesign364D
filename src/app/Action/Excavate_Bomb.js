@@ -1,6 +1,9 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
 import { useNavigate, useLocation } from "react-router";
+import Timer from './Timer';
+import Trigger from './TriggerDice'
+import axios from 'axios';
 
 const Excavate_Bomb = () => {
     const navigate = useNavigate();
@@ -8,6 +11,10 @@ const Excavate_Bomb = () => {
     const playerNames = state.playerNames || [];
     const currentPlayer = state.currentPlayer;
     const currentPlayerIndex = state.currentPlayerIndex;
+    const randomNumber = state.randomNumber;
+    const [attemptsLeft, setAttemptsLeft] = useState(5) 
+    const [numPips, setNumPips] = useState(0)
+    const [playerLost, setPlayerLost] = useState(false);
 
     const handleBackToGame = () => {
         navigate('/TurnTracking', { state: { 
@@ -15,10 +22,49 @@ const Excavate_Bomb = () => {
             currentPlayerIndex : (currentPlayerIndex + 1) % playerNames.length, 
             nextTurn: true } });
     }; 
+
+
+    const handleAttempt = async () => {
+        console.log("Starting Dice Reader for defusual")
+        try{
+            const res = await axios.get("http://localhost:5001/defusal")
+            setNumPips(res.data.value)
+            console.log("Dice value:", res.data.value)
+            setAttemptsLeft((prevAttempt) => prevAttempt - 1)
+        }
+        catch(error){
+            if (error.code === 'ECONNABORTED' || error.response?.status === 408) {
+                console.error("Timeout error: The request took too long to complete.");
+            } 
+            else{
+                console.error("Error: unable to recieve dice request");
+            }
+            setNumPips(0);  // Set default or handle accordingly
+            setAttemptsLeft((prevAttempt) => prevAttempt)
+        }
+
+    }
+
+    useEffect(() => {
+        if(attemptsLeft > 0){
+            handleAttempt();
+        }
+        else{
+            setPlayerLost(true)
+        }
+    },[attemptsLeft, playerLost]);
+
     return(
-        <div>
-            <h1 className='title'>you found a bomb!</h1>
-            <button onClick={handleBackToGame}>Back to Game</button>
+        <div className='center-container'>
+            <div className='centered-content'>
+                <h1 className='title'>You Found a Bomb!</h1>
+                <div>
+                    Attempts Remaining: {attemptsLeft}
+                    {playerLost &&  <p>You failed to disengage the trap!</p>}
+                </div>
+                
+                <button onClick={handleBackToGame}>Back to Game</button>
+            </div>
         </div>
     )
 }

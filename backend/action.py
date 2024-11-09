@@ -36,9 +36,18 @@ def excavate():
     return result
 
 # ATTACK
-def attack(player1_roll, player2_roll):
-    difference = player1_roll - player2_roll
-    return difference * 25
+def attack():
+    your_roll = random.randint(0, 20) # placeholder for until we get dice reader input
+    their_roll = random.randint(0, 20) # placeholder for until we get dice reader input
+    print(your_roll)
+    print(their_roll)
+    if your_roll > their_roll:
+        return 0
+    else:
+        return 1
+# def attack(player1_roll, player2_roll):
+#     difference = player1_roll - player2_roll
+#     return difference * 25
     
 
 def main():

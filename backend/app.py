@@ -29,51 +29,52 @@ shutdown[:] = tempShutdown[:]
 diceRequest[:] = tempdiceRequest[:]
 diceData[:] = tempdiceData[:]
 
-# Hall effect Matrix Init
+# # Hall effect Matrix Init
 
 # Define the shape and data type of the Present 2D array
-array_shape = (5, 8)  # For example, a 5x5 array
-array_dtype = np.int8  # Specify the data type
+# array_shape = (5, 8)  # For example, a 5x5 array
+# array_dtype = np.int8  # Specify the data type
 
-# Array Size
-nbytes = int(np.prod(array_shape) * np.dtype(array_dtype).itemsize)
+# # Array Size
+# nbytes = int(np.prod(array_shape) * np.dtype(array_dtype).itemsize)
 
-# Create the shared memory block
-shmMatrix = shared_memory.SharedMemory(create=True, size=nbytes, name='PresentMatrix')
+# # Create the shared memory block
+# shmMatrix = shared_memory.SharedMemory(create=True, size=nbytes, name='PresentMatrix')
 
-# Create a 2D NumPy array backed by the shared memory
-presentMatrix = np.ndarray(array_shape, dtype=array_dtype, buffer=shmMatrix.buf)
+# # Create a 2D NumPy array backed by the shared memory
+# presentMatrix = np.ndarray(array_shape, dtype=array_dtype, buffer=shmMatrix.buf)
 
-# Initialize the array with some values
-presentMatrix[:] = 1
-print(presentMatrix)
+# # Initialize the array with some values
+# presentMatrix[:] = 1
+# print(presentMatrix)
 
 
 # Past Array Matrix Initialization
 
 # Define the shape and data type of your 2D array
-pastArraySshape = (5, 8)  # For example, a 5x5 array
-array_dtype = np.int8  # Specify the data type
+# pastArraySshape = (5, 8)  # For example, a 5x5 array
+# array_dtype = np.int8  # Specify the data type
 
-# Array Size
-nbytes = int(np.prod(array_shape) * np.dtype(array_dtype).itemsize)
+# # Array Size
+# nbytes = int(np.prod(array_shape) * np.dtype(array_dtype).itemsize)
 
-# Create the shared memory block
-shmPastMatrix = shared_memory.SharedMemory(create=True, size=nbytes, name='PastMatrix')
+# # Create the shared memory block
+# shmPastMatrix = shared_memory.SharedMemory(create=True, size=nbytes, name='PastMatrix')
 
-# Create a 2D NumPy array backed by the shared memory
-pastMatrix = np.ndarray(array_shape, dtype=array_dtype, buffer=shmMatrix.buf)
+# # Create a 2D NumPy arra
+# y backed by the shared memory
+# pastMatrix = np.ndarray(array_shape, dtype=array_dtype, buffer=shmMatrix.buf)
 
-# Data Ready/Request Flags For Matrix
-tempMatrixRequest = np.array([0], dtype=np.int8)
-tempMatrixDataReady = np.array([0], dtype=np.int8)
-shmMatrixRequest = shared_memory.SharedMemory(create=True, size=tempMatrixRequest.nbytes, name='MatrixRequest')
-shmMatrixDataReady = shared_memory.SharedMemory(create=True, size=tempMatrixDataReady.nbytes, name='MatrixDataReady')
-matrixRequest = np.ndarray(tempMatrixRequest.shape, dtype=tempMatrixRequest.dtype, buffer=shmMatrixRequest.buf)
-matrixDataReady = np.ndarray(tempMatrixDataReady.shape, dtype=tempMatrixDataReady.dtype, buffer=shmMatrixDataReady.buf)
-# Use the values below.
-diceRequest[:] = tempMatrixRequest[:]
-diceData[:] = tempMatrixDataReady[:]
+# # Data Ready/Request Flags For Matrix
+# tempMatrixRequest = np.array([0], dtype=np.int8)
+# tempMatrixDataReady = np.array([0], dtype=np.int8)
+# shmMatrixRequest = shared_memory.SharedMemory(create=True, size=tempMatrixRequest.nbytes, name='MatrixRequest')
+# shmMatrixDataReady = shared_memory.SharedMemory(create=True, size=tempMatrixDataReady.nbytes, name='MatrixDataReady')
+# matrixRequest = np.ndarray(tempMatrixRequest.shape, dtype=tempMatrixRequest.dtype, buffer=shmMatrixRequest.buf)
+# matrixDataReady = np.ndarray(tempMatrixDataReady.shape, dtype=tempMatrixDataReady.dtype, buffer=shmMatrixDataReady.buf)
+# # Use the values below.
+# diceRequest[:] = tempMatrixRequest[:]
+# diceData[:] = tempMatrixDataReady[:]
 
 
 
@@ -125,9 +126,27 @@ def try_excavate():
         return jsonify({"message": "No more chests to excavate!"}), 400
     return jsonify({"result": result})
 
+@app.route("/defusal")
+def defusing():
+    diceRequest[0] = 1
+    timeout = time.time() + 10
+    print("API waiting for result.....")
+    while diceData[0] == -1:
+        if time.time() > timeout:
+            diceRequest[0] = 0
+            print("Timeout")
+            return jsonify({"message": "Timeout"}), 408
+        pass
+    dice_roll = diceData[0]
+    print("+++++++++++++++++++++")
+    print(f"We got a value: {dice_roll}")
+    diceData[0] = -1
+    return jsonify(value = int(dice_roll))
+
 @app.route("/get_chest_list")
 def get_chest_list():
     return jsonify({"result": action.chest_list})
+
 
 @app.route("/attack")
 def try_attack():
@@ -171,7 +190,7 @@ def try_attack():
 @app.route("/trigger-dice", methods=['GET'])
 def trigger_dice():
     diceRequest[0] = 1
-    timeout = time.time() + 15
+    timeout = time.time() + 10
     print("API waiting for result.....")
     while diceData[0] == -1:
         if time.time() > timeout:
@@ -197,19 +216,19 @@ def get_winner():
 if __name__ == '__main__':
     print("Opening DiceReader file")
     
-    file = open("shm_file.txt", "w")
-    file.truncate()
-    file.write(shmRequest.name + "\n")
-    file.write(shmDiceData.name+ "\n")
-    file.write(shmShutdown.name+ "\n")
+    #file = open("shm_file.txt", "w")
+    #file.truncate()
+    #file.write(shmRequest.name + "\n")
+    #file.write(shmDiceData.name+ "\n")
+    #file.write(shmShutdown.name+ "\n")
     
-    file.close()
+    #file.close()
 
     # process = subprocess.Popen(['python3', '../backend/DiceReading_CurrentLightFaces.py', 
     #                             shmRequest.name, shmDiceData.name, shmShutdown.name],preexec_fn=os.setpgrp)\
 
     # Run Game Board Matrix code
-    process = subprocess.Popen(['python3', '../backend/GameBoardMatrix.py'])
+    #process = subprocess.Popen(['python3', '../backend/GameBoardMatrix.py'])
     
     app.run(debug=True, port=5001)
     

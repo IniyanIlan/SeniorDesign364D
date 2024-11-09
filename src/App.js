@@ -11,6 +11,7 @@ import Excavate_Treasure from './app/Action/Excavate_Treasure';
 import Attack from './app/Action/Attack';
 import TurnTracking from './app/Tracking/TurnTracking';
 import Winner from './app/Tracking/Winner';
+import Attack_Selection from './app/Action/Attack_Selection';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/Attack" element={<Attack />} />
           <Route path="/TurnTracking" element={<TurnTracking />}/>
           <Route path="/Winner" element={<Winner />}/>
+          <Route path="/Attack_Selection" element={<Attack_Selection />}/>
         </Routes>
       </Router>
     </div>

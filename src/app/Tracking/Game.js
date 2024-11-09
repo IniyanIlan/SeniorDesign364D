@@ -14,6 +14,9 @@ const Game = () => {
     const { playerNames, currentPlayerIndex, chestList } = state;
     const currentPlayer = playerNames[currentPlayerIndex];
 
+    // Filter playerNames to exclude the currentPlayer
+    const otherPlayers = playerNames.filter((_, index) => index !== currentPlayerIndex);
+
     const handleDone = () => {
         navigate('/TurnTracking', { state: { 
             playerNames, 
@@ -50,7 +53,10 @@ const Game = () => {
                              currentPlayerIndex={currentPlayerIndex}
                              playerNames={playerNames}
                                      ></Excavation></div>
-                    <div ><Attack /> </div>
+                    <div ><Attack attackPlayers={otherPlayers} 
+                                playerNames={playerNames}
+                                currentPlayer={currentPlayer}
+                                currentPlayerIndex={currentPlayerIndex}/> </div>
                     <div><Trigger></Trigger></div>
                 </div>
                 <div className = "leaderboard">
