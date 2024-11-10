@@ -12,41 +12,43 @@ class player:
         self.y = -1
 
 
-player1 = player()
-player2 = player()
-player3 = player()
-player4 = player()
+players = []
 
+playerNum = 1 # default player number
 
-# Access the shared memory by name
-shm_name = 'PresentMatrix'  # Replace with actual shm.name from main process
-array_shape = (5, 8)  # Same shape as created initially
-array_dtype = np.int8  # Same dtype as initially created
+# # Access the shared memory by name
+# shm_name = 'PresentMatrix'  # Replace with actual shm.name from main process
+# array_shape = (5, 8)  # Same shape as created initially
+# array_dtype = np.int8  # Same dtype as initially created
 
-# Connect to the existing shared memory block
-existing_shmMatrix = shared_memory.SharedMemory(name=shm_name)
+# # Connect to the existing shared memory block
+# existing_shmMatrix = shared_memory.SharedMemory(name=shm_name)
 
-# Create a 2D NumPy array using the existing shared memory
-presentMatrix = np.ndarray(array_shape, dtype=array_dtype, buffer=existing_shmMatrix.buf)
+# # Create a 2D NumPy array using the existing shared memory
+# presentMatrix = np.ndarray(array_shape, dtype=array_dtype, buffer=existing_shmMatrix.buf)
 
-# Access the shared memory by name
-shm_name = 'PastMatrix'  # Replace with actual shm.name from main process
-array_shape = (5, 8)  # Same shape as created initially
-array_dtype = np.int8  # Same dtype as initially created
+# # Access the shared memory by name
+# shm_name = 'PastMatrix'  # Replace with actual shm.name from main process
+# array_shape = (5, 8)  # Same shape as created initially
+# array_dtype = np.int8  # Same dtype as initially created
 
-# Connect to the existing shared memory block
-existing_shmPastxMatrix = shared_memory.SharedMemory(name=shm_name)
+# # Connect to the existing shared memory block
+# existing_shmPastxMatrix = shared_memory.SharedMemory(name=shm_name)
 
-# Create a 2D NumPy array using the existing shared memory
-pastMatrix = np.ndarray(array_shape, dtype=array_dtype, buffer=existing_shmMatrix.buf)
+# # Create a 2D NumPy array using the existing shared memory
+# pastMatrix = np.ndarray(array_shape, dtype=array_dtype, buffer=existing_shmMatrix.buf)
 
-# Get Data Request/Ready values
-existingRequest = shared_memory.SharedMemory(name='MatrixRequest')
-existingData = shared_memory.SharedMemory(name='MatrixDataReady')
-matrixRequest = np.ndarray(1, dtype=np.int8, buffer=existingRequest.buf)
-matrixDataReady = np.ndarray(1, dtype=np.int8, buffer=existingData.buf)
-existingDiceData = shared_memory.SharedMemory(name='DiceData')
-diceData = np.ndarray(1, dtype=np.int8, buffer=existingDiceData.buf)
+# # Get Data Request/Ready values
+# existingRequest = shared_memory.SharedMemory(name='MatrixRequest')
+# existingData = shared_memory.SharedMemory(name='MatrixDataReady')
+# matrixRequest = np.ndarray(1, dtype=np.int8, buffer=existingRequest.buf)
+# matrixDataReady = np.ndarray(1, dtype=np.int8, buffer=existingData.buf)
+# existingDiceData = shared_memory.SharedMemory(name='DiceData')
+# diceData = np.ndarray(1, dtype=np.int8, buffer=existingDiceData.buf)
+
+# FOR TESTING MODULE ONLY
+pastMatrix = [[column for column in range(2)] for row in range(2)]
+presentMatrix = [[column for column in range(2)] for row in range(2)]
 
 
 #Variables
@@ -75,6 +77,8 @@ def matrixInit():
     GPIO.setup(7, GPIO.IN, GPIO.PUD_DOWN)
     GPIO.setup(11, GPIO.IN, GPIO.PUD_DOWN)
     GPIO.setup(15, GPIO.IN, GPIO.PUD_DOWN)
+    GPIO.setup(17, GPIO.IN, GPIO.PUD_DOWN)
+
 
 
 #     # Set edge detection functions
@@ -118,12 +122,14 @@ def countSpots():
         for j, element in enumerate(row):
             if element == 1:
                 playerSpots += 1
+    print(f"Found {spots} spots")
     return spots
 
 
 def walk(currentPlayer):
     # Add code here that extracts details from request data flag
-    distance = diceData[0]
+    # distance = diceData[0] real line, replace when done testing
+    distance = 2
     while(row < 2):
         countRow()
     row = 0
@@ -157,6 +163,11 @@ def walk(currentPlayer):
     # Update pastMatrix with the new state for the next check
     pastMatrix[:, :] = presentMatrix[:, :]
 
+def setPlayers(playerNum):
+    for i in playerNum:
+        while(spots < i):
+            spots = countSpots
+        
 
     
 
@@ -171,12 +182,14 @@ def excavate():
 if __name__ == "__main__":
     matrixInit()
     while(not GPIO.input(15)):
-        if((matrixRequest[0] % 10) == 1):
+        if((matrixRequest[0] % 10) == 1 or GPIO.input(17)):
             walk(matrixRequest[0] / 10)
         elif((matrixRequest[0] % 10) == 2):
             attack(matrixRequest[0] / 10)
         elif((matrixRequest[0] % 10) == 3):
             excavate(matrixRequest[0] / 10)
+        elif((matrixRequest[0] % 10) == 4):
+            setPlayers(playerNum)
         # Scan matrix for spots
         spots = countSpots()
         time.sleep(0.01)
