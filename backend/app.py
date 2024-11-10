@@ -160,20 +160,15 @@ def try_attack():
         diceData[0] = -1
         
     result = action.attack(player_rolls[0], player_rolls[1])
+
+    return jsonify({"result" : result})
+
+# FOR TESTING WITHOUT PI
+    # return jsonify({
+    #         "result": 100
+    #         })
     
-    if result > 0:
-        return jsonify({
-            "winner": "Player 1", 
-            "result": result
-            })
-    elif result < 0:
-        return jsonify({
-            "winner": "Player 2", 
-            "result": result})
-    else:
-        return jsonify({
-            "winner": "Tie",
-            "result": result})
+
     
 # @app.route("/stop-picam", methods=['POST'])
 # def stop_cam():

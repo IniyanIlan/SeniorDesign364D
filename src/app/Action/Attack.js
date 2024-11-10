@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 const Attack = ({ attackPlayers, playerNames, currentPlayer, currentPlayerIndex }) => {
     const [message, setMessage] = useState(""); // State to store the attack message
@@ -13,32 +13,39 @@ const Attack = ({ attackPlayers, playerNames, currentPlayer, currentPlayerIndex 
     const handleAttackClick = async () => {
         console.log(playerNames)
         try {
+            console.log("try success");
             const response = await fetch("http://localhost:5001/attack"); // Call the backend API
             const data = await response.json(); // Parse the JSON response
+            console.log(response);
+    
             if (response.ok) {
-                // Set the attacker and defender based on currentPlayer and selectedPlayer
+                // Set attacker and defender based on currentPlayer and selectedPlayer
                 const attacker = currentPlayer;
                 const defender = selectedPlayer;
-
-                // Gold values (these could be dynamic, but I’m setting them as 0 for now)
-                const attackerGold = data.result;
-                const defenderGold = data.result * -1;
-                const playerlist = playerNames;
-                const currentIndex = currentPlayerIndex;
-
-                console.log("attacker:", attacker);
-                console.log("defender:", defender);
-                console.log("Passing playerNames to Attack:", playerNames);
-                // Navigate to Attack_Selection and pass the state
+    
+                // Determine winner and loser gold based on backend result
+                let attackerGold, defenderGold;
+                if (data.result > 0) {
+                    attackerGold = data.result; // Attacker wins, positive gold value
+                    defenderGold = data.result * -1; // Defender loses, negative gold
+                } else if (data.result < 0) {
+                    attackerGold = data.result * -1; // Attacker loses, negative gold
+                    defenderGold = data.result; // Defender wins, positive gold value
+                } else {
+                    attackerGold = 0; // Tie case, both gold values are zero
+                    defenderGold = 0;
+                }
+    
+                // Pass the state to Attack_Selection
                 navigate('/Attack_Selection', { 
                     state: {
-                      attacker,
-                      defender,
-                      attackerGold,
-                      defenderGold,
-                      playerNames,
-                      currentPlayer,
-                      currentPlayerIndex
+                        attacker,
+                        defender,
+                        attackerGold,
+                        defenderGold,
+                        playerNames,
+                        currentPlayer,
+                        currentPlayerIndex
                     } 
                 });
             } else {

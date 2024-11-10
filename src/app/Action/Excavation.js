@@ -36,11 +36,13 @@ const Excavation = ({ chestList, currentPlayer, currentPlayerIndex, playerNames 
             } 
           });  // Navigate to the treasure component
         } else if (data.result === 1) {
+          const randomNumber = Math.floor(Math.random() * 6) + 1;
           navigate('/Excavate_Bomb', { 
             state: { 
               playerNames,
               currentPlayer, 
-              currentPlayerIndex
+              currentPlayerIndex,
+              randomNumber
             } 
           });
         }
