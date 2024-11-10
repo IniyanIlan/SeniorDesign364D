@@ -7,9 +7,14 @@ import numpy as np
 class player:
     x = 0
     y = 0
+    playerNumber = 0
     def __init__(self):
         self.x = -1
         self.y = -1
+        self.playerNumber = -1
+    def __str__(self):
+        return "Player Number: " + str(self.playerNumber) + " is at Position: (" + str(self.x) + ", " + str(self.y) + ")"
+
 
 
 players = []
@@ -47,12 +52,15 @@ playerNum = 1 # default player number
 # diceData = np.ndarray(1, dtype=np.int8, buffer=existingDiceData.buf)
 
 # FOR TESTING MODULE ONLY
-pastMatrix = [[column for column in range(2)] for row in range(2)]
-presentMatrix = [[column for column in range(2)] for row in range(2)]
+# Initialize 2x2 matrices with zeros
+pastMatrix = np.zeros((2, 2), dtype=int)
+presentMatrix = np.zeros((2, 2), dtype=int)
+pastMatrix[:, :] = 0
+presentMatrix[:, :] = 0
 
 
 #Variables
-row = 0
+rowCount = 0
 
 
 def matrixInit():
@@ -76,8 +84,8 @@ def matrixInit():
     GPIO.setup(5, GPIO.IN, GPIO.PUD_DOWN)
     GPIO.setup(7, GPIO.IN, GPIO.PUD_DOWN)
     GPIO.setup(11, GPIO.IN, GPIO.PUD_DOWN)
-    GPIO.setup(15, GPIO.IN, GPIO.PUD_DOWN)
-    GPIO.setup(17, GPIO.IN, GPIO.PUD_DOWN)
+    #GPIO.setup(15, GPIO.IN, GPIO.PUD_DOWN)
+    GPIO.setup(19, GPIO.IN, GPIO.PUD_DOWN)
 
 
 
@@ -105,13 +113,15 @@ def matrixInit():
 
 
 def countRow():
-    if row is 0:
-        presentMatrix[0][0] = GPIO.input(3)
-        presentMatrix[0][1] = GPIO.input(5)
-    elif row is 1:
-        presentMatrix[1][0] = GPIO.input(7)
-        presentMatrix[1][1] = GPIO.input(11)
-    row += 1
+    global rowCount
+    if (rowCount == 0):
+        presentMatrix[0][0] = 1 - GPIO.input(3)
+        presentMatrix[0][1] = 1 - GPIO.input(5)
+    elif (rowCount == 1):
+        presentMatrix[1][0] = 1 - GPIO.input(7)
+        presentMatrix[1][1] = 1 - GPIO.input(11)
+    rowCount += 1
+    return
 
 
 
@@ -122,51 +132,111 @@ def countSpots():
         for j, element in enumerate(row):
             if element == 1:
                 playerSpots += 1
-    print(f"Found {spots} spots")
-    return spots
+    print(f"Found {playerSpots} spots")
+    return playerSpots
 
 
-def walk(currentPlayer):
+def sail(currentPlayer):
     # Add code here that extracts details from request data flag
     # distance = diceData[0] real line, replace when done testing
-    distance = 2
-    while(row < 2):
+    global rowCount
+    rowCount = 0
+    while rowCount < presentMatrix.shape[0]:
+        time.sleep(0.2)
         countRow()
-    row = 0
-    
-    # Board has been scanned. Check for valid change
-    # Valid Change is confirmed by seeing if there are only 2 pieces, and that only one piece has moved (the correct player)
-    spots = countSpots
-    if(spots != 2): # invalid number of players. 
-        return # try again on the next loop
-    # Now check if only one player has moved
-    # Find the difference between present and past matrices to detect movement
-    changed_positions = []
-    for i in range(array_shape[0]):
-        for j in range(array_shape[1]):
-            if presentMatrix[i][j] != pastMatrix[i][j]:
-                changed_positions.append((i, j))
-
-    # Valid change occurs if exactly one piece moved, resulting in exactly two changes
-    # (one position went from 1 to 0, another from 0 to 1)
-    if len(changed_positions) != 2:
-        print("Invalid move: multiple or no changes detected.")
-        return  # Retry on the next scan
-
-    # Check that only one player's position has changed
-    (old_x, old_y), (new_x, new_y) = changed_positions
-    if presentMatrix[old_x][old_y] == 0 and presentMatrix[new_x][new_y] == 1:
-        # Update currentPlayer position in the player instance
-        currentPlayer.x, currentPlayer.y = new_x, new_y
-        print(f"Player {currentPlayer} moved to ({new_x}, {new_y})")
-
+    spots = countSpots()  # Initialize spots count
+    player = players[currentPlayer-1]
+    distance = 2 # Hard-coded distance for now to verfiy it works
+    while spots < playerNum:
+        rowCount = 0
+        print("Entered main while loop")
+        # Scan each row to update the matrix
+        while rowCount < presentMatrix.shape[0]:
+            time.sleep(0.2)
+            countRow()
+        # Board has been scanned. Check for valid change
+        # Valid Change is confirmed by seeing if there are only 2 pieces, and that only one piece has moved (the correct player)
+        validMatrix, newPos = isValidMatrixStateSail(playerNum, player)
+        if validMatrix:
+            # Further check that it moved by a correct distance
+            distanceMoved = getDistanceMoved(player, newPos)
+            if distanceMoved <= distance:
+                print(f"Player {currentPlayer} moved correctly by {distanceMoved} units.")
+                player.x = newPos[0]
+                player.y = newPos[1]
+                pastMatrix[:, :] = presentMatrix[:, :]
+                # ADD ANY EXTRA OUTPUT OPTIONS HERE
+                return
+            else:
+                print(f"Player {currentPlayer} movement invalid. Expected {distance} units but moved {distanceMoved} units.")
+        else:
+            print(f"Invalid matrix state for player {currentPlayer}. Retrying.")
     # Update pastMatrix with the new state for the next check
-    pastMatrix[:, :] = presentMatrix[:, :]
 
+
+def getDistanceMoved(player, newPos):
+    if(newPos == (player.x, player.y)):
+        return 0 # No pieces moved. We can assume nothing happened
+    # Find the player’s current position in the matrix
+    initial_pos = (player.x, player.y)  # Assuming each player has a previous position
+    
+    distance_moved = abs(newPos[0] - initial_pos[0]) + abs(newPos[1] - initial_pos[1])
+    
+    return distance_moved
+
+
+
+# Waits for player input to place a piece down on the board. Must be a location that is valid (the edge of the board)
+# If the placement is valid, a new player object is instantiated with the coordinate of that spot, and added
+# To the player list.
 def setPlayers(playerNum):
-    for i in playerNum:
-        while(spots < i):
-            spots = countSpots
+    global rowCount
+    spots = countSpots()  # Initialize spots count
+    playersToPlace = 1
+    for i in range(playerNum):
+    # Loop until we have the required number of valid player placements
+        while spots < playerNum:
+            rowCount = 0
+            # Scan each row to update the matrix (assumes a 2x2 matrix for testing)
+            while rowCount < presentMatrix.shape[0]:
+                time.sleep(0.2)
+                countRow()
+            print(presentMatrix)
+            # Check if the current matrix state is valid with expected spots = playerNum
+            if isValidMatrixStateSetup(playersToPlace):
+                # Identify new player position by comparing present and past matrices
+                changed_positions = []
+                for i in range(presentMatrix.shape[0]):
+                    for j in range(presentMatrix.shape[1]):
+                        if presentMatrix[i][j] != pastMatrix[i][j]:
+                            changed_positions.append((i, j))
+                            changed_positions.append((i, j))
+
+                if len(changed_positions) == 2:
+                    (old_x, old_y), (new_x, new_y) = changed_positions
+                    if pastMatrix[old_x][old_y] == 0 and presentMatrix[new_x][new_y] == 1:
+                        # Valid new player placement
+                        new_player = player()
+                        new_player.x, new_player.y = new_x, new_y
+                        players.append(new_player)
+                        new_player.playerNumber = len(players)
+                        print(f"New player added at ({new_x}, {new_y})")
+                    
+                        # Update the pastMatrix for the next scan
+                        pastMatrix[:, :] = presentMatrix[:, :]
+
+                        # Update spots count
+                        spots = countSpots()
+                        playersToPlace += 1
+                    else:
+                        print("Invalid movement detected.")
+                else:
+                    print("Invalid player placement; retrying.")
+            else:
+                print("Matrix state is invalid; retrying.")
+    
+        print(f"All {playerNum} players successfully placed.")
+            
         
 
     
@@ -178,19 +248,113 @@ def attack():
 def excavate():
     countRow()
 
+# USED DURING PLAYER LOCATION SETUP
+def isValidMatrixStateSetup(expected_num_players):
+    # Count the number of spots (1s) in the present matrix
+    playerSpots = countSpots()
+    
+    # Check if the number of player spots matches the expected count
+    if playerSpots != expected_num_players:
+        print(f"Invalid number of players: expected {expected_num_players}, found {playerSpots}")
+        return False
+    
+    # Check for single movement by comparing present and past matrices
+    changed_positions = []
+    rows, cols = pastMatrix.shape
+    for i in range(rows):
+        for j in range(cols):
+            if presentMatrix[i][j] != pastMatrix[i][j]:
+                changed_positions.append((i, j))
+                changed_positions.append((i, j))
+    print(len(changed_positions))
+    # Valid movement occurs if there is exactly one changed position
+    # (one cell went from 0 to 1)
+    if len(changed_positions) == 2:
+        (old_x, old_y), (new_x, new_y) = changed_positions
+        if pastMatrix[old_x][old_y] == 0 and presentMatrix[new_x][new_y] == 1:
+            # Valid move detected
+            print("Valid move detected: single player moved.")
+            return True
+        else:
+            print("Detected multiple or invalid changes.")
+            return False
+    elif len(changed_positions) == 0:
+        # No movement detected, but the state is valid
+        print("No movement detected, state is valid.")
+        return True
+    else:
+        # Invalid move if there are more or fewer than two changes
+        print("Invalid move: multiple or no changes detected.")
+        return False
+
+# USED DURING PLAYER MOVEMENT/SAILING
+def isValidMatrixStateSail(expected_num_players, currentPlayer):
+    # Count the number of spots (1s) in the present matrix
+    playerSpots = countSpots()
+    
+    # Check if the number of player spots matches the expected count
+    if playerSpots != expected_num_players:
+        print(f"Invalid number of players: expected {expected_num_players}, found {playerSpots}")
+        return False, (-1, -1)
+    
+    # Check for single movement by comparing present and past matrices
+    changed_positions = []
+    rows, cols = pastMatrix.shape
+    for i in range(rows):
+        for j in range(cols):
+            if presentMatrix[i][j] != pastMatrix[i][j]:
+                changed_positions.append((i, j))
+    print(changed_positions)
+    # Valid movement occurs if there are exactly two changed positions
+    # (one cell went from 1 to 0 and another from 0 to 1)
+    if len(changed_positions) == 2:
+        if changed_positions[0] == (player.x, player.y):
+            (old_x, old_y), (new_x, new_y) = changed_positions
+        else:
+            (new_x, new_y), (old_x, old_y) = changed_positions
+        if presentMatrix[old_x][old_y] == 0 and presentMatrix[new_x][new_y] == 1 and pastMatrix[old_x][old_y] == 1:
+            # Valid move detected
+            print("Valid move detected: single player moved.")
+            return True, (new_x, new_y)
+        else:
+            print("Detected multiple or invalid changes.")
+            return False, (-1, -1)
+    elif len(changed_positions) == 0:
+        # No movement detected, but the state is valid
+        print("No movement detected, state is valid.")
+        return True, (currentPlayer.x, currentPlayer.y)
+    else:
+        # Invalid move if there are more or fewer than two changes
+        print("Invalid move: multiple or no changes detected.")
+        return False, (-1, -1)
+
 
 if __name__ == "__main__":
     matrixInit()
+    setPlayers(playerNum=playerNum)
+    for player in players:
+                print(player)
+    # while(not GPIO.input(15)):
+    #     if((matrixRequest[0] % 10) == 1 or GPIO.input(17)):
+    #         walk(matrixRequest[0] / 10)
+    #     elif((matrixRequest[0] % 10) == 2):
+    #         attack(matrixRequest[0] / 10)
+    #     elif((matrixRequest[0] % 10) == 3):
+    #         excavate(matrixRequest[0] / 10)
+    #     elif((matrixRequest[0] % 10) == 4):
+    #         setPlayers(playerNum)
     while(not GPIO.input(15)):
-        if((matrixRequest[0] % 10) == 1 or GPIO.input(17)):
-            walk(matrixRequest[0] / 10)
-        elif((matrixRequest[0] % 10) == 2):
-            attack(matrixRequest[0] / 10)
-        elif((matrixRequest[0] % 10) == 3):
-            excavate(matrixRequest[0] / 10)
-        elif((matrixRequest[0] % 10) == 4):
-            setPlayers(playerNum)
+        if(GPIO.input(19)):
+            sail(1) # Hard-coded to only be 1's turn. Obviously will be different afterwards
+            for player in players:
+                print(player)
+        # elif((matrixRequest[0] % 10) == 2):
+        #     attack(matrixRequest[0] / 10)
+        # elif((matrixRequest[0] % 10) == 3):
+        #     excavate(matrixRequest[0] / 10)
+        # elif((matrixRequest[0] % 10) == 4):
+        #     setPlayers(playerNum)
         # Scan matrix for spots
-        spots = countSpots()
+        #spots = countSpots()
         time.sleep(0.01)
 
