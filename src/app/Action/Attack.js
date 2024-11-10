@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 const Attack = ({ attackPlayers, playerNames, currentPlayer, currentPlayerIndex }) => {
     const [message, setMessage] = useState(""); // State to store the attack message
@@ -9,6 +10,18 @@ const Attack = ({ attackPlayers, playerNames, currentPlayer, currentPlayerIndex 
     const handlePlayerChange = (event) => {
         setSelectedPlayer(event.target.value);
     };
+
+    const handleGoldUpdate = async (amount, player) => {
+        try {
+            await axios.post("http://localhost:5001/update_gold", {
+                playerName: player,
+                goldChange: amount
+            });
+            console.log(`Updated ${player}'s gold by ${amount}`);
+        } catch (error) {
+            console.error("Error updating gold:", error.response?.data || error.message);
+        }
+      };
 
     const handleAttackClick = async () => {
         console.log(playerNames)
@@ -28,9 +41,13 @@ const Attack = ({ attackPlayers, playerNames, currentPlayer, currentPlayerIndex 
                 if (data.result > 0) {
                     attackerGold = data.result; // Attacker wins, positive gold value
                     defenderGold = data.result * -1; // Defender loses, negative gold
+                    handleGoldUpdate(attackerGold, currentPlayer)
+                    handleGoldUpdate(defenderGold, selectedPlayer)
                 } else if (data.result < 0) {
                     attackerGold = data.result * -1; // Attacker loses, negative gold
                     defenderGold = data.result; // Defender wins, positive gold value
+                    handleGoldUpdate(attackerGold, currentPlayer)
+                    handleGoldUpdate(defenderGold, selectedPlayer)
                 } else {
                     attackerGold = 0; // Tie case, both gold values are zero
                     defenderGold = 0;
