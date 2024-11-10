@@ -23,6 +23,18 @@ const Excavate_Bomb = () => {
             nextTurn: true } });
     }; 
 
+    const handleGoldUpdate = async (amount) => {
+    try {
+        await axios.post("http://localhost:5001/update_gold", {
+            playerName: currentPlayer,
+            goldChange: amount
+        });
+        console.log(`Updated ${currentPlayer}'s gold by ${amount}`);
+    } catch (error) {
+        console.error("Error updating gold:", error);
+    }
+  };
+
 
     const handleAttempt = async () => {
         console.log("Starting Dice Reader for defusual")
@@ -51,6 +63,7 @@ const Excavate_Bomb = () => {
         }
         else{
             setPlayerLost(true)
+            handleGoldUpdate(-100);
         }
     },[attemptsLeft, playerLost]);
 
@@ -60,7 +73,7 @@ const Excavate_Bomb = () => {
                 <h1 className='title'>You Found a Bomb!</h1>
                 <div>
                     Attempts Remaining: {attemptsLeft}
-                    {playerLost &&  <p>You failed to disengage the trap!</p>}
+                    {playerLost &&  <p>You failed to disengage the trap! -100 gold</p>}
                 </div>
                 
                 <button onClick={handleBackToGame}>Back to Game</button>
