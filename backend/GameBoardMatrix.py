@@ -1,8 +1,10 @@
+import sys
 import RPi.GPIO as GPIO
 import time
 from multiprocessing.resource_tracker import unregister
 from multiprocessing import shared_memory
 import numpy as np
+
 
 class player:
     x = 0
@@ -21,42 +23,42 @@ players = []
 
 playerNum = 1 # default player number
 
-# # Access the shared memory by name
-# shm_name = 'PresentMatrix'  # Replace with actual shm.name from main process
-# array_shape = (5, 8)  # Same shape as created initially
-# array_dtype = np.int8  # Same dtype as initially created
+# Access the shared memory by name
+shm_name = 'PresentMatrix'  # Replace with actual shm.name from main process
+array_shape = (5, 8)  # Same shape as created initially
+array_dtype = np.int8  # Same dtype as initially created
 
-# # Connect to the existing shared memory block
-# existing_shmMatrix = shared_memory.SharedMemory(name=shm_name)
+# Connect to the existing shared memory block
+existing_shmMatrix = shared_memory.SharedMemory(name=shm_name)
 
-# # Create a 2D NumPy array using the existing shared memory
-# presentMatrix = np.ndarray(array_shape, dtype=array_dtype, buffer=existing_shmMatrix.buf)
+# Create a 2D NumPy array using the existing shared memory
+presentMatrix = np.ndarray(array_shape, dtype=array_dtype, buffer=existing_shmMatrix.buf)
 
-# # Access the shared memory by name
-# shm_name = 'PastMatrix'  # Replace with actual shm.name from main process
-# array_shape = (5, 8)  # Same shape as created initially
-# array_dtype = np.int8  # Same dtype as initially created
+# Access the shared memory by name
+shm_name = 'PastMatrix'  # Replace with actual shm.name from main process
+array_shape = (5, 8)  # Same shape as created initially
+array_dtype = np.int8  # Same dtype as initially created
 
-# # Connect to the existing shared memory block
-# existing_shmPastxMatrix = shared_memory.SharedMemory(name=shm_name)
+# Connect to the existing shared memory block
+existing_shmPastxMatrix = shared_memory.SharedMemory(name=shm_name)
 
-# # Create a 2D NumPy array using the existing shared memory
-# pastMatrix = np.ndarray(array_shape, dtype=array_dtype, buffer=existing_shmMatrix.buf)
+# Create a 2D NumPy array using the existing shared memory
+pastMatrix = np.ndarray(array_shape, dtype=array_dtype, buffer=existing_shmMatrix.buf)
 
-# # Get Data Request/Ready values
-# existingRequest = shared_memory.SharedMemory(name='MatrixRequest')
-# existingData = shared_memory.SharedMemory(name='MatrixDataReady')
-# matrixRequest = np.ndarray(1, dtype=np.int8, buffer=existingRequest.buf)
-# matrixDataReady = np.ndarray(1, dtype=np.int8, buffer=existingData.buf)
-# existingDiceData = shared_memory.SharedMemory(name='DiceData')
-# diceData = np.ndarray(1, dtype=np.int8, buffer=existingDiceData.buf)
+# Get Data Request/Ready values
+existingRequest = shared_memory.SharedMemory(name='MatrixRequest')
+existingData = shared_memory.SharedMemory(name='MatrixDataReady')
+matrixRequest = np.ndarray(2, dtype=np.int64, buffer=existingRequest.buf)
+matrixDataReady = np.ndarray(2, dtype=np.int64, buffer=existingData.buf)
+existingDiceData = shared_memory.SharedMemory(name='DiceData')
+diceData = np.ndarray(1, dtype=np.int8, buffer=existingDiceData.buf)
 
 # FOR TESTING MODULE ONLY
 # Initialize 2x2 matrices with zeros
-pastMatrix = np.zeros((2, 2), dtype=int)
-presentMatrix = np.zeros((2, 2), dtype=int)
-pastMatrix[:, :] = 0
-presentMatrix[:, :] = 0
+# pastMatrix = np.zeros((2, 2), dtype=int)
+# presentMatrix = np.zeros((2, 2), dtype=int)
+# pastMatrix[:, :] = 0
+# presentMatrix[:, :] = 0
 
 
 #Variables
@@ -166,6 +168,8 @@ def sail(currentPlayer):
                 player.y = newPos[1]
                 pastMatrix[:, :] = presentMatrix[:, :]
                 # ADD ANY EXTRA OUTPUT OPTIONS HERE
+                matrixDataReady[0] = 1
+                matrixRequest[0] = 0 # Turn off matrixRequest.
                 return
             else:
                 print(f"Player {currentPlayer} movement invalid. Expected {distance} units but moved {distanceMoved} units.")
@@ -234,19 +238,50 @@ def setPlayers(playerNum):
                     print("Invalid player placement; retrying.")
             else:
                 print("Matrix state is invalid; retrying.")
-    
+
         print(f"All {playerNum} players successfully placed.")
+        matrixDataReady[0] = 1
+        matrixRequest[0] = 0 # Turn off matrixRequest.
+
             
         
 
     
 
 
-def attack():
-    countRow()
+def attack(playerNum):
+    attackingPlayer = players[playerNum-1] # Assuming players are 1-indexed
+    # Clear player matrixDataReady stuff
+    matrixDataReady[1] = 0
+    # This just checks for a valid state in the pastMatrix for the player
+    # If a player is nearby another player, attack is valid
+    
+    # Iterate over each player to check for nearby players within a 1-tile range
+    for player in players:
+        # Skip if the player is the same as the attacker
+        if player == attackingPlayer:
+            continue
+        
+        # Check if the player is within attack range (1 tile in any direction)
+        if abs(player.x - attackingPlayer.x) <= 1 and abs(player.y - attackingPlayer.y) <= 1:
+            # If within range, the attack is considered valid for this player
+            print(f"{attackingPlayer} can attack {player}")
+            # Perform any additional actions for an attack (e.g., reduce health)
+            matrixDataReady[1] *= 10
+            matrixDataReady[1] += player.playerNumber # store player Number
+    if(matrixDataReady[1] == 0): 
+        matrixDataReady[0] = -1 # No players were found. Invalid data
+    else:
+        matrixDataReady[0] = 2 # Valid attck
+    matrixRequest[0] = 0 # Turn off matrixRequest.
+
+
 
 def excavate():
-    countRow()
+    # Valid return code if the player is nearby a treasure chest
+    matrixDataReady[0] = 1 # treasure chest always found for now
+    matrixRequest[0] = 0 # Turn off matrixRequest.
+    return
 
 # USED DURING PLAYER LOCATION SETUP
 def isValidMatrixStateSetup(expected_num_players):
@@ -330,31 +365,35 @@ def isValidMatrixStateSail(expected_num_players, currentPlayer):
 
 
 if __name__ == "__main__":
-    matrixInit()
-    setPlayers(playerNum=playerNum)
-    for player in players:
-                print(player)
-    # while(not GPIO.input(15)):
-    #     if((matrixRequest[0] % 10) == 1 or GPIO.input(17)):
-    #         walk(matrixRequest[0] / 10)
-    #     elif((matrixRequest[0] % 10) == 2):
-    #         attack(matrixRequest[0] / 10)
-    #     elif((matrixRequest[0] % 10) == 3):
-    #         excavate(matrixRequest[0] / 10)
-    #     elif((matrixRequest[0] % 10) == 4):
-    #         setPlayers(playerNum)
-    while(not GPIO.input(15)):
-        if(GPIO.input(19)):
-            sail(1) # Hard-coded to only be 1's turn. Obviously will be different afterwards
-            for player in players:
-                print(player)
-        # elif((matrixRequest[0] % 10) == 2):
-        #     attack(matrixRequest[0] / 10)
-        # elif((matrixRequest[0] % 10) == 3):
-        #     excavate(matrixRequest[0] / 10)
-        # elif((matrixRequest[0] % 10) == 4):
-        #     setPlayers(playerNum)
-        # Scan matrix for spots
-        #spots = countSpots()
-        time.sleep(0.01)
+    try:
+        print("shared memory initialized correctly")
+        matrixInit()
+        while(not GPIO.input(15)): # This is just an exit program condition. Dont worry about it
+            if((matrixRequest[0] == 1)): # 1 = sail
+                sail(matrixRequest[1]) # Index 1 corresponds to which player is the one choosing to do this (player turn)
+            elif(matrixRequest[0] == 2): # 2 = attack
+                attack(matrixRequest[1])
+            elif(matrixRequest[0] == 3): # 3 = excavate
+                excavate(matrixRequest[1])
+            elif(matrixRequest[0] == 4): # 4 = Player position initialization
+                setPlayers(playerNum)
+                for player in players:
+                    print(player)
+            
+        # while(not GPIO.input(15)):
+        #     if(GPIO.input(19)):
+        #         attack(playerNum) # Hard-coded to only be 1's turn. Obviously will be different afterwards
+        #         for player in players:
+        #             print(player)
+        #     # elif((matrixRequest[0] % 10) == 2):
+        #     #     attack(matrixRequest[0] / 10)
+        #     # elif((matrixRequest[0] % 10) == 3):
+        #     #     excavate(matrixRequest[0] / 10)
+        #     # elif((matrixRequest[0] % 10) == 4):
+        #     #     setPlayers(playerNum)
+        #     # Scan matrix for spots
+        #     #spots = countSpots()
+            time.sleep(0.01)
+    except KeyboardInterrupt:
+        print('Exited')
 

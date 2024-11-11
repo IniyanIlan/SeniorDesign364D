@@ -29,9 +29,9 @@ function Trigger(){
     return (
         <div>
             <button className='button' onClick={handleTrigger}>
-                Trigger Dice
+                Move
             </button>
-            {numPips !== null && <h2>Dice Value: {numPips}</h2>}
+            {numPips !== null && <h2>You rolled a {numPips}</h2>}
         </div>
     );
 }
