@@ -76,7 +76,7 @@ const Attack = ({ attackPlayers, playerNames, currentPlayer, currentPlayerIndex 
 
     return (
         <div>
-            <select value={selectedPlayer} onChange={handlePlayerChange} className="dropdown">
+            <select value={selectedPlayer} onChange={handlePlayerChange} className="button">
                 {attackPlayers.map((name) => (
                     <option key={name} value={name}>
                         {name}

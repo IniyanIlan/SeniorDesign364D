@@ -56,10 +56,10 @@ const TurnTracking = () => {
                 <a href = "/NumberPlayer">Restart Game</a>
                 <a href = "/" className = "quit">Quit</a>
       </div>
-      <div className="game-container">
+      <div className="game-columns">
         <h2>Welcome to the Game!</h2>
         <p>{playerNames[currentPlayerIndex]}, it's your turn. Roll the dice!</p>
-        <button onClick={handleRollDice}>Roll Dice</button>
+        <button className="button" onClick={handleRollDice}>Roll Dice</button>
       </div>
     </div>
     
