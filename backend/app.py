@@ -16,12 +16,73 @@ CORS(app)
 leaderboard_dict = {}
 winning_gold = 500
 
+<<<<<<< Updated upstream
+=======
+# Shared Memory Stuff Starts Here
+
+try:
+    # Try to connect to an existing shared memory block
+    existing_shm = shared_memory.SharedMemory(name='DiceData')
+    existing_shm.unlink()  # Unlink the existing shared memory block
+    existing_shm.close()   # Close the existing shared memory block
+except FileNotFoundError:
+    # If not found, it means no shared memory block by that name exists
+    pass
+
+try:
+    # Try to connect to an existing shared memory block
+    existing_shm = shared_memory.SharedMemory(name='PresentMatrix')
+    existing_shm.unlink()  # Unlink the existing shared memory block
+    existing_shm.close()   # Close the existing shared memory block
+except FileNotFoundError:
+    # If not found, it means no shared memory block by that name exists
+    pass
+
+try:
+    # Try to connect to an existing shared memory block
+    existing_shm = shared_memory.SharedMemory(name='PastMatrix')
+    existing_shm.unlink()  # Unlink the existing shared memory block
+    existing_shm.close()   # Close the existing shared memory block
+except FileNotFoundError:
+    # If not found, it means no shared memory block by that name exists
+    pass
+
+try:
+    # Try to connect to an existing shared memory block
+    existing_shm = shared_memory.SharedMemory(name='MatrixRequest')
+    existing_shm.unlink()  # Unlink the existing shared memory block
+    existing_shm.close()   # Close the existing shared memory block
+except FileNotFoundError:
+    # If not found, it means no shared memory block by that name exists
+    pass
+
+try:
+    # Try to connect to an existing shared memory block
+    existing_shm = shared_memory.SharedMemory(name='MatrixDataReady')
+    existing_shm.unlink()  # Unlink the existing shared memory block
+    existing_shm.close()   # Close the existing shared memory block
+    # Try to connect to an existing shared memory block
+    existing_shm = shared_memory.SharedMemory(name='DiceRequest')
+    existing_shm.unlink()  # Unlink the existing shared memory block
+    existing_shm.close()   # Close the existing shared memory block
+    # Try to connect to an existing shared memory block
+    existing_shm = shared_memory.SharedMemory(name='DiceShutdown')
+    existing_shm.unlink()  # Unlink the existing shared memory block
+    existing_shm.close()   # Close the existing shared memory block
+except FileNotFoundError:
+    # If not found, it means no shared memory block by that name exists
+    pass
+
+
+
+
+>>>>>>> Stashed changes
 tempdiceRequest = np.array([0], dtype=np.int8)
 tempdiceData = np.array([-1], dtype=np.int8)
 tempShutdown = np.array([0], dtype=np.int8)
-shmRequest = shared_memory.SharedMemory(create=True, size=tempdiceRequest.nbytes)
+shmRequest = shared_memory.SharedMemory(create=True, size=tempdiceRequest.nbytes, name='DiceRequest')
 shmDiceData = shared_memory.SharedMemory(create=True, size=tempdiceData.nbytes, name='DiceData')
-shmShutdown = shared_memory.SharedMemory(create=True, size=tempShutdown.nbytes)
+shmShutdown = shared_memory.SharedMemory(create=True, size=tempShutdown.nbytes, name='DiceShutdown')
 diceRequest = np.ndarray(tempdiceRequest.shape, dtype=tempdiceRequest.dtype, buffer=shmRequest.buf)
 diceData = np.ndarray(tempdiceData.shape, dtype=tempdiceData.dtype, buffer=shmDiceData.buf)
 shutdown = np.ndarray(tempdiceData.shape, dtype=tempShutdown.dtype, buffer=shmShutdown.buf)
@@ -78,6 +139,19 @@ diceData[:] = tempdiceData[:]
 
 
 
+<<<<<<< Updated upstream
+=======
+# Data Ready/Request Flags For Matrix
+tempMatrixRequest = np.array([0, 0], dtype=np.int64)
+tempMatrixDataReady = np.array([0, 0, 0, 0], dtype=np.int64)
+shmMatrixRequest = shared_memory.SharedMemory(create=True, size=tempMatrixRequest.nbytes, name='MatrixRequest')
+shmMatrixDataReady = shared_memory.SharedMemory(create=True, size=tempMatrixDataReady.nbytes, name='MatrixDataReady')
+matrixRequest = np.ndarray(tempMatrixRequest.shape, dtype=tempMatrixRequest.dtype, buffer=shmMatrixRequest.buf)
+matrixDataReady = np.ndarray(tempMatrixDataReady.shape, dtype=tempMatrixDataReady.dtype, buffer=shmMatrixDataReady.buf)
+# Use the values below.
+matrixRequest[:] = tempMatrixRequest[:]
+matrixDataReady[:] = tempMatrixDataReady[:]
+>>>>>>> Stashed changes
 
 
 @app.route("/")
@@ -147,9 +221,9 @@ def defusing():
 def get_chest_list():
     return jsonify({"result": action.chest_list})
 
-
 @app.route("/attack")
 def try_attack():
+<<<<<<< Updated upstream
     # player_rolls = []
     # diceRequest[0] = 2
     # # fill in player index 
@@ -161,6 +235,20 @@ def try_attack():
     #     diceData[0] = -1
         
     # result = action.attack(player_rolls[0], player_rolls[1])
+=======
+    player_rolls = []
+    
+    while len(player_rolls) < 2:
+        diceRequest[0] = 1
+        while(diceData[0] == -1):
+            pass
+        player_rolls.append(int(diceData[0]))
+        diceData[0] = -1
+        time.sleep(4)
+        
+    result = action.attack(player_rolls[0], player_rolls[1])
+    print(result)
+>>>>>>> Stashed changes
 
     # return jsonify({"result" : result})
 
@@ -199,6 +287,36 @@ def trigger_dice():
     print(f"We got a value: {dice_roll}")
     diceData[0] = -1
     return jsonify(value = int(dice_roll))
+
+@app.route("/validate-move/<int:currentPlayerIndex>", methods=['GET'])
+def validate_move(currentPlayerIndex):
+    matrixRequest[0] = 1
+    matrixRequest[1] = currentPlayerIndex + 1
+    timeout = time.time() + 10
+    while matrixDataReady[0] == 0:
+        if time.time() > timeout:
+            diceRequest[0] = 0
+            print("Timeout")
+            return jsonify({"message": "Timeout"}), 408
+        pass
+    
+    x = matrixDataReady[2]
+    y = matrixDataReady[3]
+
+
+    if matrixDataReady[0] == 1:
+        return jsonify({
+            'valid' : True,
+            'x_val' : x,
+            'y_val' : y
+        })
+    elif matrixDataReady[0] == -1:
+        return jsonify({
+            'valid': False,
+            'x_val' : x,
+            'y_val' : y
+        })
+
 
 @app.route("/get_winner", methods=["GET"])
 def get_winner():

@@ -12,13 +12,10 @@ import math
 # Site to help access webcam: https://www.opencvhelp.org/tutorials/advanced/how-to-access-webcam/
 # Site to help read dice with webcam: https://golsteyn.com/writing/dice
 
-file = open("shm_file.txt", "r")
-lines = [line.strip() for line in file]
-file.close()
+shmRequest_Name = 'DiceRequest'
+shmData_Name = 'DiceData'
+shmShutdown_Name = 'DiceShutdown'
 
-shmRequest_Name = lines[0]
-shmData_Name = lines[1]
-shmShutdown_Name = lines[2]
 existingRequest = shared_memory.SharedMemory(name=shmRequest_Name)
 existingData = shared_memory.SharedMemory(name=shmData_Name)
 existingShutdown = shared_memory.SharedMemory(name=shmShutdown_Name)

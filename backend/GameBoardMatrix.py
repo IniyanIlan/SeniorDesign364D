@@ -21,7 +21,7 @@ class player:
 
 players = []
 
-playerNum = 1 # default player number
+playerNum = 2 # default player number
 
 # Access the shared memory by name
 shm_name = 'PresentMatrix'  # Replace with actual shm.name from main process
@@ -49,7 +49,7 @@ pastMatrix = np.ndarray(array_shape, dtype=array_dtype, buffer=existing_shmMatri
 existingRequest = shared_memory.SharedMemory(name='MatrixRequest')
 existingData = shared_memory.SharedMemory(name='MatrixDataReady')
 matrixRequest = np.ndarray(2, dtype=np.int64, buffer=existingRequest.buf)
-matrixDataReady = np.ndarray(2, dtype=np.int64, buffer=existingData.buf)
+matrixDataReady = np.ndarray(4, dtype=np.int64, buffer=existingData.buf)
 existingDiceData = shared_memory.SharedMemory(name='DiceData')
 diceData = np.ndarray(1, dtype=np.int8, buffer=existingDiceData.buf)
 
@@ -86,7 +86,7 @@ def matrixInit():
     GPIO.setup(5, GPIO.IN, GPIO.PUD_DOWN)
     GPIO.setup(7, GPIO.IN, GPIO.PUD_DOWN)
     GPIO.setup(11, GPIO.IN, GPIO.PUD_DOWN)
-    #GPIO.setup(15, GPIO.IN, GPIO.PUD_DOWN)
+    GPIO.setup(15, GPIO.IN, GPIO.PUD_DOWN)
     GPIO.setup(19, GPIO.IN, GPIO.PUD_DOWN)
 
 
@@ -169,6 +169,9 @@ def sail(currentPlayer):
                 pastMatrix[:, :] = presentMatrix[:, :]
                 # ADD ANY EXTRA OUTPUT OPTIONS HERE
                 matrixDataReady[0] = 1
+                matrixDataReady[1] = player.playerNumber - 1
+                matrixDataReady[2] = player.x
+                matrixDataReady[3] = player.y
                 matrixRequest[0] = 0 # Turn off matrixRequest.
                 return
             else:
@@ -379,6 +382,7 @@ if __name__ == "__main__":
                 setPlayers(playerNum)
                 for player in players:
                     print(player)
+            
             
         # while(not GPIO.input(15)):
         #     if(GPIO.input(19)):

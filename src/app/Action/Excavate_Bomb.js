@@ -12,9 +12,10 @@ const Excavate_Bomb = () => {
     const currentPlayer = state.currentPlayer;
     const currentPlayerIndex = state.currentPlayerIndex;
     const randomNumber = state.randomNumber;
-    const [attemptsLeft, setAttemptsLeft] = useState(5) 
-    const [numPips, setNumPips] = useState(0)
+    const [attemptsLeft, setAttemptsLeft] = useState(5);
+    const [numPips, setNumPips] = useState(0);
     const [playerLost, setPlayerLost] = useState(false);
+    const [playerWon, setPlayerWon] = useState(false);
 
     const handleBackToGame = () => {
         navigate('/TurnTracking', { state: { 
@@ -42,7 +43,14 @@ const Excavate_Bomb = () => {
             const res = await axios.get("http://localhost:5001/defusal")
             setNumPips(res.data.value)
             console.log("Dice value:", res.data.value)
-            setAttemptsLeft((prevAttempt) => prevAttempt - 1)
+            if(res.data.value != randomNumber){
+                setAttemptsLeft((prevAttempt) => prevAttempt - 1)
+            }
+            else{
+                setPlayerWon(true)
+                handleGoldUpdate(50);
+            }
+            
         }
         catch(error){
             if (error.code === 'ECONNABORTED' || error.response?.status === 408) {
@@ -58,10 +66,7 @@ const Excavate_Bomb = () => {
     }
 
     useEffect(() => {
-        if(attemptsLeft > 0){
-            handleAttempt();
-        }
-        else{
+        if(attemptsLeft == 0){
             setPlayerLost(true)
             handleGoldUpdate(-100);
         }
@@ -70,13 +75,16 @@ const Excavate_Bomb = () => {
     return(
         <div className='center-container'>
             <div className='centered-content'>
-                <h1 className='title'>You Found a Bomb!</h1>
+                <h1 className='title'>You Found a Trapped Chest!</h1>
                 <div>
+                    Roll {randomNumber} to defuse! 
                     Attempts Remaining: {attemptsLeft}
                     {playerLost &&  <p>You failed to disengage the trap! -100 gold</p>}
+                    {playerWon && <p>You defused the trap! +50 gold</p>}
+                    <button className = "button" onClick={handleAttempt}>Attempt Defuse</button>
                 </div>
                 
-                <button onClick={handleBackToGame}>Back to Game</button>
+                <button className = "button" onClick={handleBackToGame}>Back to Game</button>
             </div>
         </div>
     )
