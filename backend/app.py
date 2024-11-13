@@ -16,8 +16,6 @@ CORS(app)
 leaderboard_dict = {}
 winning_gold = 500
 
-<<<<<<< Updated upstream
-=======
 # Shared Memory Stuff Starts Here
 
 try:
@@ -76,7 +74,6 @@ except FileNotFoundError:
 
 
 
->>>>>>> Stashed changes
 tempdiceRequest = np.array([0], dtype=np.int8)
 tempdiceData = np.array([-1], dtype=np.int8)
 tempShutdown = np.array([0], dtype=np.int8)
@@ -139,8 +136,6 @@ diceData[:] = tempdiceData[:]
 
 
 
-<<<<<<< Updated upstream
-=======
 # Data Ready/Request Flags For Matrix
 tempMatrixRequest = np.array([0, 0], dtype=np.int64)
 tempMatrixDataReady = np.array([0, 0, 0, 0], dtype=np.int64)
@@ -151,7 +146,6 @@ matrixDataReady = np.ndarray(tempMatrixDataReady.shape, dtype=tempMatrixDataRead
 # Use the values below.
 matrixRequest[:] = tempMatrixRequest[:]
 matrixDataReady[:] = tempMatrixDataReady[:]
->>>>>>> Stashed changes
 
 
 @app.route("/")
@@ -223,39 +217,29 @@ def get_chest_list():
 
 @app.route("/attack")
 def try_attack():
-<<<<<<< Updated upstream
-    # player_rolls = []
-    # diceRequest[0] = 2
-    # # fill in player index 
-    # while len(player_rolls) < 2:
-    #     diceRequest[0] = 1
-    #     while(diceData[0] == -1):
-    #         pass
-    #     player_rolls.append(diceData[0])
-    #     diceData[0] = -1
-        
-    # result = action.attack(player_rolls[0], player_rolls[1])
-=======
     player_rolls = []
     
-    while len(player_rolls) < 2:
-        diceRequest[0] = 1
-        while(diceData[0] == -1):
-            pass
-        player_rolls.append(int(diceData[0]))
-        diceData[0] = -1
-        time.sleep(4)
+    diceRequest[0] = 1
+    while(diceData[0] == -1):
+        pass
+    player_rolls.append(int(diceData[0]))
+    diceData[0] = -1
+    time.sleep(3)
+    diceRequest[0] = 1
+    while(diceData[0] == -1):
+        pass
+    player_rolls.append(int(diceData[0]))
+    diceData[0] = -1
         
     result = action.attack(player_rolls[0], player_rolls[1])
     print(result)
->>>>>>> Stashed changes
 
-    # return jsonify({"result" : result})
+    return jsonify({"result" : result})
 
 # FOR TESTING WITHOUT PI
-    return jsonify({
-            "result": 100
-            })
+    # return jsonify({
+    #         "result": 100
+    #         })
     
 
     
@@ -329,20 +313,6 @@ def get_winner():
 
 if __name__ == '__main__':
     print("Opening DiceReader file")
-    
-    #file = open("shm_file.txt", "w")
-    #file.truncate()
-    #file.write(shmRequest.name + "\n")
-    #file.write(shmDiceData.name+ "\n")
-    #file.write(shmShutdown.name+ "\n")
-    
-    #file.close()
-
-    # process = subprocess.Popen(['python3', '../backend/DiceReading_CurrentLightFaces.py', 
-    #                             shmRequest.name, shmDiceData.name, shmShutdown.name],preexec_fn=os.setpgrp)\
-
-    # Run Game Board Matrix code
-    #process = subprocess.Popen(['python3', '../backend/GameBoardMatrix.py'])
     
     app.run(debug=True, port=5001)
     

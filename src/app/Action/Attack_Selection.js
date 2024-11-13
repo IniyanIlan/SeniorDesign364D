@@ -44,6 +44,7 @@ const handleAttack = async () => {
       console.log(response);
 
       if (response.ok) {
+        console.log(data.result)
           setAttackerGold(data.result)
           setDefenderGold(data.result * -1)
           const attackG = data.result

@@ -43,14 +43,14 @@ const Excavate_Bomb = () => {
             const res = await axios.get("http://localhost:5001/defusal")
             setNumPips(res.data.value)
             console.log("Dice value:", res.data.value)
-            if(res.data.value != randomNumber){
-                setAttemptsLeft((prevAttempt) => prevAttempt - 1)
+            if(res.data.value != randomNumber && attemptsLeft > 0){
+                setAttemptsLeft(
+                    (prevAttempt) => prevAttempt - 1)
             }
-            else{
+            else if(res.data.value == randomNumber){
                 setPlayerWon(true)
                 handleGoldUpdate(50);
-            }
-            
+            } 
         }
         catch(error){
             if (error.code === 'ECONNABORTED' || error.response?.status === 408) {
@@ -65,12 +65,23 @@ const Excavate_Bomb = () => {
 
     }
 
+    const handleLoss = async () =>{
+        if(playerLost){
+            handleGoldUpdate(-100)
+        }
+    }
+
     useEffect(() => {
         if(attemptsLeft == 0){
-            setPlayerLost(true)
-            handleGoldUpdate(-100);
+            setPlayerLost(true);
         }
-    },[attemptsLeft, playerLost]);
+    },[attemptsLeft]);
+
+    useEffect(() =>{
+        if(playerLost){
+            handleGoldUpdate(-100)
+        }
+    }, [playerLost])
 
     return(
         <div className='center-container'>
