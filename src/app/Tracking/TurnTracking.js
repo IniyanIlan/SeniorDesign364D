@@ -12,7 +12,14 @@ const TurnTracking = () => {
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0); // Track current player index
   const navigate = useNavigate();
 
+  const playButtonSound = () => {
+    const audio = new Audio('/click_3.mp3');
+    audio.play();
+    // playButtonSound();
+  };
+
   const handleRollDice = () => {
+    playButtonSound()
     console.log("handleRollDice player:", playerNames[currentPlayerIndex]);
     navigate('/StartGame', { state: { playerNames, currentPlayerIndex, nextTurn: false, chestList} });
   };
@@ -52,7 +59,7 @@ const TurnTracking = () => {
     <div>
       <div className = "banner">
                 <a href="/Rules" target="_blank">Rule Book</a>
-                <a href="/StartGame">Game Log</a>
+                {/* <a href="/StartGame">Game Log</a> */}
                 <a href = "/NumberPlayer">Restart Game</a>
                 <a href = "/" className = "quit">Quit</a>
       </div>
