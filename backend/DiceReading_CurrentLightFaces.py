@@ -94,27 +94,30 @@ detector = cv2.SimpleBlobDetector_create(params)
 
 def camera_loop(picam2):
     num_pips = 0
+    frameCount = 0
+    update_interval = 30  # Show every 10th frame
     while(diceRequest[0] == 1):
         # Grab the latest image from the video feed
         frame = picam2.capture_array()
         frame = (frame.astype(np.float32)) * 0.75
         frame = frame.astype(np.uint8)
-        
+        cv2.imshow("frame", frame)
         blobs = get_blobs(detector, frame)
         dice = get_dice_from_blobs(blobs)
         out_frame = overlay_info(frame, dice, blobs)
 
         # Shows frame applet
-        cv2.imshow("frame", frame)
-
+        
+        #time.sleep(0.1)
         # 
-        res = cv2.waitKey(100)
+        res = cv2.waitKey(2)
         #time.sleep(1)
         if dice:        # Breaks the loop when a die is detected. Also works for multiple dice
             # After detecting dice, 5 more reads
-            time.sleep(.2)
+            #time.sleep(.2)
+            
             sumPip=0
-            for x in range (15):
+            for x in range (50):
                 frame = picam2.capture_array()
                 frame = (frame.astype(np.float32)) * 0.75
                 frame = frame.astype(np.uint8)
@@ -122,18 +125,14 @@ def camera_loop(picam2):
                 dice = get_dice_from_blobs(blobs)
                 overlay_info(frame, dice, blobs)
                 cv2.imshow("frame", frame)
-                cv2.waitKey(100)
+                res = cv2.waitKey(2)
                 num_pips = sum(d[0] for d in dice)
                 sumPip = sumPip + num_pips
-            avePip = math.ceil(sumPip / 15) 
+            avePip = math.ceil(sumPip / 50) 
             # time.sleep(1)
             # cv2.imshow("frame", frame)
             # time.sleep(.5)
-
-            
-            print("From DiceReader=======================================")
-            print(avePip)
-            print("=======================================")
+            print(f"Average Pips Found:{avePip}")
             diceRequest[0] = 0
             diceData[0] = avePip
         #cv2.destroyAllWindows()
