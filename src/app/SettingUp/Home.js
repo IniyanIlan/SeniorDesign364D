@@ -5,18 +5,26 @@ import { useNavigate } from "react-router";
 
 const Home = () => {
   const navigate = useNavigate();
+
+  const playButtonSound = () => {
+    const audio = new Audio('/click_3.mp3');
+    audio.play();
+    // playButtonSound();
+  };
+
   const handleEnterPlayGameButton = () => {
-    // Navigate to another page
+    playButtonSound();
     navigate('/NumberPlayer');
   };
   const handleRulesButton = () => {
-    // Navigate to another page
+    playButtonSound();
     navigate('/Rules');
   };
   const handleGameDemo = () => {
-    // Navigate to another page
+    playButtonSound();
     window.location.href = "https://www.youtube.com/watch?v=eR07kFFZ_iU";
   };
+  
   return (
     <div className="container">
       <h1 className="title">Welcome to Pirate Adventure!</h1>

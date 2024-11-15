@@ -10,6 +10,12 @@ const PlayerNameEntry = () => {
   const [playerNames, setPlayerNames] = useState(Array(numberOfPlayers).fill(''));
   const navigate = useNavigate();
 
+  const playButtonSound = () => {
+    const audio = new Audio('/click_3.mp3');
+    audio.play();
+    // playButtonSound();
+  };
+
   const handleInputChange = (index, event) => {
     const newPlayerNames = [...playerNames];
     newPlayerNames[index] = event.target.value;
@@ -38,6 +44,7 @@ const PlayerNameEntry = () => {
   //   });
   // };
   const handleSubmit = async (event) => {
+    playButtonSound()
     event.preventDefault();
 
     try {

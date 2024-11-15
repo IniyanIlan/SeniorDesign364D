@@ -7,7 +7,13 @@ const NumberPlayer = () => {
   const navigate = useNavigate();
   const maxPlayers = 6;
 
+  const playButtonSound = () => {
+    const audio = new Audio('/click_3.mp3');
+    audio.play();
+  };
+
   const handleSubmit = (event) => {
+    playButtonSound()
     event.preventDefault();
     if (numberOfPlayers <= maxPlayers) {
       fetch("http://localhost:5001/")

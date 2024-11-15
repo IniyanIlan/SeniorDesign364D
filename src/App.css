@@ -7,6 +7,23 @@
 }
 /* style.css */
 
+.speaker-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1000; /* Ensure it stays on top */
+  color: #333; /* Adjust color as needed */
+  transition: transform 0.2s;
+}
+
+.speaker-button:hover {
+  transform: scale(1.2); /* Slight zoom effect on hover */
+}
+
 body, html {
   overflow-x: hidden;
 }

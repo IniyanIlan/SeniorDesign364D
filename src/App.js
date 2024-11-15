@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './app/SettingUp/Home';
 import PlayerNameEntry from './app/SettingUp/PlayerNameEntry';
@@ -14,8 +14,25 @@ import Winner from './app/Tracking/Winner';
 import Attack_Selection from './app/Action/Attack_Selection';
 
 function App() {
+  const [isPlaying, setIsPlaying] = useState(true);
+  const audioRef = useRef(null);
+
+  const toggleMusic = () => {
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
   return (
     <div className="App">
+      <audio ref={audioRef} src="/background-music.mp3" autoPlay loop />
+
+      <button className="speaker-button" onClick={toggleMusic}>
+        {isPlaying ? '🔊' : '🔇'}
+      </button>
+      
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
