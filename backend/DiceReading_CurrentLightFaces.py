@@ -109,13 +109,27 @@ def camera_loop(picam2):
 
         # 
         res = cv2.waitKey(100)
-        time.sleep(1)
+        #time.sleep(1)
         if dice:        # Breaks the loop when a die is detected. Also works for multiple dice
+            # After detecting dice, 5 more reads
+            time.sleep(.2)
             sumPip=0
-            for x in range (5):
+            for x in range (15):
+                frame = picam2.capture_array()
+                frame = (frame.astype(np.float32)) * 0.75
+                frame = frame.astype(np.uint8)
+                blobs = get_blobs(detector, frame)
+                dice = get_dice_from_blobs(blobs)
+                overlay_info(frame, dice, blobs)
+                cv2.imshow("frame", frame)
+                cv2.waitKey(100)
                 num_pips = sum(d[0] for d in dice)
                 sumPip = sumPip + num_pips
-            avePip = math.ceil(sumPip / 5)    
+            avePip = math.ceil(sumPip / 15) 
+            # time.sleep(1)
+            # cv2.imshow("frame", frame)
+            # time.sleep(.5)
+
             
             print("From DiceReader=======================================")
             print(avePip)
@@ -131,24 +145,27 @@ def camera_loop(picam2):
     #cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    picam2 = Picamera2()
-    picam2.start()
-    #picam2.start_preview(Preview=None)
-    print("Starting Pi Cam....")
-    #picam2.start()
-    print("Capturing camera content.....")
-    while(shutdown[0] == 0): # might add shutdown flag later
-        camera_loop(picam2)
-        cv2.destroyAllWindows()
-    #picam2.close()
-    # Close shared memory
-    existingRequest.close()
-    existingData.close()
-    existingShutdown.close()
-    # Unregister from manager
-    unregister(existingRequest._name, 'shared_memory')
-    unregister(existingData._name, 'shared_memory')
-    unregister(existingShutdown._name, 'shared_memory')
-    print("Camera closed")
+    try:
+            
+        picam2 = Picamera2()
+        picam2.start()
+        #picam2.start_preview(Preview=None)
+        print("Starting Pi Cam....")
+        #picam2.start()
+        print("Capturing camera content.....")
+        while(shutdown[0] == 0): # might add shutdown flag later
+            camera_loop(picam2)
+            cv2.destroyAllWindows()
+    except KeyboardInterrupt:
+        picam2.close()
+        # Close shared memory
+        existingRequest.close()
+        existingData.close()
+        existingShutdown.close()
+        # Unregister from manager
+        unregister(existingRequest._name, 'shared_memory')
+        unregister(existingData._name, 'shared_memory')
+        unregister(existingShutdown._name, 'shared_memory')
+        print("Camera closed")
 
 

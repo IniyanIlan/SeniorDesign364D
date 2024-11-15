@@ -258,7 +258,7 @@ def try_attack():
 @app.route("/trigger-dice", methods=['GET'])
 def trigger_dice():
     diceRequest[0] = 1
-    timeout = time.time() + 10
+    timeout = time.time() + 25
     print("API waiting for result.....")
     while diceData[0] == -1:
         if time.time() > timeout:
