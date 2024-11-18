@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Leaderboard from './Leaderboard';
@@ -13,9 +13,43 @@ const Game = () => {
     const navigate = useNavigate();
     const { playerNames, currentPlayerIndex, chestList } = state;
     const currentPlayer = playerNames[currentPlayerIndex];
+    const [leaderboard, setLeaderboard] = useState([]);
+    const [otherPlayers, setOtherPlayers] = useState([]);
 
+  useEffect(() => {
+    // Fetch player scores from the backend
+    const fetchScores = async () => {
+      try {
+        const response = await axios.get("http://localhost:5001/get_leaderboard");
+        setLeaderboard(response.data);
+        console.log("Fetch sorted_leaderboard data:", response.data);
+      } catch (error) {
+        console.error("Error fetching leaderboard:", error);
+      }
+    };
+
+    fetchScores();
+  }, []);
+    const playersWithPositiveGold = leaderboard
+    .filter(([playerName, gold]) => gold > 0) // Keep only players with gold > 0
+    .map(([playerName]) => playerName); // Extract just the names
     // Filter playerNames to exclude the currentPlayer
-    const otherPlayers = playerNames.filter((_, index) => index !== currentPlayerIndex);
+    useEffect(() => {
+        if (leaderboard.length > 0) {
+            // Filter playerNames based on the leaderboard data
+            const playersWithPositiveGold = leaderboard
+                .filter(([playerName, gold]) => gold > 0) // Keep only players with gold > 0
+                .map(([playerName]) => playerName); // Extract just the names
+
+            const filteredPlayers = playerNames.filter(
+                (name, index) =>
+                    index !== currentPlayerIndex && playersWithPositiveGold.includes(name)
+            );
+
+            setOtherPlayers(filteredPlayers); // Update the filtered players
+        }
+    }, [leaderboard, playerNames, currentPlayerIndex]);
+   
 
     const handleDone = () => {
         navigate('/TurnTracking', { state: { 

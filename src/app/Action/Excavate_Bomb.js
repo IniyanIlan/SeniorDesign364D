@@ -24,7 +24,7 @@ const Excavate_Bomb = () => {
             nextTurn: true } });
     }; 
 
-    const handleGoldUpdate = async (amount) => {
+    const handleGoldUpdate = async (amount) => { 
     try {
         await axios.post("http://localhost:5001/update_gold", {
             playerName: currentPlayer,
@@ -49,7 +49,7 @@ const Excavate_Bomb = () => {
             }
             else if(res.data.value == randomNumber){
                 setPlayerWon(true)
-                handleGoldUpdate(50);
+                handleGoldUpdate(150); 
             } 
         }
         catch(error){
