@@ -59,16 +59,24 @@ try:
     existing_shm = shared_memory.SharedMemory(name='MatrixDataReady')
     existing_shm.unlink()  # Unlink the existing shared memory block
     existing_shm.close()   # Close the existing shared memory block
+except FileNotFoundError:
+    # If not found, it means no shared memory block by that name exists
+    pass
+
+try:
     # Try to connect to an existing shared memory block
     existing_shm = shared_memory.SharedMemory(name='DiceRequest')
     existing_shm.unlink()  # Unlink the existing shared memory block
     existing_shm.close()   # Close the existing shared memory block
+except FileNotFoundError:
+    pass
+
+try:
     # Try to connect to an existing shared memory block
     existing_shm = shared_memory.SharedMemory(name='DiceShutdown')
     existing_shm.unlink()  # Unlink the existing shared memory block
     existing_shm.close()   # Close the existing shared memory block
 except FileNotFoundError:
-    # If not found, it means no shared memory block by that name exists
     pass
 
 
