@@ -11,9 +11,11 @@ def initialize_chests():
     global chest_list
     chest_list = []  # Reset chest list
     # number of available chests is 1.5 times the number of players
-    num_chests = math.ceil(num_players * 1.5)
-    for i in range(num_chests // 2):  # Dividing by 2 to account for pairs (treasure, trap)
+    num_chests = 24
+    for i in range(math.ceil(num_chests*0.65)):  
         chest_list.append(0)  # 0 for treasure
+        num_chests = num_chests - 1
+    for i in range(num_chests):
         chest_list.append(1)  # 1 for trap
 
 def get_chest_list():

@@ -58,7 +58,8 @@ const handleAttack = async () => {
           } else if (data.result < 0) {
               alert(defender + " has successfully defended against the attack!")
           } else {
-              alert("The tide has favored both sides")
+              alert("The tide has favored both sides. " + attacker + " has been given a reward for their courage.")
+              setAttackerGold(50)
           }
       } else {
           setMessage("Attack failed.");
