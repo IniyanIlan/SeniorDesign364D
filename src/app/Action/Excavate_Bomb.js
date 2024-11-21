@@ -91,7 +91,7 @@ const Excavate_Bomb = () => {
                     Roll {randomNumber} to defuse! 
                     Attempts Remaining: {attemptsLeft}
                     {playerLost &&  <p>You failed to disengage the trap! -100 gold</p>}
-                    {playerWon && <p>You defused the trap! +50 gold</p>}
+                    {playerWon && <p>You defused the trap! +150 gold</p>}
                     <button className = "button" onClick={handleAttempt}>Attempt Defuse</button>
                 </div>
                 

@@ -10,6 +10,8 @@ function Attack_Selection() {
   const [message, setMessage] = useState("");
   const { state } = location;
   const { attacker, defender, playerNames, currentPlayer, currentPlayerIndex } = state || {};
+  const [attackerRoll, setAttackerRoll] = useState(0)
+  const [defenderRoll, setDefenderRoll] = useState(0)
   const [attackerGold, setAttackerGold] = useState(0)
   const [defenderGold, setDefenderGold] = useState(0)
 
@@ -35,11 +37,11 @@ const handleGoldUpdate = async (amount, player) => {
   }
 };
 
-const handleAttack = async () => {
+const handleWinner = async () => {
   console.log(playerNames)
   try {
       console.log("try success");
-      const response = await fetch("http://localhost:5001/attack"); // Call the backend API
+      const response = await fetch(`http://localhost:5001/attack/${attackerRoll}/${defenderRoll}`); // Call the backend API
       const data = await response.json(); // Parse the JSON response
       console.log(response);
 
@@ -58,8 +60,9 @@ const handleAttack = async () => {
           } else if (data.result < 0) {
               alert(defender + " has successfully defended against the attack!")
           } else {
-              alert("The tide has favored both sides. " + attacker + " has been given a reward for their courage.")
+              alert("The tide sways both sides. " + attacker + " has been given a reward for their courage.")
               setAttackerGold(50)
+              handleGoldUpdate(50, attacker)
           }
       } else {
           setMessage("Attack failed.");
@@ -70,12 +73,49 @@ const handleAttack = async () => {
   }
 };
 
+const handleAttack = async () => {
+  try{
+    // const res = await axios.get("http://localhost:5001/trigger-dice");
+    // setAttackerRoll(res.data.value)
+    setAttackerRoll(6)
+
+  }
+  catch(error){
+    console.error("Error during attack:", error);
+    setAttackerRoll(0)
+    setMessage("An error occurred.");
+  }
+}
+
+const handleDefense = async () => {
+  try{
+    // const res = await axios.get("http://localhost:5001/trigger-dice");
+    // setDefenderRoll(res.data.value)
+    setDefenderRoll(1)
+
+  }
+  catch(error){
+    console.error("Error during attack:", error);
+    setDefenderRoll(0)
+    setMessage("An error occurred.");
+  }
+  
+}
+
   useEffect(() => {
     if(attackerGold != 0 || defenderGold != 0){
-      console.log("Changing god amount")
+      console.log("Changing gold amount")
     }
 
   },[attackerGold, defenderGold]);
+
+  useEffect(() => {
+    if(attackerRoll != 0 && defenderRoll != 0){
+      console.log("Calculating Winner")
+      handleWinner()
+    }
+
+  },[attackerRoll, defenderRoll]);
 
   return (
     <div className="combat-container">
@@ -94,6 +134,10 @@ const handleAttack = async () => {
               className="gold-input"
             />
           </p>
+          <button className="button" onClick={handleAttack}>
+            Attack!
+          </button>
+          {attackerRoll != 0 && <p>{attacker} rolled a {attackerRoll}</p>}
         </div>
 
         {/* Defender Section */}
@@ -109,16 +153,17 @@ const handleAttack = async () => {
               className="gold-input"
             />
           </p>
+          <button className="button" onClick={handleDefense}>
+            Defend!
+          </button>
+          {defenderRoll != 0 && <p>{defender} rolled a {defenderRoll}</p>}
         </div>
       </div>
-      <button className="button" onClick={handleAttack}>
-        Attack!
-      </button>
-
       {/* change this to trigger dice */}
       <button className="button" onClick={handleBackToGame}>
         back to game
       </button>
+      
     </div>
   );
 }

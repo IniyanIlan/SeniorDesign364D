@@ -223,25 +223,10 @@ def defusing():
 def get_chest_list():
     return jsonify({"result": action.chest_list})
 
-@app.route("/attack")
-def try_attack():
-    player_rolls = []
-    
-    diceRequest[0] = 1
-    while(diceData[0] == -1):
-        pass
-    player_rolls.append(int(diceData[0]))
-    diceData[0] = -1
-    time.sleep(3)
-    diceRequest[0] = 1
-    while(diceData[0] == -1):
-        pass
-    player_rolls.append(int(diceData[0]))
-    diceData[0] = -1
-        
-    result = action.attack(player_rolls[0], player_rolls[1])
+@app.route("/attack/<int:attackRoll>/<int:defenderRoll>", methods=["GET"])
+def try_attack(attackRoll, defenderRoll):
+    result = action.attack(attackRoll, defenderRoll)
     print(result)
-
     return jsonify({"result" : result})
 
 # FOR TESTING WITHOUT PI

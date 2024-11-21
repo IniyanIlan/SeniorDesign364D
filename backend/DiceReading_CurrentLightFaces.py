@@ -115,9 +115,17 @@ def camera_loop(picam2):
         if dice:        # Breaks the loop when a die is detected. Also works for multiple dice
             # After detecting dice, 5 more reads
             #time.sleep(.2)
-            
+            for i in range(3):
+                frame = picam2.capture_array()
+                frame = (frame.astype(np.float32)) * 0.75
+                frame = frame.astype(np.uint8)
+                blobs = get_blobs(detector, frame)
+                dice = get_dice_from_blobs(blobs)
+                overlay_info(frame, dice, blobs)
+                cv2.imshow("frame", frame)
+                res = cv2.waitKey(2)
             sumPip=0
-            for x in range (50):
+            for x in range (15):
                 frame = picam2.capture_array()
                 frame = (frame.astype(np.float32)) * 0.75
                 frame = frame.astype(np.uint8)
@@ -128,7 +136,7 @@ def camera_loop(picam2):
                 res = cv2.waitKey(2)
                 num_pips = sum(d[0] for d in dice)
                 sumPip = sumPip + num_pips
-            avePip = math.ceil(sumPip / 50) 
+            avePip = math.ceil(sumPip / 15) 
             # time.sleep(1)
             # cv2.imshow("frame", frame)
             # time.sleep(.5)
