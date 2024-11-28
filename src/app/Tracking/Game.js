@@ -48,7 +48,7 @@ const Game = () => {
 
             setOtherPlayers(filteredPlayers); // Update the filtered players
         }
-    }, [leaderboard, playerNames, currentPlayerIndex]);
+    }, [leaderboard, playerNames]);
    
 
     const handleDone = () => {

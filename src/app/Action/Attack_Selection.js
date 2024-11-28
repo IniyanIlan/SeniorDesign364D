@@ -38,7 +38,7 @@ const handleGoldUpdate = async (amount, player) => {
 };
 
 const handleWinner = async () => {
-  console.log(playerNames)
+  console.log("Handling winner")
   try {
       console.log("try success");
       const response = await fetch(`http://localhost:5001/attack/${attackerRoll}/${defenderRoll}`); // Call the backend API
@@ -75,9 +75,10 @@ const handleWinner = async () => {
 
 const handleAttack = async () => {
   try{
-    // const res = await axios.get("http://localhost:5001/trigger-dice");
-    // setAttackerRoll(res.data.value)
-    setAttackerRoll(6)
+    console.log("From attack_selection.js " + defender)
+    const res = await axios.get("http://localhost:5001/trigger-dice");
+    setAttackerRoll(res.data.value)
+    // setAttackerRoll(6)
 
   }
   catch(error){
@@ -89,13 +90,13 @@ const handleAttack = async () => {
 
 const handleDefense = async () => {
   try{
-    // const res = await axios.get("http://localhost:5001/trigger-dice");
-    // setDefenderRoll(res.data.value)
-    setDefenderRoll(1)
+    const res = await axios.get("http://localhost:5001/trigger-dice");
+    setDefenderRoll(res.data.value)
+    // setDefenderRoll(1)
 
   }
   catch(error){
-    console.error("Error during attack:", error);
+    console.error("Error during defense:", error);
     setDefenderRoll(0)
     setMessage("An error occurred.");
   }
