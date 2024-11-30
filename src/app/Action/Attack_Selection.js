@@ -82,6 +82,9 @@ const handleAttack = async () => {
 
   }
   catch(error){
+    if (error.code === 'ECONNABORTED' || error.response?.status === 408) {
+      setMessage("Timeout error: Click the attack button to try again!");
+  }
     console.error("Error during attack:", error);
     setAttackerRoll(0)
     setMessage("An error occurred.");
@@ -97,6 +100,10 @@ const handleDefense = async () => {
   }
   catch(error){
     console.error("Error during defense:", error);
+    if (error.code === 'ECONNABORTED' || error.response?.status === 408) {
+      setMessage("Timeout error: Click the defend button to try again!");
+  }
+    console.error("Error during attack:", error);
     setDefenderRoll(0)
     setMessage("An error occurred.");
   }
@@ -126,15 +133,17 @@ const handleDefense = async () => {
         <div className="combat-card">
           <h2>Attacker</h2>
           <p className="character-name">{attacker}</p>
-          <p>
-            Gold:{" "}
-            <input
-              type="text"
-              readOnly
-              value={attackerGold}
-              className="gold-input"
-            />
-          </p>
+          {attackerGold && (
+              <p>
+              Gold:{" "}
+              <input
+                  type="text"
+                  readOnly
+                  value={attackerGold}
+                  className="gold-input"
+              />
+              </p>
+          )}
           <button className="button" onClick={handleAttack}>
             Attack!
           </button>
@@ -145,15 +154,17 @@ const handleDefense = async () => {
         <div className="combat-card">
           <h2>Defender</h2>
           <p className="character-name">{defender}</p>
-          <p>
-            Gold:{" "}
-            <input
-              type="text"
-              readOnly
-              value={defenderGold}
-              className="gold-input"
-            />
-          </p>
+          {defenderGold && (
+              <p>
+              Gold:{" "}
+              <input
+                  type="text"
+                  readOnly
+                  value={defenderGold}
+                  className="gold-input"
+              />
+              </p>
+          )}
           <button className="button" onClick={handleDefense}>
             Defend!
           </button>

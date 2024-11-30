@@ -5,6 +5,7 @@ import math
 
 num_players = 6 #change this whenever we get information from SettingUp
 chest_list = []
+random.seed(None) # randomness on system entropy (makes it more random)
 
 
 def initialize_chests():
@@ -28,9 +29,8 @@ def excavate():
     if len(chest_list) == 0:
         print("No more chests to excavate!")
         return -1
-    idx = random.randint(0, len(chest_list) - 1)
-    result = chest_list[idx]
-    chest_list.pop(idx)
+    random.shuffle(chest_list)  
+    result = chest_list.pop() 
     if result == 0:
         print("You found a treasure!")
     else:
@@ -49,31 +49,11 @@ def excavate():
 #         return 1
 def attack(player1_roll, player2_roll):
     difference = player1_roll - player2_roll
-    return difference * 25
+    return difference * 75
     
 
 def main():
-    initialize_chests()
-    print(chest_list)
-    excavate()
-    print(chest_list)
-    excavate()
-    print(chest_list)
-    excavate()
-    print(chest_list)
-    excavate()
-    print(chest_list)
-    excavate()
-    print(chest_list)
-    excavate()
-    print(chest_list)
-    excavate()
-    print(chest_list)
-    excavate()
-    print(chest_list)
-    excavate()
-    print(chest_list)
-    attack()
-
+    print("main")
+ 
 if __name__ == "__main__":
     main()
