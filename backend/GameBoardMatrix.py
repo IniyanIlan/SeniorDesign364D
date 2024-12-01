@@ -25,15 +25,21 @@ class Node:
     validHexagons = []
     nodeNumberHex = -1
     isHexNode = True
-    def __init__(self, mapping, validHexagons, NodeNumberHex):
+    def __init__(self, mapping, validHexagons=[], NodeNumberHex=-1, isHexNode=True):
         self.mapping = mapping
         self.validHexagons = validHexagons
         self.nodeNumberHex = NodeNumberHex
-
-    def __init__(self, mapping):
-        self.mapping = mapping
+        self.isHexNode = isHexNode
+    def __str__(self):
+        return f"{self.nodeNumberHex}"
+    def __repr__(self):
+        if(self.nodeNumberHex < 10):
+            return f" {self.nodeNumberHex}"
+        else:
+            return f"{self.nodeNumberHex}"
     
-    
+# Colors-- Their index represents the player number as well
+playerColors = ['Red', 'Orange', 'Blue', 'Purple', 'Gold', 'Pink']
 
 
 # This list is purely to reset all nodes once a search is completed
@@ -45,31 +51,32 @@ players = []
 playerNum = 2 # default player number
 
 # Representation of the Hexagon game board and its mappings to the sensor matrix
-lookUpTableHexagon = [ [0]*9 for i in range(9)]
+lookUpTableHexagon = [ [0]*11 for i in range(12)]
+#print(lookUpTableHexagon)
 # Row 0
-lookUpTableHexagon[0] = [0, 0, 0, 0, Node(None, [1], 2), 0, 0, 0, 0]
+lookUpTableHexagon[0] = [0, 0, 0, 0, 0, Node(None, [1], 2), 0, 0, 0, 0, 0]
 # Row 1
-lookUpTableHexagon[1] = [0, 0, 0, Node(None, [1], 1), 0, Node(None, [1], 3), 0, 0, 0]
+lookUpTableHexagon[1] = [0, 0, 0, 0, Node(None, [1], 1), 0, Node(None, [1], 3), 0, 0, 0, 0]
 # Row 2
-lookUpTableHexagon[2] = [0, Node(None, [2], 4), 0, Node(None, [1,3], 6), 0, Node(None, [1, 4], 8), 0, Node(None, [5], 10), 0]
+lookUpTableHexagon[2] = [0, 0, Node(None, [2], 4), 0, Node(None, [1,3], 6), 0, Node(None, [1, 4], 8), 0, Node(None, [5], 10), 0, 0]
 # Row 3
-lookUpTableHexagon[3] = [Node(None, [2], 12), 0, Node(None, [2, 3], 5), 0, Node(None, [3, 4], 7), 0, Node(None, [4, 5], 9), 0, Node(None, [5], 11)]
+lookUpTableHexagon[3] = [0, Node(None, [2], 12), 0, Node(None, [2, 3], 5), 0, Node(None, [3, 4], 7), 0, Node(None, [4, 5], 9), 0, Node(None, [5], 11), 0]
 # Row 4
-lookUpTableHexagon[4] = [Node(None, [2, 6], 19), 0, Node(None, [2, 3, 7], 13), 0, Node(None, [3, 4, 8], 15), 0, Node(None, [4, 9, 5], 18), 0, 0] # Last node is purposefully crossed out
+lookUpTableHexagon[4] = [0, Node(None, [2, 6], 19), 0, Node(None, [2, 3, 7], 13), 0, Node(None, [3, 4, 8], 15), 0, Node(None, [4, 9, 5], 18), 0, 0, 0] # Last node is purposefully crossed out
 # Row 5
-lookUpTableHexagon[5] = [0, Node(None, [2, 6, 7], 20), 0, Node(None, [3, 7, 8], 14), 0, Node(None, [4, 8, 9], 16), 0, Node(None, [5, 9, 10], 17), 0]
+lookUpTableHexagon[5] = [0, 0, Node(None, [2, 6, 7], 20), 0, Node(None, [3, 7, 8], 14), 0, Node(None, [4, 8, 9], 16), 0, Node(None, [5, 9, 10], 17), 0, 0]
 # Row 6
-lookUpTableHexagon[6] = [0, Node(None, [6, 7, 11], 27), 0, Node(None, [7, 8, 12], 21), 0, Node(None, [8, 9, 13], 23), 0, Node(None, [9, 10, 14], 25), 0]
+lookUpTableHexagon[6] = [0, 0, Node(None, [6, 7, 11], 27), 0, Node(None, [7, 8, 12], 21), 0, Node(None, [8, 9, 13], 23), 0, Node(None, [9, 10, 14], 25), 0, 0]
 # Row 7
-lookUpTableHexagon[7] = [0, 0, Node(None, [7, 11, 12], 32), 0, Node(None, [8, 12, 13], 22), 0, Node(None, [9, 13, 14], 24), 0, Node(None, [9, 10, 14], 25)] # Node deleted here
+lookUpTableHexagon[7] = [0, 0, 0, Node(None, [7, 11, 12], 32), 0, Node(None, [8, 12, 13], 22), 0, Node(None, [9, 13, 14], 24), 0, Node(None, [9, 10, 14], 25), 0] # Node deleted here
 # Row 8
-lookUpTableHexagon[8] = [Node(None, [11], 39), 0, Node(None, [11, 12, 15], 33), 0, Node(None, [12, 13, 16], 28), 0, Node(None, [13, 14, 17], 30), 0, Node(None, [14], 40)]
+lookUpTableHexagon[8] = [0, Node(None, [11], 39), 0, Node(None, [11, 12, 15], 33), 0, Node(None, [12, 13, 16], 28), 0, Node(None, [13, 14, 17], 30), 0, Node(None, [14], 40), 0]
 # Row 9
-lookUpTableHexagon[9] = [0, Node(None, [11, 15], 38), 0, Node(None, [12, 15, 16], 34), 0, Node(None, [13, 16, 17], 29), 0, Node(None, [14, 17], 31), 0]
+lookUpTableHexagon[9] = [0, 0, Node(None, [11, 15], 38), 0, Node(None, [12, 15, 16], 34), 0, Node(None, [13, 16, 17], 29), 0, Node(None, [14, 17], 31), 0, 0]
 # Row 10
-lookUpTableHexagon[10] = [0, 0, 0, Node(None, [15, 16], 37), 0, Node(None, [16, 17], 35), 0, 0, 0]
+lookUpTableHexagon[10] = [0, 0, 0, 0, Node(None, [15, 16], 37), 0, Node(None, [16, 17], 35), 0, 0, 0, 0]
 # Row 11
-lookUpTableHexagon[11] = [0, 0, 0, 0, Node(None, [16], 36), 0, 0, 0, 0]
+lookUpTableHexagon[11] = [0, 0, 0, 0, 0, Node(None, [16], 36), 0, 0, 0, 0, 0]
 
 
 # This list is purely to reset all nodes once a search is completed
@@ -82,7 +89,17 @@ hexagonNodes = []
 # Representation of the sensor matrix and its mapping to the hexagon matrix
 lookUpTableSensors = [ [0]*5 for i in range(8)]
 
-lookUpTableSensors[0] = [Node()]
+## TODO: FILL OUT THE REST OF THIS WHEN PCB IS FULLY ASSEMBLED
+# lookUpTableSensors[0] = [Node(mapping= , isHexNode=False), Node(mapping= , isHexNode=False), Node(mapping= , isHexNode=False), Node(mapping= , isHexNode=False), Node(mapping= , isHexNode=False)]
+# lookUpTableSensors[1] = [Node(mapping= , isHexNode=False), Node(mapping= , isHexNode=False), Node(mapping= , isHexNode=False), Node(mapping= , isHexNode=False), Node(mapping= , isHexNode=False)]
+# lookUpTableSensors[2] = [Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False)]
+# lookUpTableSensors[3] = [Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False)]
+# lookUpTableSensors[4] = [Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False)]
+# lookUpTableSensors[5] = [Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False)]
+# lookUpTableSensors[6] = [Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False)]
+# lookUpTableSensors[7] = [Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False), Node(mapping= None, isHexNode=False)]
+
+
 
 # Access the shared memory by name
 shm_name = 'PresentMatrix'  # Replace with actual shm.name from main process
@@ -304,11 +321,15 @@ def getDistanceMoved(player, newPos):
         (0, -1),  # Left
         (0, 1),   # Right
         (-1, 1),  # Top-right
+        (-1, -1), # Top-left
         (1, -1),  # Bottom-left
+        (1, 1)    # Bottom-right
     ]
         
-    hexagonEndPos = lookUpTableSensors[newPos[0]][newPos[1]].mapping
-    hexagonBeginPos = lookUpTableSensors[player.x][player.y].mapping
+    #hexagonEndPos = lookUpTableSensors[newPos[0]][newPos[1]].mapping
+    #hexagonBeginPos = lookUpTableSensors[player.x][player.y].mapping
+    hexagonBeginPos = (0, 5)
+    hexagonEndPos = (7, 9)
     # BFS :)
     queue = deque([(hexagonBeginPos, 0)])  # (current_node, distance)
     visited = set()
@@ -316,7 +337,7 @@ def getDistanceMoved(player, newPos):
 
     while queue:
         (current_x, current_y), distance = queue.popleft()
-
+        print(f"BFS is at Node {(current_x, current_y)}")
         # Check if we've reached the target node
         if (current_x, current_y) == hexagonEndPos:
             return distance
@@ -330,6 +351,7 @@ def getDistanceMoved(player, newPos):
                 neighbor_node = lookUpTableHexagon[neighbor_x][neighbor_y]
                 if neighbor_node and (neighbor_x, neighbor_y) not in visited:
                     queue.append(((neighbor_x, neighbor_y), distance + 1))
+                    #print(f"Adding")
                     visited.add((neighbor_x, neighbor_y))
 
     return -1  # Target node is unreachable
