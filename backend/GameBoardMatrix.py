@@ -4,6 +4,8 @@ import time
 from multiprocessing.resource_tracker import unregister
 from multiprocessing import shared_memory
 import numpy as np
+import time as sleep
+from collections import deque
 
 
 class player:
@@ -18,10 +20,69 @@ class player:
         return "Player Number: " + str(self.playerNumber) + " is at Position: (" + str(self.x) + ", " + str(self.y) + ")"
 
 
+class Node:
+    mapping = None
+    validHexagons = []
+    nodeNumberHex = -1
+    isHexNode = True
+    def __init__(self, mapping, validHexagons, NodeNumberHex):
+        self.mapping = mapping
+        self.validHexagons = validHexagons
+        self.nodeNumberHex = NodeNumberHex
 
+    def __init__(self, mapping):
+        self.mapping = mapping
+    
+    
+
+
+# This list is purely to reset all nodes once a search is completed
+hexagonNodes = []
+
+# Local variabales
 players = []
 
 playerNum = 2 # default player number
+
+# Representation of the Hexagon game board and its mappings to the sensor matrix
+lookUpTableHexagon = [ [0]*9 for i in range(9)]
+# Row 0
+lookUpTableHexagon[0] = [0, 0, 0, 0, Node(None, [1], 2), 0, 0, 0, 0]
+# Row 1
+lookUpTableHexagon[1] = [0, 0, 0, Node(None, [1], 1), 0, Node(None, [1], 3), 0, 0, 0]
+# Row 2
+lookUpTableHexagon[2] = [0, Node(None, [2], 4), 0, Node(None, [1,3], 6), 0, Node(None, [1, 4], 8), 0, Node(None, [5], 10), 0]
+# Row 3
+lookUpTableHexagon[3] = [Node(None, [2], 12), 0, Node(None, [2, 3], 5), 0, Node(None, [3, 4], 7), 0, Node(None, [4, 5], 9), 0, Node(None, [5], 11)]
+# Row 4
+lookUpTableHexagon[4] = [Node(None, [2, 6], 19), 0, Node(None, [2, 3, 7], 13), 0, Node(None, [3, 4, 8], 15), 0, Node(None, [4, 9, 5], 18), 0, 0] # Last node is purposefully crossed out
+# Row 5
+lookUpTableHexagon[5] = [0, Node(None, [2, 6, 7], 20), 0, Node(None, [3, 7, 8], 14), 0, Node(None, [4, 8, 9], 16), 0, Node(None, [5, 9, 10], 17), 0]
+# Row 6
+lookUpTableHexagon[6] = [0, Node(None, [6, 7, 11], 27), 0, Node(None, [7, 8, 12], 21), 0, Node(None, [8, 9, 13], 23), 0, Node(None, [9, 10, 14], 25), 0]
+# Row 7
+lookUpTableHexagon[7] = [0, 0, Node(None, [7, 11, 12], 32), 0, Node(None, [8, 12, 13], 22), 0, Node(None, [9, 13, 14], 24), 0, Node(None, [9, 10, 14], 25)] # Node deleted here
+# Row 8
+lookUpTableHexagon[8] = [Node(None, [11], 39), 0, Node(None, [11, 12, 15], 33), 0, Node(None, [12, 13, 16], 28), 0, Node(None, [13, 14, 17], 30), 0, Node(None, [14], 40)]
+# Row 9
+lookUpTableHexagon[9] = [0, Node(None, [11, 15], 38), 0, Node(None, [12, 15, 16], 34), 0, Node(None, [13, 16, 17], 29), 0, Node(None, [14, 17], 31), 0]
+# Row 10
+lookUpTableHexagon[10] = [0, 0, 0, Node(None, [15, 16], 37), 0, Node(None, [16, 17], 35), 0, 0, 0]
+# Row 11
+lookUpTableHexagon[11] = [0, 0, 0, 0, Node(None, [16], 36), 0, 0, 0, 0]
+
+
+# This list is purely to reset all nodes once a search is completed
+hexagonNodes = []
+
+
+
+
+
+# Representation of the sensor matrix and its mapping to the hexagon matrix
+lookUpTableSensors = [ [0]*5 for i in range(8)]
+
+lookUpTableSensors[0] = [Node()]
 
 # Access the shared memory by name
 shm_name = 'PresentMatrix'  # Replace with actual shm.name from main process
@@ -49,7 +110,7 @@ pastMatrix = np.ndarray(array_shape, dtype=array_dtype, buffer=existing_shmMatri
 existingRequest = shared_memory.SharedMemory(name='MatrixRequest')
 existingData = shared_memory.SharedMemory(name='MatrixDataReady')
 matrixRequest = np.ndarray(2, dtype=np.int64, buffer=existingRequest.buf)
-matrixDataReady = np.ndarray(4, dtype=np.int64, buffer=existingData.buf)
+matrixDataReady = np.ndarray(6, dtype=np.int64, buffer=existingData.buf)
 existingDiceData = shared_memory.SharedMemory(name='DiceData')
 diceData = np.ndarray(1, dtype=np.int8, buffer=existingDiceData.buf)
 
@@ -69,25 +130,29 @@ def matrixInit():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setwarnings(False)
     # Set up selector bits for MUXes (Pins 8, 10, 12)
-    GPIO.setup(8, GPIO.IN, GPIO.PUD_DOWN) # selector 1 (LSB)
-    GPIO.setup(10, GPIO.IN, GPIO.PUD_DOWN) # Selector 2
-    GPIO.setup(12, GPIO.IN, GPIO.PUD_DOWN) # Selector 3 (MSB)
+    GPIO.setup(8, GPIO.OUT, 0) # selector 1 (LSB)
+    GPIO.setup(10, GPIO.OUT, 0) # Selector 2
+    GPIO.setup(12, GPIO.OUT, 0) # Selector 3 (MSB)
 
     #Set MUX Output GPIOs (3,5,7,9,11)
     # SET HERE WHEN THE PCB GETS HERE PLS
-    ''' 
-    
-    
-    '''
-    # Demo code
-    # Pin Init
-    GPIO.setup(15, GPIO.IN, GPIO.PUD_DOWN) #shutdown program pin
+
     GPIO.setup(3, GPIO.IN, GPIO.PUD_DOWN)
     GPIO.setup(5, GPIO.IN, GPIO.PUD_DOWN)
     GPIO.setup(7, GPIO.IN, GPIO.PUD_DOWN)
+    GPIO.setup(9, GPIO.IN, GPIO.PUD_DOWN)
     GPIO.setup(11, GPIO.IN, GPIO.PUD_DOWN)
-    GPIO.setup(15, GPIO.IN, GPIO.PUD_DOWN)
-    GPIO.setup(19, GPIO.IN, GPIO.PUD_DOWN)
+
+    # Demo code
+    # Pin Init
+
+    # GPIO.setup(15, GPIO.IN, GPIO.PUD_DOWN) #shutdown program pin
+    # GPIO.setup(3, GPIO.IN, GPIO.PUD_DOWN)
+    # GPIO.setup(5, GPIO.IN, GPIO.PUD_DOWN)
+    # GPIO.setup(7, GPIO.IN, GPIO.PUD_DOWN)
+    # GPIO.setup(11, GPIO.IN, GPIO.PUD_DOWN)
+    # GPIO.setup(15, GPIO.IN, GPIO.PUD_DOWN)
+    # GPIO.setup(19, GPIO.IN, GPIO.PUD_DOWN)
 
 
 
@@ -114,20 +179,68 @@ def matrixInit():
 #     print("Player moved to space 4!")
 
 
-def countRow():
-    global rowCount
-    if (rowCount == 0):
-        presentMatrix[0][0] = 1 - GPIO.input(3)
-        presentMatrix[0][1] = 1 - GPIO.input(5)
-    elif (rowCount == 1):
-        presentMatrix[1][0] = 1 - GPIO.input(7)
-        presentMatrix[1][1] = 1 - GPIO.input(11)
-    rowCount += 1
+def countRow(row):
+    # Set selector row
+    match row:
+        case 0:
+            GPIO.output(12, 0)
+            GPIO.output(10, 0)
+            GPIO.output(8,  0)
+        case 1:
+            GPIO.output(12, 0)
+            GPIO.output(10, 0)
+            GPIO.output(8,  1)
+        case 2:
+            GPIO.output(12, 0)
+            GPIO.output(10, 1)
+            GPIO.output(8,  0)
+        case 3:
+            GPIO.output(12, 0)
+            GPIO.output(10, 1)
+            GPIO.output(8,  1)
+        case 4:
+            GPIO.output(12, 1)
+            GPIO.output(10, 0)
+            GPIO.output(8,  0)
+        case 5:
+            GPIO.output(12, 1)
+            GPIO.output(10, 0)
+            GPIO.output(8,  1)
+        case 6:
+            GPIO.output(12, 1)
+            GPIO.output(10, 1)
+            GPIO.output(8,  0)
+        case 7:
+            GPIO.output(12, 1)
+            GPIO.output(10, 1)
+            GPIO.output(8,  1)
+    sleep(0.0001) # might need to wait a second since the propagation of the MUX might be slower than the clock speed
+    presentMatrix[row][0] = GPIO.input(3)
+    presentMatrix[row][1] = GPIO.input(5)
+    presentMatrix[row][2] = GPIO.input(7)
+    presentMatrix[row][3] = GPIO.input(9)
+    presentMatrix[row][4] = GPIO.input(11)
+
+
+
+    
+    # global rowCount
+    # if (rowCount == 0):
+    #     presentMatrix[0][0] = 1 - GPIO.input(3)
+    #     presentMatrix[0][1] = 1 - GPIO.input(5)
+    # elif (rowCount == 1):
+    #     presentMatrix[1][0] = 1 - GPIO.input(7)
+    #     presentMatrix[1][1] = 1 - GPIO.input(11)
+    # rowCount += 1
     return
 
 
-
-
+def scanMatrix():
+    for i in range(8):
+        countRow(i)
+        
+        
+    
 def countSpots():
     playerSpots = 0
     for i, row in enumerate(presentMatrix):
@@ -143,53 +256,83 @@ def sail(currentPlayer):
     # distance = diceData[0] real line, replace when done testing
     global rowCount
     rowCount = 0
-    while rowCount < presentMatrix.shape[0]:
-        time.sleep(0.2)
-        countRow()
+    # while rowCount < presentMatrix.shape[0]:
+    #     time.sleep(0.2)
+    #     countRow()
+
+    scanMatrix()
+
     spots = countSpots()  # Initialize spots count
     player = players[currentPlayer-1]
     distance = 2 # Hard-coded distance for now to verfiy it works
-    while spots < playerNum:
-        rowCount = 0
-        print("Entered main while loop")
-        # Scan each row to update the matrix
-        while rowCount < presentMatrix.shape[0]:
-            time.sleep(0.2)
-            countRow()
-        # Board has been scanned. Check for valid change
-        # Valid Change is confirmed by seeing if there are only 2 pieces, and that only one piece has moved (the correct player)
-        validMatrix, newPos = isValidMatrixStateSail(playerNum, player)
-        if validMatrix:
-            # Further check that it moved by a correct distance
-            distanceMoved = getDistanceMoved(player, newPos)
-            if distanceMoved <= distance:
-                print(f"Player {currentPlayer} moved correctly by {distanceMoved} units.")
-                player.x = newPos[0]
-                player.y = newPos[1]
-                pastMatrix[:, :] = presentMatrix[:, :]
-                # ADD ANY EXTRA OUTPUT OPTIONS HERE
-                matrixDataReady[0] = 1
-                matrixDataReady[1] = player.playerNumber - 1
-                matrixDataReady[2] = player.x
-                matrixDataReady[3] = player.y
-                matrixRequest[0] = 0 # Turn off matrixRequest.
-                return
-            else:
-                print(f"Player {currentPlayer} movement invalid. Expected {distance} units but moved {distanceMoved} units.")
+    rowCount = 0
+    print("Entered main while loop")
+    # Scan each row to update the matrix
+    while rowCount < presentMatrix.shape[0]:
+        time.sleep(0.2)
+        countRow()
+    # Board has been scanned. Check for valid change
+    # Valid Change is confirmed by seeing if there are only 2 pieces, and that only one piece has moved (the correct player)
+    validMatrix, newPos = isValidMatrixStateSail(playerNum, player)
+    if validMatrix:
+        # Further check that it moved by a correct distance
+        distanceMoved = getDistanceMoved(player, newPos)
+        if distanceMoved <= distance:
+            print(f"Player {currentPlayer} moved correctly by exactly {distanceMoved} units.")
+            player.x = newPos[0]
+            player.y = newPos[1]
+            pastMatrix[:, :] = presentMatrix[:, :]
+            # ADD ANY EXTRA OUTPUT OPTIONS HERE
+            matrixDataReady[0] = 1
+            matrixDataReady[1] = player.playerNumber - 1
+            matrixDataReady[2] = player.x
+            matrixDataReady[3] = player.y
+            matrixRequest[0] = 0 # Turn off matrixRequest.
+            return
         else:
-            print(f"Invalid matrix state for player {currentPlayer}. Retrying.")
+            print(f"Player {currentPlayer} movement invalid. Expected {distance} units but moved {distanceMoved} units.")
+    else:
+        print(f"Invalid matrix state for player {currentPlayer}. Retrying.")
     # Update pastMatrix with the new state for the next check
 
 
 def getDistanceMoved(player, newPos):
-    if(newPos == (player.x, player.y)):
-        return 0 # No pieces moved. We can assume nothing happened
-    # Find the player’s current position in the matrix
-    initial_pos = (player.x, player.y)  # Assuming each player has a previous position
-    
-    distance_moved = abs(newPos[0] - initial_pos[0]) + abs(newPos[1] - initial_pos[1])
-    
-    return distance_moved
+
+    directions = [
+        (-1, 0),  # Up
+        (1, 0),   # Down
+        (0, -1),  # Left
+        (0, 1),   # Right
+        (-1, 1),  # Top-right
+        (1, -1),  # Bottom-left
+    ]
+        
+    hexagonEndPos = lookUpTableSensors[newPos[0]][newPos[1]].mapping
+    hexagonBeginPos = lookUpTableSensors[player.x][player.y].mapping
+    # BFS :)
+    queue = deque([(hexagonBeginPos, 0)])  # (current_node, distance)
+    visited = set()
+    visited.add(hexagonBeginPos)
+
+    while queue:
+        (current_x, current_y), distance = queue.popleft()
+
+        # Check if we've reached the target node
+        if (current_x, current_y) == hexagonEndPos:
+            return distance
+
+        # Check all valid neighbors
+        for dx, dy in directions:
+            neighbor_x, neighbor_y = current_x + dx, current_y + dy
+
+            # Ensure the neighbor is within bounds and is a Node object
+            if 0 <= neighbor_x < len(lookUpTableHexagon) and 0 <= neighbor_y < len(lookUpTableHexagon[0]):
+                neighbor_node = lookUpTableHexagon[neighbor_x][neighbor_y]
+                if neighbor_node and (neighbor_x, neighbor_y) not in visited:
+                    queue.append(((neighbor_x, neighbor_y), distance + 1))
+                    visited.add((neighbor_x, neighbor_y))
+
+    return -1  # Target node is unreachable
 
 
 
@@ -248,10 +391,6 @@ def setPlayers(playerNum):
 
             
         
-
-    
-
-
 def attack(playerNum):
     attackingPlayer = players[playerNum-1] # Assuming players are 1-indexed
     # Clear player matrixDataReady stuff
@@ -269,7 +408,7 @@ def attack(playerNum):
         if abs(player.x - attackingPlayer.x) <= 1 and abs(player.y - attackingPlayer.y) <= 1:
             # If within range, the attack is considered valid for this player
             print(f"{attackingPlayer} can attack {player}")
-            # Perform any additional actions for an attack (e.g., reduce health)
+            # Prepare data
             matrixDataReady[1] *= 10
             matrixDataReady[1] += player.playerNumber # store player Number
     if(matrixDataReady[1] == 0): 

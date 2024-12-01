@@ -133,7 +133,7 @@ diceData[:] = tempdiceData[:]
 
 # # Data Ready/Request Flags For Matrix
 # tempMatrixRequest = np.array([0], dtype=np.int8)
-# tempMatrixDataReady = np.array([0], dtype=np.int8)
+# tempMatrixDataReady = np.array([0, 0, 0, 0, 0, 0], dtype=np.int64)
 # shmMatrixRequest = shared_memory.SharedMemory(create=True, size=tempMatrixRequest.nbytes, name='MatrixRequest')
 # shmMatrixDataReady = shared_memory.SharedMemory(create=True, size=tempMatrixDataReady.nbytes, name='MatrixDataReady')
 # matrixRequest = np.ndarray(tempMatrixRequest.shape, dtype=tempMatrixRequest.dtype, buffer=shmMatrixRequest.buf)
@@ -146,7 +146,7 @@ diceData[:] = tempdiceData[:]
 
 # Data Ready/Request Flags For Matrix
 tempMatrixRequest = np.array([0, 0], dtype=np.int64)
-tempMatrixDataReady = np.array([0, 0, 0, 0], dtype=np.int64)
+tempMatrixDataReady = np.array([0, 0, 0, 0, 0, 0], dtype=np.int64)
 shmMatrixRequest = shared_memory.SharedMemory(create=True, size=tempMatrixRequest.nbytes, name='MatrixRequest')
 shmMatrixDataReady = shared_memory.SharedMemory(create=True, size=tempMatrixDataReady.nbytes, name='MatrixDataReady')
 matrixRequest = np.ndarray(tempMatrixRequest.shape, dtype=tempMatrixRequest.dtype, buffer=shmMatrixRequest.buf)
