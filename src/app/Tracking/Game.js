@@ -11,10 +11,11 @@ import Attack from '../Action/Attack';
 const Game = () => {
     const { state } = useLocation();
     const navigate = useNavigate();
-    const { playerNames, currentPlayerIndex, chestList } = state;
+    const { playerNames, currentPlayerIndex, chestList, pipValue } = state;
     const currentPlayer = playerNames[currentPlayerIndex];
     const [leaderboard, setLeaderboard] = useState([]);
     const [otherPlayers, setOtherPlayers] = useState([]);
+    const [rollValue, setRollValue] = useState(pipValue);
 
   useEffect(() => {
     // Fetch player scores from the backend
@@ -49,6 +50,12 @@ const Game = () => {
             setOtherPlayers(filteredPlayers); // Update the filtered players
         }
     }, [leaderboard, playerNames]);
+
+    useEffect(() => {
+        if(pipValue != 0){
+            setRollValue(pipValue);
+        }
+    },[pipValue]);
    
 
     const handleDone = () => {
@@ -92,6 +99,7 @@ const Game = () => {
                                 currentPlayer={currentPlayer}
                                 currentPlayerIndex={currentPlayerIndex}/> </div>
                     <div><Trigger></Trigger></div>
+                    <div>You can move {rollValue} steps</div>
                 </div>
                 <div className = "leaderboard">
                     <Leaderboard />

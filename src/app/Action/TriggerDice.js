@@ -27,7 +27,6 @@ function Trigger(){
             }
             setNumPips(0);  // Set default or handle accordingly
         }
-        handleValidateMovement()
     }
     const handleValidateMovement = async () => {
         console.log("Validating Move")
@@ -51,7 +50,7 @@ function Trigger(){
     return (
         <div>
             <button className='button' onClick={handleTrigger}>
-                Move
+                Validate
             </button>
             {numPips !== 0 && <h2>You rolled a {numPips}</h2>}
         </div>

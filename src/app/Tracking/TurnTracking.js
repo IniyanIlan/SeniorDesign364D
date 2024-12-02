@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation , useNavigate } from 'react-router-dom';
 import '../Tracking/Game.css';
 import axios from 'axios';
+import Trigger from '../Action/TriggerDice'
 
 
 const TurnTracking = () => {
@@ -11,6 +12,7 @@ const TurnTracking = () => {
   const { playerNames, chestList} = location.state || {};
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0); // Track current player index
   const navigate = useNavigate();
+  const [pipValue, setPips] = useState(0)
 
   const playButtonSound = () => {
     const audio = new Audio('/click_3.mp3');
@@ -18,11 +20,55 @@ const TurnTracking = () => {
     // playButtonSound();
   };
 
-  const handleRollDice = () => {
+  // const handleRollDice = async () => {
+  //   playButtonSound()
+  //   console.log("handleRollDice player:", playerNames[currentPlayerIndex]);
+  //   try{
+  //     const res = await axios.get("http://localhost:5001/trigger-dice")
+  //   }
+  //   catch(e){
+  //     console.log("Error fetching dice value")
+  //   }
+  //   navigate('/StartGame', { state: { playerNames, currentPlayerIndex, nextTurn: false, chestList} });
+  // };
+  const handleRollDice = async () => {
     playButtonSound()
     console.log("handleRollDice player:", playerNames[currentPlayerIndex]);
-    navigate('/StartGame', { state: { playerNames, currentPlayerIndex, nextTurn: false, chestList} });
+    try{
+      const res = await axios.get("http://localhost:5001/trigger-dice")
+      setPips(res.data.value)
+      console.log("Dice value:", res.data.value)
+    }
+    catch(error){
+      if (error.code === 'ECONNABORTED' || error.response?.status === 408) {
+          console.error("Timeout error: The request took too long to complete.");
+      } 
+      else{
+          console.error("Error: unable to recieve dice request");
+      }
+    }
+    navigate('/StartGame', { state: { playerNames, currentPlayerIndex, nextTurn: false, chestList, pipValue} });
+      
   };
+
+  // const handleTrigger = async () => {
+  //     playButtonSound()
+  //     console.log("Starting Dice Reader")
+  //     try{
+  //         const res = await axios.get("http://localhost:5001/trigger-dice")
+  //         setNumPips(res.data.value)
+  //         console.log("Dice value:", res.data.value)
+  //     }
+  //     catch(error){
+  //         if (error.code === 'ECONNABORTED' || error.response?.status === 408) {
+  //             console.error("Timeout error: The request took too long to complete.");
+  //         } 
+  //         else{
+  //             console.error("Error: unable to recieve dice request");
+  //         }
+  //         setNumPips(0);  // Set default or handle accordingly
+  //     }
+  // }
 
   // useEffect(() => {
   //   if (location.state.nextTurn) {
@@ -67,6 +113,7 @@ const TurnTracking = () => {
         <h2>Welcome to the Game!</h2>
         <p>{playerNames[currentPlayerIndex]}, it's your turn. Roll the dice!</p>
         <button className="button" onClick={handleRollDice}>Roll Dice</button>
+        {/* <Trigger></Trigger> */}
       </div>
     </div>
     
