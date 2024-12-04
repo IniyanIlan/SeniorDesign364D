@@ -1,9 +1,6 @@
-import RPi.GPIO as GPIO
-import time
 import time
 import board
 import neopixel_spi as neopixel
-import busio
 
 NUM_PIXELS = 82
 PIXEL_ORDER = neopixel.RGB
@@ -13,16 +10,16 @@ DELAY = 0.1
 
 
 spi = board.SPI()
-if(GPIO.getmode() == GPIO.BCM):
-    print(GPIO.getmode())
 
-# Simple program made to test GPIO pin usage on the RPI 5.
-# Pressing the button 4 times will end the program.
 
-GPIO.setup(14,GPIO.OUT, initial=GPIO.LOW)
-GPIO.setup(15, GPIO.IN, GPIO.PUD_DOWN)
-n = 0
-flag = True
+# Ensure the SPI is properly locked and configured
+while not spi.try_lock():
+    pass  # Wait until the SPI bus is free
+
+spi.configure(baudrate=8000000)  # Set baudrate to 8 MHz
+spi.unlock()
+    
+
 pixels = neopixel.NeoPixel_SPI(
     spi, NUM_PIXELS, pixel_order=PIXEL_ORDER, auto_write=False, brightness=1.0
 )
@@ -45,3 +42,10 @@ while True:
             pixels.show()
             #time.sleep(0.001)
         
+        
+        
+        # for i in range(NUM_PIXELS):
+        #     pixels[i] = color
+        #     pixels.show()
+        #     #time.sleep(DELAY)
+        #     pixels.fill(0)

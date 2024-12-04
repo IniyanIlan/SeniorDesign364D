@@ -153,7 +153,6 @@ def camera_loop(picam2):
 
 if __name__ == "__main__":
     try:
-            
         picam2 = Picamera2()
         picam2.start()
         #picam2.start_preview(Preview=None)

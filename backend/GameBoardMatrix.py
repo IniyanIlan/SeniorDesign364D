@@ -6,6 +6,7 @@ from multiprocessing import shared_memory
 import numpy as np
 import time as sleep
 from collections import deque
+import subprocess
 
 
 class player:
@@ -142,23 +143,33 @@ diceData = np.ndarray(1, dtype=np.int8, buffer=existingDiceData.buf)
 #Variables
 rowCount = 0
 
+#Pins for easy debugging
+PIN8 = 14
+PIN10 = 15
+PIN12 = 18
+
+PIN3 = 2
+PIN5 = 3
+PIN7 = 4
+PIN11 = 17
+PIN13 = 27
 
 def matrixInit():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setwarnings(False)
-    # Set up selector bits for MUXes (Pins 8, 10, 12)
-    GPIO.setup(8, GPIO.OUT, 0) # selector 1 (LSB)
-    GPIO.setup(10, GPIO.OUT, 0) # Selector 2
-    GPIO.setup(12, GPIO.OUT, 0) # Selector 3 (MSB)
+    # Set up selector bits for MUXes (Pins 8, 10, 12) (GPIO 14, 15, 18)
+    GPIO.setup(PIN8, GPIO.OUT, 0) # selector 1 (LSB)
+    GPIO.setup(PIN10, GPIO.OUT, 0) # Selector 2
+    GPIO.setup(PIN12, GPIO.OUT, 0) # Selector 3 (MSB)
 
-    #Set MUX Output GPIOs (3,5,7,9,11)
+    #Set MUX Output GPIOs (3,5,7,11,13) OR (2, 3, 4, 17, 27)
     # SET HERE WHEN THE PCB GETS HERE PLS
 
+    GPIO.setup(2, GPIO.IN, GPIO.PUD_DOWN)
     GPIO.setup(3, GPIO.IN, GPIO.PUD_DOWN)
-    GPIO.setup(5, GPIO.IN, GPIO.PUD_DOWN)
-    GPIO.setup(7, GPIO.IN, GPIO.PUD_DOWN)
-    GPIO.setup(9, GPIO.IN, GPIO.PUD_DOWN)
-    GPIO.setup(11, GPIO.IN, GPIO.PUD_DOWN)
+    GPIO.setup(4, GPIO.IN, GPIO.PUD_DOWN)
+    GPIO.setup(17, GPIO.IN, GPIO.PUD_DOWN)
+    GPIO.setup(27, GPIO.IN, GPIO.PUD_DOWN)
 
     # Demo code
     # Pin Init
@@ -200,43 +211,43 @@ def countRow(row):
     # Set selector row
     match row:
         case 0:
-            GPIO.output(12, 0)
-            GPIO.output(10, 0)
-            GPIO.output(8,  0)
+            GPIO.output(PIN12, 0)
+            GPIO.output(PIN10, 0)
+            GPIO.output(PIN8,  0)
         case 1:
-            GPIO.output(12, 0)
-            GPIO.output(10, 0)
-            GPIO.output(8,  1)
+            GPIO.output(PIN12, 0)
+            GPIO.output(PIN10, 0)
+            GPIO.output(PIN8,  1)
         case 2:
-            GPIO.output(12, 0)
-            GPIO.output(10, 1)
-            GPIO.output(8,  0)
+            GPIO.output(PIN12, 0)
+            GPIO.output(PIN10, 1)
+            GPIO.output(PIN8,  0)
         case 3:
-            GPIO.output(12, 0)
-            GPIO.output(10, 1)
-            GPIO.output(8,  1)
+            GPIO.output(PIN12, 0)
+            GPIO.output(PIN10, 1)
+            GPIO.output(PIN8,  1)
         case 4:
-            GPIO.output(12, 1)
-            GPIO.output(10, 0)
-            GPIO.output(8,  0)
+            GPIO.output(PIN12, 1)
+            GPIO.output(PIN10, 0)
+            GPIO.output(PIN8,  0)
         case 5:
-            GPIO.output(12, 1)
-            GPIO.output(10, 0)
-            GPIO.output(8,  1)
+            GPIO.output(PIN12, 1)
+            GPIO.output(PIN10, 0)
+            GPIO.output(PIN8,  1)
         case 6:
-            GPIO.output(12, 1)
-            GPIO.output(10, 1)
-            GPIO.output(8,  0)
+            GPIO.output(PIN12, 1)
+            GPIO.output(PIN10, 1)
+            GPIO.output(PIN8,  0)
         case 7:
-            GPIO.output(12, 1)
-            GPIO.output(10, 1)
-            GPIO.output(8,  1)
+            GPIO.output(PIN12, 1)
+            GPIO.output(PIN10, 1)
+            GPIO.output(PIN8,  1)
     sleep(0.0001) # might need to wait a second since the propagation of the MUX might be slower than the clock speed
-    presentMatrix[row][0] = GPIO.input(3)
-    presentMatrix[row][1] = GPIO.input(5)
-    presentMatrix[row][2] = GPIO.input(7)
-    presentMatrix[row][3] = GPIO.input(9)
-    presentMatrix[row][4] = GPIO.input(11)
+    presentMatrix[row][0] = GPIO.input(PIN3)
+    presentMatrix[row][1] = GPIO.input(PIN5)
+    presentMatrix[row][2] = GPIO.input(PIN7)
+    presentMatrix[row][3] = GPIO.input(PIN11)
+    presentMatrix[row][4] = GPIO.input(PIN13)
 
 
 
@@ -530,15 +541,15 @@ def isValidMatrixStateSail(expected_num_players, currentPlayer):
 
 if __name__ == "__main__":
     try:
-        print("shared memory initialized correctly")
-        matrixInit()
-        while(not GPIO.input(15)): # This is just an exit program condition. Dont worry about it
+        while True:
+            print("shared memory initialized correctly")
+            matrixInit()
             if((matrixRequest[0] == 1)): # 1 = sail
                 sail(matrixRequest[1]) # Index 1 corresponds to which player is the one choosing to do this (player turn)
             elif(matrixRequest[0] == 2): # 2 = attack
                 attack(matrixRequest[1])
             elif(matrixRequest[0] == 3): # 3 = excavate
-                excavate(matrixRequest[1])
+                excavate(matrixRequest[1]) 
             elif(matrixRequest[0] == 4): # 4 = Player position initialization
                 setPlayers(playerNum)
                 for player in players:
