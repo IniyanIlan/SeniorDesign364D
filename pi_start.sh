@@ -1,12 +1,3 @@
-# handle_sigint(){
-#     echo "Stopping the script..."n
-#     kill -9 `lsof -i :3000`
-#     kill -9 `lsof -i :5001`
-#     exit 0
-# }
-
-# trap handle_sigint SIGINT
-
 echo "Starting Tides of Treachery..."
 cd ./src
 npm start &
