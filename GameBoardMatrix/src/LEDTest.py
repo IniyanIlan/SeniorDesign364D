@@ -20,7 +20,8 @@ pixels = neopixel.NeoPixel_SPI(
     spi, NUM_PIXELS, pixel_order=PIXEL_ORDER, auto_write=False, brightness=1.0
 )
 
-COLOR_RANGE = [0x2000FF, 0x5911FA, 0x7e1c4a, 0xe688e3, 0x480d48, 0xFF00FF]  # Various ocean-like blues
+COLOR_RANGE_OCEAN = [0x2000FF, 0x5911FA, 0x7e1c4a, 0xe688e3, 0x480d48, 0xFF00FF]  # Various ocean-like blues
+COLOR_RANGE_EXPLODE = [0x00ff00, 0x30ff00, 0xffff00, 0x30b500]
 
 def random_color(color_range):
     """Select a random color from the given range."""
@@ -125,11 +126,14 @@ BRIGHTNESS_LEVELS = [0.1, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]  # Varying brightness le
 
 if __name__ == "__main__":
         # Example: Breathe effect for pixel 10 with red color
-        #breathe(pixelIndexLeft=0, pixelIndexRight=NUM_PIXELS, color=0x004b88)
-    pixels_data = initialize_pixels(NUM_PIXELS, COLOR_RANGE)
+    #breathe(pixelIndexLeft=0, pixelIndexRight=NUM_PIXELS, color=0x004b88)
+    pixels_data = initialize_pixels(NUM_PIXELS, COLOR_RANGE_EXPLODE)
+    # Potential defuse mode
+    #raceDown([0x00ff00, 0x30ff00, 0xffff00, 0x50a500], BRIGHTNESS_LEVELS, 0.3)
     try:
         while True:
-            ripple(pixels_data, COLOR_RANGE, 0.003)
+            #ripple(pixels_data, COLOR_RANGE_OCEAN, 0.003)
+            ripple(pixels_data, COLOR_RANGE_EXPLODE, 0.05)
             #time.sleep(DELAY)
 
         # Reset pixels
