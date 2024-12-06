@@ -31,7 +31,7 @@ function Excavate_Treasure () {
     return(
         <div className='center-container'>
           <div className='centered-content'>
-          <h1>you found treasure!</h1>
+          <h1>You found treasure!</h1>
           <img
                 className = "chest-img"
                 src="/treasure-chest.jpg" 

@@ -48,6 +48,11 @@ const TurnTracking = () => {
       }
     }     
   };
+  useEffect(() => {
+    if(pipValue !== 0){
+        navigate('/StartGame', { state: { playerNames, currentPlayerIndex, nextTurn: false, chestList, pipValue} });
+    }
+  },[pipValue]);
 
   useEffect(() => {
     if(pipValue !== 0){
