@@ -11,11 +11,11 @@ FLASK_PID=$!
 python3 DiceReading_CurrentLightFaces.py &
 DICE_PID=$!
 
-python3 GameBoardMatrix.py &
-BOARD_PID=$!
+# python3 GameBoardMatrix.py &
+# BOARD_PID=$!
 
-python3 Neopixel.py &
-NEO_PID=$!
+# python3 Neopixel.py &
+# NEO_PID=$!
 
 echo "Finishing script..."
 
@@ -24,8 +24,8 @@ cleanup() {
   kill $REACT_PID
   kill $FLASK_PID
   kill $DICE_PID
-  kill $BOARD_PID
-  kill $NEO_PID
+  # kill $BOARD_PID
+  # kill $NEO_PID
   echo "All processes stopped."
 }
 

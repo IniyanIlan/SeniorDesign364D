@@ -54,7 +54,7 @@ const Game = () => {
         if(pipValue != 0){
             setRollValue(pipValue);
         }
-    },[pipValue]);
+    },[]);
    
 
     const handleDone = () => {
@@ -98,7 +98,7 @@ const Game = () => {
                                 currentPlayer={currentPlayer}
                                 currentPlayerIndex={currentPlayerIndex}/> </div>
                     <div><Trigger></Trigger></div>
-                    <div>You can move {rollValue} steps</div>
+                    {rollValue !== 0 && <div>You can move {rollValue} steps</div>}
                 </div>
                 <div className = "leaderboard">
                     <Leaderboard />

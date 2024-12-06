@@ -3,7 +3,6 @@ import numpy as np
 from sklearn import cluster
 from picamera2 import Picamera2, Preview
 import sys
-import numpy as np
 from multiprocessing.resource_tracker import unregister
 from multiprocessing import shared_memory
 import time

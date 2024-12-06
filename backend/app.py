@@ -79,7 +79,12 @@ try:
 except FileNotFoundError:
     pass
 
-
+try:
+    existing_shm = shared_memory.SharedMemory(name='LEDRequest')
+    existing_shm.unlink()
+    existing_shm.close()
+except:
+    pass
 
 
 tempdiceRequest = np.array([0], dtype=np.int8)
@@ -94,6 +99,13 @@ shutdown = np.ndarray(tempdiceData.shape, dtype=tempShutdown.dtype, buffer=shmSh
 shutdown[:] = tempShutdown[:]
 diceRequest[:] = tempdiceRequest[:]
 diceData[:] = tempdiceData[:]
+
+# Index 0 = Mode of LED {0 - Breathe, 1 - Waves, 2 - Explosion, 3 - Player, 4 - Off}, Index 1 = PlayerColor
+tempLEDRequest = np.array([0, 0], dtype= np.int16)
+shmLEDRequest = shared_memory.SharedMemory(create=True, size=tempLEDRequest.nbytes, name='LEDRequest')
+ledRequest = np.ndarray(tempLEDRequest.shape, dtype=tempLEDRequest.dtype, buffer=shmLEDRequest.buf)
+ledRequest[:] = tempLEDRequest[:]
+
 
 # Hall effect Matrix Init
 
@@ -146,9 +158,16 @@ matrixDataReady[:] = tempMatrixDataReady[:]
 
 @app.route("/")
 def home():
+    
     action.initialize_chests()
     print(action.chest_list)
     return jsonify({"message": "Chests initialized", "chests": action.chest_list})
+
+@app.route("/chest_locations", methods=["GET"])
+def chest_locations():
+    chest_locations = action.get_locations()
+    print(chest_locations)
+    return jsonify({"chest_locations": chest_locations})
 
 @app.route("/init_leaderboard", methods=["POST"])
 def init_leaderboard():
@@ -281,6 +300,7 @@ def validate_move(currentPlayerIndex):
             'x_val' : x,
             'y_val' : y
         })
+
 
 
 @app.route("/get_winner", methods=["GET"])

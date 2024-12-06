@@ -27,6 +27,15 @@ p {
     max-width: 90vw;   /* Constrains the width relative to the screen size */
 }
 
+.button:not(:disabled):hover{
+    background-color:#64A7A7;
+}
+.button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+
+}
+
 .game-columns{
     display: flex;
     flex-direction: column;
@@ -100,4 +109,8 @@ p {
 .leaderboard-container li {
     font-size: 18px;
     margin: 5px 0;
+}
+
+.welcome {
+    font-size: 1.5rem;
 }

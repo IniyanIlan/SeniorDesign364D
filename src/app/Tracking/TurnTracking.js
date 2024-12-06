@@ -32,7 +32,7 @@ const TurnTracking = () => {
   //   navigate('/StartGame', { state: { playerNames, currentPlayerIndex, nextTurn: false, chestList} });
   // };
   const handleRollDice = async () => {
-    playButtonSound()
+    // playButtonSound()
     console.log("handleRollDice player:", playerNames[currentPlayerIndex]);
     try{
       const res = await axios.get("http://localhost:5001/trigger-dice")
@@ -46,10 +46,15 @@ const TurnTracking = () => {
       else{
           console.error("Error: unable to recieve dice request");
       }
-    }
-    navigate('/StartGame', { state: { playerNames, currentPlayerIndex, nextTurn: false, chestList, pipValue} });
-      
+    }     
   };
+
+  useEffect(() => {
+    if(pipValue !== 0){
+        navigate('/StartGame', { state: { playerNames, currentPlayerIndex, nextTurn: false, chestList, pipValue} });
+    }
+  },[pipValue]);
+
 
   // const handleTrigger = async () => {
   //     playButtonSound()

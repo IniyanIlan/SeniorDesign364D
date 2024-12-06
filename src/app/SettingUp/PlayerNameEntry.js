@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
@@ -8,12 +9,27 @@ const PlayerNameEntry = () => {
   const [playerNames, setPlayerNames] = useState(Array(numberOfPlayers).fill(''));
   const [selectedColors, setSelectedColors] = useState(Array(numberOfPlayers).fill(''));
   const [availableColors] = useState(['Red','Orange', 'Blue', 'Purple','Gold', 'Pink']); // Define initial colors
+  const [chestLocations, setLocations] = useState([]);
   const navigate = useNavigate();
 
   const playButtonSound = () => {
     const audio = new Audio('/click_3.mp3');
     audio.play();
   };
+
+  useEffect(() => {
+    const fetchChestLocations = async () => {
+      try {
+        const res = await axios.get("http://localhost:5001/chest_locations");
+        console.log(res.data.chest_locations);
+        setLocations(res.data.chest_locations);
+      } 
+      catch (error) {
+        console.error("Error fetching chest locations:", error);
+      }
+    };
+    fetchChestLocations();
+  },[])
 
   const handleInputChange = (index, event) => {
     const newPlayerNames = [...playerNames];
@@ -52,11 +68,12 @@ const PlayerNameEntry = () => {
 
     try {
       await axios.post("http://localhost:5001/init_leaderboard", { playerNames, selectedColors });
-      navigate('/TurnTracking', { 
+      navigate('/Initialization', { 
         state: { 
           playerNames,
           selectedColors,
           chestList,
+          chestLocations
         }
       });
     } catch (error) {

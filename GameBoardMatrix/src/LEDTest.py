@@ -129,16 +129,16 @@ if __name__ == "__main__":
     #breathe(pixelIndexLeft=0, pixelIndexRight=NUM_PIXELS, color=0x004b88)
     pixels_data = initialize_pixels(NUM_PIXELS, COLOR_RANGE_EXPLODE)
     # Potential defuse mode
-    #raceDown([0x00ff00, 0x30ff00, 0xffff00, 0x50a500], BRIGHTNESS_LEVELS, 0.3)
+    raceDown([0x00ff00, 0x30ff00, 0xffff00, 0x50a500], BRIGHTNESS_LEVELS, 0.3)
     try:
         while True:
             #ripple(pixels_data, COLOR_RANGE_OCEAN, 0.003)
-            ripple(pixels_data, COLOR_RANGE_EXPLODE, 0.05)
+            #ripple(pixels_data, COLOR_RANGE_EXPLODE, 0.05)
             #time.sleep(DELAY)
 
         # Reset pixels
-        pixels.fill(0)
-        pixels.show()
+            pixels.fill(0)
+            pixels.show()
     except KeyboardInterrupt:
         # Clean up on exit
         pixels.fill(0)

@@ -12,6 +12,7 @@ import Attack from './app/Action/Attack';
 import TurnTracking from './app/Tracking/TurnTracking';
 import Winner from './app/Tracking/Winner';
 import Attack_Selection from './app/Action/Attack_Selection';
+import Initialization from './app/SettingUp/Initialization';
 
 function App() {
   const [isPlaying, setIsPlaying] = useState(true);
@@ -38,6 +39,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/NumberPlayer" element={<NumberPlayer />} />
           <Route path="/PlayerEnterName" element={<PlayerNameEntry />} />
+          <Route path="Initialization" element={<Initialization/>}/>
           <Route path="/StartGame" element={<Game />}/>
           <Route path="/Rules" element={<Rules />}/>
           <Route path="/Excavate_Bomb" element={<Excavate_Bomb/>}> </Route>

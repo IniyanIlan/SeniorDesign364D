@@ -77,17 +77,7 @@ const Initialization = () => {
         <div className="game-columns">
             <div className = "welcome"> Before we get started... </div>
             <p>Place the chests in their proper spots as shown in the image</p>
-            {/* <img
-                className="board-image"
-                src="/BoardGame.jpg" 
-                alt="Board"
-            /> */}
-            <img
-                className = "chest-img"
-                src="/treasure-chest.jpg" 
-                alt="Board"
-            />
-            <svg width="800" height="600" style={{ backgroundColor: "white" }}>
+            <svg width="800" height="600" style={{ backgroundColor: "#E1FDFD"}}>
                 {hexagons.map(({ x, y }, index) => (
                     <polygon
                     key={index}
