@@ -19,6 +19,11 @@ const TurnTracking = () => {
     audio.play();
     // playButtonSound();
   };
+  const playWinnerSound = () => {
+    const audio = new Audio('/fanfare.wav');
+    audio.play();
+    // playWinnerSound();
+  };
 
   // const handleRollDice = async () => {
   //   playButtonSound()
@@ -61,32 +66,6 @@ const TurnTracking = () => {
   },[pipValue]);
 
 
-  // const handleTrigger = async () => {
-  //     playButtonSound()
-  //     console.log("Starting Dice Reader")
-  //     try{
-  //         const res = await axios.get("http://localhost:5001/trigger-dice")
-  //         setNumPips(res.data.value)
-  //         console.log("Dice value:", res.data.value)
-  //     }
-  //     catch(error){
-  //         if (error.code === 'ECONNABORTED' || error.response?.status === 408) {
-  //             console.error("Timeout error: The request took too long to complete.");
-  //         } 
-  //         else{
-  //             console.error("Error: unable to recieve dice request");
-  //         }
-  //         setNumPips(0);  // Set default or handle accordingly
-  //     }
-  // }
-
-  // useEffect(() => {
-  //   if (location.state.nextTurn) {
-  //     console.log("useEffect: currentPlayerIndex:", location.state.currentPlayerIndex);
-  //     setCurrentPlayerIndex(location.state.currentPlayerIndex);
-  //   }
-  // }, [location.state.nextTurn]);
-
   useEffect(() => {
     const checkForWinner = async () => {
       try {
@@ -95,6 +74,7 @@ const TurnTracking = () => {
 
         if (winner) {
           console.log("Winner found:", winner);
+          playWinnerSound();
           navigate('/Winner', { state: { winner } });
         } else {
           console.log("useEffect: currentPlayerIndex:", location.state.currentPlayerIndex);
