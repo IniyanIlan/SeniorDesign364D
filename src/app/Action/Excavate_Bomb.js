@@ -17,7 +17,20 @@ const Excavate_Bomb = () => {
     const [playerLost, setPlayerLost] = useState(false);
     const [playerWon, setPlayerWon] = useState(false);
 
+    const playButtonSound = () => {
+        const audio = new Audio('/click_3.mp3');
+        audio.play();
+        // playButtonSound();
+      };
+ 
+    const playExplodeSound = () => {
+        const audio = new Audio('/EXPLODE.wav');
+        audio.play();
+        // playExplodeSound();
+      };
+
     const handleBackToGame = () => {
+        playButtonSound();
         navigate('/TurnTracking', { state: { 
             playerNames, 
             currentPlayerIndex : (currentPlayerIndex + 1) % playerNames.length, 
@@ -38,6 +51,7 @@ const Excavate_Bomb = () => {
 
 
     const handleAttempt = async () => {
+        playButtonSound();
         console.log("Starting Dice Reader for defusual")
         try{
             const res = await axios.get("http://localhost:5001/defusal")
@@ -73,6 +87,7 @@ const Excavate_Bomb = () => {
 
     useEffect(() => {
         if(attemptsLeft == 0){
+            playExplodeSound();
             setPlayerLost(true);
         }
     },[attemptsLeft]);

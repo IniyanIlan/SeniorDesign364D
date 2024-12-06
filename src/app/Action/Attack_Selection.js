@@ -4,6 +4,12 @@ import { useNavigate, useLocation } from "react-router";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const playButtonSound = () => {
+  const audio = new Audio('/click_3.mp3');
+  audio.play();
+  // playButtonSound();
+};
+
 function Attack_Selection() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -17,6 +23,7 @@ function Attack_Selection() {
 
   
   const handleBackToGame = () => {
+    playButtonSound();
     console.log("player names: ", playerNames)
     console.log("current player: ", currentPlayer)
     navigate('/TurnTracking', { state: { 
@@ -74,6 +81,7 @@ const handleWinner = async () => {
 };
 
 const handleAttack = async () => {
+  playButtonSound();
   try{
     console.log("From attack_selection.js " + defender)
     const res = await axios.get("http://localhost:5001/trigger-dice");
@@ -92,6 +100,7 @@ const handleAttack = async () => {
 }
 
 const handleDefense = async () => {
+  playButtonSound();
   try{
     const res = await axios.get("http://localhost:5001/trigger-dice");
     setDefenderRoll(res.data.value)
@@ -173,7 +182,7 @@ const handleDefense = async () => {
       </div>
       {/* change this to trigger dice */}
       <button className="button" onClick={handleBackToGame}>
-        back to game
+        Back to game
       </button>
       
     </div>

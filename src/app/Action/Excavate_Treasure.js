@@ -12,7 +12,13 @@ function Excavate_Treasure () {
     const currentPlayer = state.currentPlayer;
     const currentPlayerIndex = state.currentPlayerIndex;
 
+    const playButtonSound = () => {
+      const audio = new Audio('/click_3.mp3');
+      audio.play();
+      // playButtonSound();
+    };
     const handleBackToGame = () => {
+      playButtonSound();
       navigate('/TurnTracking', { state: { 
         playerNames, 
         currentPlayerIndex : (currentPlayerIndex + 1) % playerNames.length, 

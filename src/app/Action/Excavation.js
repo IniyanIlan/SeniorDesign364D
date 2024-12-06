@@ -18,8 +18,14 @@ const Excavation = ({ chestList, currentPlayer, currentPlayerIndex, playerNames 
         console.error("Error updating gold:", error);
     }
   };
+  const playButtonSound = () => {
+    const audio = new Audio('/click_3.mp3');
+    audio.play();
+    // playButtonSound();
+  };
 
   const handleExcavate = async () => {
+    playButtonSound();
     try {
       const response = await fetch("http://localhost:5001/excavate");
       const data = await response.json();
