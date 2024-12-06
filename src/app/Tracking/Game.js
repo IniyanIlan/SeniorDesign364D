@@ -108,6 +108,7 @@ const Game = () => {
                   //  <button onClick={() => handleGoldUpdate(100)}>Plus 100 Gold</button>
                   //  <button onClick={() => handleGoldUpdate(-100)}>Minus 100 Gold</button>
                 //</div>
+                // <button onClick={() => handleGoldUpdate(100)}>Plus 100 Gold</button>
                 }
             </div>
         </div>
