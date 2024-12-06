@@ -11,8 +11,14 @@ const Attack = ({ attackPlayers, playerNames, currentPlayer, currentPlayerIndex 
         console.log(event.target.value);
         setSelectedPlayer(event.target.value);
     };
+    const playButtonSound = () => {
+        const audio = new Audio('/click_3.mp3');
+        audio.play();
+        // playButtonSound();
+      };
 
     const handleAttackClick = () => {
+        playButtonSound();
         console.log("From Attack.js attackclick");
         console.log(selectedPlayer);
         const attacker = currentPlayer;

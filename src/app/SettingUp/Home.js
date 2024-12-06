@@ -22,7 +22,7 @@ const Home = () => {
   };
   const handleGameDemo = () => {
     playButtonSound();
-    window.location.href = "https://www.youtube.com/watch?v=eR07kFFZ_iU";
+    window.location.href = "https://www.youtube.com/watch?v=3HUFUgqmWy8";
   };
   
   return (

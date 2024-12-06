@@ -11,7 +11,14 @@ function Trigger(){
     const currentPlayerIndex = state.currentPlayerIndex;
     const [numPips, setNumPips] = useState(0)
 
+    const playButtonSound = () => {
+        const audio = new Audio('/click_3.mp3');
+        audio.play();
+        // playButtonSound();
+      };
+
     const handleTrigger = async () => {
+        playButtonSound();
         console.log("Starting Dice Reader")
         try{
             const res = await axios.get("http://localhost:5001/trigger-dice")
