@@ -23,6 +23,11 @@ const Excavation = ({ chestList, currentPlayer, currentPlayerIndex, playerNames 
     audio.play();
     // playButtonSound();
   };
+  const playGoldSound = () => {
+    const audio = new Audio('/gold-louder.wav');
+    audio.play();
+    // playGoldSound();
+  };
 
   const handleExcavate = async () => {
     playButtonSound();
@@ -34,6 +39,7 @@ const Excavation = ({ chestList, currentPlayer, currentPlayerIndex, playerNames 
       if (response.ok) {
         if (data.result === 0) {
           handleGoldUpdate(100);
+          playGoldSound();
           navigate('/Excavate_Treasure', { 
             state: { 
               playerNames,

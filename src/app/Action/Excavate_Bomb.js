@@ -28,7 +28,11 @@ const Excavate_Bomb = () => {
         audio.play();
         // playExplodeSound();
       };
-
+    const playGoldSound = () => {
+        const audio = new Audio('/gold-louder.wav');
+        audio.play();
+        // playGoldSound();
+    };
     const handleBackToGame = () => {
         playButtonSound();
         navigate('/TurnTracking', { state: { 
@@ -63,6 +67,7 @@ const Excavate_Bomb = () => {
             }
             else if(res.data.value == randomNumber){
                 setPlayerWon(true)
+                playGoldSound();
                 handleGoldUpdate(150); 
             } 
         }
