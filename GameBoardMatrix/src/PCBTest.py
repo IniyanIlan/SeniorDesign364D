@@ -72,14 +72,24 @@ def countRow(row):
             GPIO.output(PIN8,  1)
     time.sleep(0.01) # might need to wait a second since the propagation of the MUX might be slower than the clock speed
     matrix[row][0] = GPIO.input(PIN3)
+    if(GPIO.input(PIN3)):
+        print(f"({row}, 0)")
     #time.sleep(0.01)
     matrix[row][1] = GPIO.input(PIN5)
+    if(GPIO.input(PIN5)):
+        print(f"({row}, 1)")
     #time.sleep(0.01)
     matrix[row][2] = GPIO.input(PIN7)
+    if(GPIO.input(PIN7)):
+        print(f"({row}, 2)")
     #time.sleep(0.01)
     matrix[row][3] = GPIO.input(PIN11)
+    if(GPIO.input(PIN11)):
+        print(f"({row}, 3)")
     #time.sleep(0.01)
     matrix[row][4] = GPIO.input(PIN13)
+    if(GPIO.input(PIN13)):
+        print(f"({row}, 4)")
 
 
 

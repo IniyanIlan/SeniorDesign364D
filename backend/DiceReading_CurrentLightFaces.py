@@ -11,6 +11,8 @@ import math
 # Site to help access webcam: https://www.opencvhelp.org/tutorials/advanced/how-to-access-webcam/
 # Site to help read dice with webcam: https://golsteyn.com/writing/dice
 
+time.sleep(2)
+
 shmRequest_Name = 'DiceRequest'
 shmData_Name = 'DiceData'
 shmShutdown_Name = 'DiceShutdown'

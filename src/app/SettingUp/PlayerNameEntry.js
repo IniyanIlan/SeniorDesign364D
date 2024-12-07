@@ -67,7 +67,7 @@ const PlayerNameEntry = () => {
     console.log("color indices: ", colorIndices)
 
     try {
-      await axios.post("http://localhost:5001/init_leaderboard", { playerNames, selectedColors });
+      await axios.post("http://localhost:5001/init_leaderboard", { playerNames, colorIndices});
       navigate('/Initialization', { 
         state: { 
           playerNames,

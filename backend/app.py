@@ -15,6 +15,7 @@ CORS(app)
 # Initialize a global dictionary for leaderboard
 leaderboard_dict = {}
 winning_gold = 500
+color_indices = []
 
 # Shared Memory Stuff Starts Here
 
@@ -83,7 +84,7 @@ try:
     existing_shm = shared_memory.SharedMemory(name='LEDRequest')
     existing_shm.unlink()
     existing_shm.close()
-except:
+except FileNotFoundError:
     pass
 
 
@@ -173,10 +174,17 @@ def chest_locations():
 def init_leaderboard():
     data = request.json
     player_names = data.get("playerNames", [])
-    
     # Initialize each player's score to 0
+    global color_indices
     global leaderboard_dict
     leaderboard_dict = {name: 0 for name in player_names}
+    color_indices = data.get("colorIndices", [])
+    for i in color_indices:
+        matrixDataReady[0] = i
+        matrixRequest[0] = 4
+        timeout = time.time() + 5
+        while(matrixRequest[0] != 0 and time.time() < timeout):
+            pass
     print(f"Leaderboard initialized: {leaderboard_dict}")
     return jsonify({"message": "Leaderboard initialized", "leaderboard": leaderboard_dict})
 
@@ -225,6 +233,21 @@ def defusing():
     print(f"We got a value: {dice_roll}")
     diceData[0] = -1
     return jsonify(value = int(dice_roll))
+
+@app.route("/explosion_led", methods=["POST"])
+def explosion():
+    ledRequest[0] = 1
+    return jsonify({"message": "Explosion triggered"})
+
+@app.route("/player_led", methods=["POST"])
+def player_led():
+    data = request.json
+    ledRequest[0] = 2
+    playerIndex = int(data.get("playerIndex", 0))
+    print(playerIndex)
+    print(color_indices[playerIndex])
+    ledRequest[1] = color_indices[playerIndex]
+    return jsonify({"message": "Player LED triggered"})
 
 @app.route("/get_chest_list")
 def get_chest_list():

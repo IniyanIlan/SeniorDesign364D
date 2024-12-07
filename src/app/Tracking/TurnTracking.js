@@ -25,6 +25,18 @@ const TurnTracking = () => {
     // playWinnerSound();
   };
 
+  const runPlayerLED = async () => {
+    try{
+      const res = await axios.post("http://localhost:5001/player_led", {
+        playerIndex: currentPlayerIndex
+      });
+      console.log("Player LED activated:", res.data.message);
+    }
+    catch(error){
+      console.error("Error activating player LED:", error);
+    }
+  }
+
   // const handleRollDice = async () => {
   //   playButtonSound()
   //   console.log("handleRollDice player:", playerNames[currentPlayerIndex]);
@@ -89,6 +101,10 @@ const TurnTracking = () => {
       checkForWinner(); // Call /get_winner if it's the next turn
     }
   }, [location.state.nextTurn]);
+
+  useEffect(()=> {
+    runPlayerLED()
+  },[]);
 
 
   return (

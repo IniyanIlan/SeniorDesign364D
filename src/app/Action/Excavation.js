@@ -37,17 +37,17 @@ const Excavation = ({ chestList, currentPlayer, currentPlayerIndex, playerNames 
       console.log(data)
 
       if (response.ok) {
-        if (data.result === 0) {
-          handleGoldUpdate(100);
-          playGoldSound();
-          navigate('/Excavate_Treasure', { 
-            state: { 
-              playerNames,
-              currentPlayer, 
-              currentPlayerIndex
-            } 
-          });  // Navigate to the treasure component
-        } else if (data.result === 1) {
+        // if (data.result === 1) {
+        //   handleGoldUpdate(100);
+        //   playGoldSound();
+        //   navigate('/Excavate_Treasure', { 
+        //     state: { 
+        //       playerNames,
+        //       currentPlayer, 
+        //       currentPlayerIndex
+        //     } 
+        //   });  // Navigate to the treasure component
+        // } else if (data.result === 0) {
           const randomNumber = Math.floor(Math.random() * (10 - 4 + 1)) + 4;
           navigate('/Excavate_Bomb', { 
             state: { 
@@ -57,7 +57,6 @@ const Excavation = ({ chestList, currentPlayer, currentPlayerIndex, playerNames 
               randomNumber
             } 
           });
-        }
       } else {
         setMessage(data.message);  // Display error message if no more chests
       }

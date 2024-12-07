@@ -28,6 +28,17 @@ const Excavate_Bomb = () => {
         audio.play();
         // playExplodeSound();
       };
+      
+    const explodeLED = async () => {
+        try{
+            const res = await axios.post("http://localhost:5001/explosion_led");
+            console.log("Explode LEDs have been activated" + res.data.message);
+        }
+        catch(error){
+            console.error("Error activating LEDs:", error);
+        }
+    }
+
     const playGoldSound = () => {
         const audio = new Audio('/gold-louder.wav');
         audio.play();
@@ -93,6 +104,7 @@ const Excavate_Bomb = () => {
     useEffect(() => {
         if(attemptsLeft == 0){
             playExplodeSound();
+            explodeLED();
             setPlayerLost(true);
         }
     },[attemptsLeft]);

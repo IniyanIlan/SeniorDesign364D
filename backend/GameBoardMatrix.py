@@ -8,12 +8,15 @@ import time as sleep
 from collections import deque
 import subprocess
 
+time.sleep(2)
+
 
 class player:
     x = 0
     y = 0
     playerNumber = 0
-    def __init__(self):
+    color = ""
+    def __init__(self, x, y, playerNumber, color):
         self.x = -1
         self.y = -1
         self.playerNumber = -1
@@ -55,29 +58,29 @@ playerNum = 2 # default player number
 lookUpTableHexagon = [ [0]*11 for i in range(12)]
 #print(lookUpTableHexagon)
 # Row 0
-lookUpTableHexagon[0] = [0, 0, 0, 0, 0, Node(None, [1], 2), 0, 0, 0, 0, 0]
+lookUpTableHexagon[0] = [0, 0, 0, 0, 0, Node((5, 3), [1], 2), 0, 0, 0, 0, 0]
 # Row 1
-lookUpTableHexagon[1] = [0, 0, 0, 0, Node(None, [1], 1), 0, Node(None, [1], 3), 0, 0, 0, 0]
+lookUpTableHexagon[1] = [0, 0, 0, 0, Node((5,1), [1], 1), 0, Node((6, 4), [1], 3), 0, 0, 0, 0]
 # Row 2
-lookUpTableHexagon[2] = [0, 0, Node(None, [2], 4), 0, Node(None, [1,3], 6), 0, Node(None, [1, 4], 8), 0, Node(None, [5], 10), 0, 0]
+lookUpTableHexagon[2] = [0, 0, 0, Node((5,2), [1,3], 6), 0, Node((5,3), [1, 4], 8), 0, Node((5,4), [5], 10), 0, 0]
 # Row 3
-lookUpTableHexagon[3] = [0, Node(None, [2], 12), 0, Node(None, [2, 3], 5), 0, Node(None, [3, 4], 7), 0, Node(None, [4, 5], 9), 0, Node(None, [5], 11), 0]
+lookUpTableHexagon[3] = [0, Node((6,0), [2], 12), 0, Node((6,2), [2, 3], 5), 0, Node(None, [3, 4], 7), 0, Node((3,3), [4, 5], 9), 0, Node((4,4), [5], 11), 0]
 # Row 4
-lookUpTableHexagon[4] = [0, Node(None, [2, 6], 19), 0, Node(None, [2, 3, 7], 13), 0, Node(None, [3, 4, 8], 15), 0, Node(None, [4, 9, 5], 18), 0, 0, 0] # Last node is purposefully crossed out
+lookUpTableHexagon[4] = [0, Node((6,1), [2, 6], 19), 0, Node(None, [2, 3, 7], 13), 0, Node((0,3), [3, 4, 8], 15), 0, Node((4,3), [4, 9, 5], 18), 0, 0, 0] # Last node is purposefully crossed out
 # Row 5
-lookUpTableHexagon[5] = [0, 0, Node(None, [2, 6, 7], 20), 0, Node(None, [3, 7, 8], 14), 0, Node(None, [4, 8, 9], 16), 0, Node(None, [5, 9, 10], 17), 0, 0]
+lookUpTableHexagon[5] = [0, 0, Node((5,1), [2, 6, 7], 20), 0, Node((4,0), [3, 7, 8], 14), 0, Node((0,4), [4, 8, 9], 16), 0, Node((1,3), [5, 9, 10], 17), 0, 0]
 # Row 6
-lookUpTableHexagon[6] = [0, 0, Node(None, [6, 7, 11], 27), 0, Node(None, [7, 8, 12], 21), 0, Node(None, [8, 9, 13], 23), 0, Node(None, [9, 10, 14], 25), 0, 0]
+lookUpTableHexagon[6] = [0, 0, Node((7,3), [6, 7, 11], 27), 0, Node((1,0), [7, 8, 12], 21), 0, Node((1,1), [8, 9, 13], 23), 0, Node((2,2), [9, 10, 14], 25), 0, 0]
 # Row 7
-lookUpTableHexagon[7] = [0, 0, 0, Node(None, [7, 11, 12], 32), 0, Node(None, [8, 12, 13], 22), 0, Node(None, [9, 13, 14], 24), 0, Node(None, [9, 10, 14], 25), 0] # Node deleted here
+lookUpTableHexagon[7] = [0, Node((4,2), [7, 11, 12], 32), 0, 0, 0, Node((0,0), [8, 12, 13], 22), 0, Node((0,2), [9, 13, 14], 24), 0, Node((2,4), [9, 10, 14], 25), 0] # Node deleted here
 # Row 8
-lookUpTableHexagon[8] = [0, Node(None, [11], 39), 0, Node(None, [11, 12, 15], 33), 0, Node(None, [12, 13, 16], 28), 0, Node(None, [13, 14, 17], 30), 0, Node(None, [14], 40), 0]
+lookUpTableHexagon[8] = [0, Node((4,1), [11], 39), 0, Node((5,0), [11, 12, 15], 33), 0, Node((0,1), [12, 13, 16], 28), 0, Node((1,4), [13, 14, 17], 30), 0, Node((3,4), [14], 40), 0]
 # Row 9
-lookUpTableHexagon[9] = [0, 0, Node(None, [11, 15], 38), 0, Node(None, [12, 15, 16], 34), 0, Node(None, [13, 16, 17], 29), 0, Node(None, [14, 17], 31), 0, 0]
+lookUpTableHexagon[9] = [0, 0, Node((2,0), [11, 15], 38), 0, Node(6,0, [12, 15, 16], 34), 0, Node((2,1), [13, 16, 17], 29), 0, 0, 0, 0]
 # Row 10
-lookUpTableHexagon[10] = [0, 0, 0, 0, Node(None, [15, 16], 37), 0, Node(None, [16, 17], 35), 0, 0, 0, 0]
+lookUpTableHexagon[10] = [0, 0, 0, 0, Node((3,0), [15, 16], 37), 0, Node((3,2), [16, 17], 35), 0, 0, 0, 0]
 # Row 11
-lookUpTableHexagon[11] = [0, 0, 0, 0, 0, Node(None, [16], 36), 0, 0, 0, 0, 0]
+lookUpTableHexagon[11] = [0, 0, 0, 0, 0, Node((3,1), [16], 36), 0, 0, 0, 0, 0]
 
 
 # This list is purely to reset all nodes once a search is completed
@@ -155,12 +158,12 @@ PIN11 = 17
 PIN13 = 27
 
 def matrixInit():
-    GPIO.setmode(GPIO.BOARD)
+    GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
     # Set up selector bits for MUXes (Pins 8, 10, 12) (GPIO 14, 15, 18)
-    GPIO.setup(PIN8, GPIO.OUT, 0) # selector 1 (LSB)
-    GPIO.setup(PIN10, GPIO.OUT, 0) # Selector 2
-    GPIO.setup(PIN12, GPIO.OUT, 0) # Selector 3 (MSB)
+    GPIO.setup(PIN8, GPIO.OUT, initial=0) # selector 1 (LSB)
+    GPIO.setup(PIN10, GPIO.OUT, initial=0) # Selector 2
+    GPIO.setup(PIN12, GPIO.OUT, initial=0) # Selector 3 (MSB)
 
     #Set MUX Output GPIOs (3,5,7,11,13) OR (2, 3, 4, 17, 27)
     # SET HERE WHEN THE PCB GETS HERE PLS
@@ -372,55 +375,32 @@ def getDistanceMoved(player, newPos):
 # Waits for player input to place a piece down on the board. Must be a location that is valid (the edge of the board)
 # If the placement is valid, a new player object is instantiated with the coordinate of that spot, and added
 # To the player list.
-def setPlayers(playerNum):
-    global rowCount
-    spots = countSpots()  # Initialize spots count
-    playersToPlace = 1
-    for i in range(playerNum):
-    # Loop until we have the required number of valid player placements
-        while spots < playerNum:
-            rowCount = 0
-            # Scan each row to update the matrix (assumes a 2x2 matrix for testing)
-            while rowCount < presentMatrix.shape[0]:
-                time.sleep(0.2)
-                countRow()
-            print(presentMatrix)
-            # Check if the current matrix state is valid with expected spots = playerNum
-            if isValidMatrixStateSetup(playersToPlace):
-                # Identify new player position by comparing present and past matrices
-                changed_positions = []
-                for i in range(presentMatrix.shape[0]):
-                    for j in range(presentMatrix.shape[1]):
-                        if presentMatrix[i][j] != pastMatrix[i][j]:
-                            changed_positions.append((i, j))
-                            changed_positions.append((i, j))
-
-                if len(changed_positions) == 2:
-                    (old_x, old_y), (new_x, new_y) = changed_positions
-                    if pastMatrix[old_x][old_y] == 0 and presentMatrix[new_x][new_y] == 1:
-                        # Valid new player placement
-                        new_player = player()
-                        new_player.x, new_player.y = new_x, new_y
-                        players.append(new_player)
-                        new_player.playerNumber = len(players)
-                        print(f"New player added at ({new_x}, {new_y})")
-                    
-                        # Update the pastMatrix for the next scan
-                        pastMatrix[:, :] = presentMatrix[:, :]
-
-                        # Update spots count
-                        spots = countSpots()
-                        playersToPlace += 1
-                    else:
-                        print("Invalid movement detected.")
-                else:
-                    print("Invalid player placement; retrying.")
-            else:
-                print("Matrix state is invalid; retrying.")
-
-        print(f"All {playerNum} players successfully placed.")
-        matrixDataReady[0] = 1
-        matrixRequest[0] = 0 # Turn off matrixRequest.
+def setPlayers():
+    #TODO
+    # HEXAGON COORDINATES X,Y
+    GOLD = (0,5)
+    BLUE = (3,1)
+    RED  = (3,9)
+    PINK = (8, 1)
+    PURPLE = (8, 9)
+    ORANGE = (11,5)
+    match matrixDataReady[0]:
+        case 0: # Red player
+            players.append(player(RED[0], RED[1], playerNumber=len(players), color="RED"))
+        case 1: # Orange Player
+            players.append(player(ORANGE[0], ORANGE[1], playerNumber=len(players), color="ORANGE"))
+        case 2: # Blue
+            players.append(player(BLUE[0], BLUE[1], playerNumber=len(players), color="BLUE"))
+        case 3: # Purple
+            players.append(player(PURPLE[0], PURPLE[1], playerNumber=len(players), color="PURPLE"))
+        case 4: # Gold
+            players.append(player(GOLD[0], GOLD[1], playerNumber=len(players), color="GOLD"))
+        case 5: # Pink
+            players.append(player(PINK[0], PINK[1], playerNumber=len(players), color="PINK"))
+    # Set request and data ready back to zero. We are done.
+    matrixDataReady[0] = 0
+    matrixRequest[0] = 0
+            
 
             
         
@@ -458,44 +438,7 @@ def excavate():
     matrixRequest[0] = 0 # Turn off matrixRequest.
     return
 
-# USED DURING PLAYER LOCATION SETUP
-def isValidMatrixStateSetup(expected_num_players):
-    # Count the number of spots (1s) in the present matrix
-    playerSpots = countSpots()
     
-    # Check if the number of player spots matches the expected count
-    if playerSpots != expected_num_players:
-        print(f"Invalid number of players: expected {expected_num_players}, found {playerSpots}")
-        return False
-    
-    # Check for single movement by comparing present and past matrices
-    changed_positions = []
-    rows, cols = pastMatrix.shape
-    for i in range(rows):
-        for j in range(cols):
-            if presentMatrix[i][j] != pastMatrix[i][j]:
-                changed_positions.append((i, j))
-                changed_positions.append((i, j))
-    print(len(changed_positions))
-    # Valid movement occurs if there is exactly one changed position
-    # (one cell went from 0 to 1)
-    if len(changed_positions) == 2:
-        (old_x, old_y), (new_x, new_y) = changed_positions
-        if pastMatrix[old_x][old_y] == 0 and presentMatrix[new_x][new_y] == 1:
-            # Valid move detected
-            print("Valid move detected: single player moved.")
-            return True
-        else:
-            print("Detected multiple or invalid changes.")
-            return False
-    elif len(changed_positions) == 0:
-        # No movement detected, but the state is valid
-        print("No movement detected, state is valid.")
-        return True
-    else:
-        # Invalid move if there are more or fewer than two changes
-        print("Invalid move: multiple or no changes detected.")
-        return False
 
 # USED DURING PLAYER MOVEMENT/SAILING
 def isValidMatrixStateSail(expected_num_players, currentPlayer):
@@ -542,7 +485,7 @@ def isValidMatrixStateSail(expected_num_players, currentPlayer):
 if __name__ == "__main__":
     try:
         while True:
-            print("shared memory initialized correctly")
+            #print("shared memory initialized correctly")
             matrixInit()
             if((matrixRequest[0] == 1)): # 1 = sail
                 sail(matrixRequest[1]) # Index 1 corresponds to which player is the one choosing to do this (player turn)
@@ -551,9 +494,7 @@ if __name__ == "__main__":
             elif(matrixRequest[0] == 3): # 3 = excavate
                 excavate(matrixRequest[1]) 
             elif(matrixRequest[0] == 4): # 4 = Player position initialization
-                setPlayers(playerNum)
-                for player in players:
-                    print(player)
+                setPlayers()
             
             
         # while(not GPIO.input(15)):
