@@ -72,13 +72,13 @@ def countRow(row):
             GPIO.output(PIN8,  1)
     time.sleep(0.01) # might need to wait a second since the propagation of the MUX might be slower than the clock speed
     matrix[row][0] = GPIO.input(PIN3)
-    time.sleep(0.01)
+    #time.sleep(0.01)
     matrix[row][1] = GPIO.input(PIN5)
-    time.sleep(0.01)
+    #time.sleep(0.01)
     matrix[row][2] = GPIO.input(PIN7)
-    time.sleep(0.01)
+    #time.sleep(0.01)
     matrix[row][3] = GPIO.input(PIN11)
-    time.sleep(0.01)
+    #time.sleep(0.01)
     matrix[row][4] = GPIO.input(PIN13)
 
 
@@ -98,6 +98,8 @@ def countRow(row):
 def scanMatrix():
     for i in range(8):
         countRow(i)
+    matrix[7][2] = 0
+    matrix[6][4] = 0
 
 
 
@@ -112,10 +114,6 @@ def scanMatrix():
     # rowCount += 1
     return
 
-
-def scanMatrix():
-    for i in range(8):
-        countRow(i)
 
 
 if __name__ == "__main__":

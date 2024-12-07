@@ -16,10 +16,10 @@ function Attack_Selection() {
   const [message, setMessage] = useState("");
   const { state } = location;
   const { attacker, defender, playerNames, currentPlayer, currentPlayerIndex } = state || {};
-  const [attackerRoll, setAttackerRoll] = useState(0)
-  const [defenderRoll, setDefenderRoll] = useState(0)
-  const [attackerGold, setAttackerGold] = useState(0)
-  const [defenderGold, setDefenderGold] = useState(0)
+  const [attackerRoll, setAttackerRoll] = useState(null)
+  const [defenderRoll, setDefenderRoll] = useState(null)
+  const [attackerGold, setAttackerGold] = useState(null)
+  const [defenderGold, setDefenderGold] = useState(null)
 
   
   const handleBackToGame = () => {
@@ -142,7 +142,7 @@ const handleDefense = async () => {
         <div className="combat-card">
           <h2>Attacker</h2>
           <p className="character-name">{attacker}</p>
-          {attackerGold && (
+          {attackerRoll && (
               <p>
               Gold:{" "}
               <input
@@ -153,17 +153,17 @@ const handleDefense = async () => {
               />
               </p>
           )}
-          <button className="button" onClick={handleAttack}>
+          <button className="button" disabled={attackerRoll != null} onClick={handleAttack}>
             Attack!
           </button>
-          {attackerRoll != 0 && <p>{attacker} rolled a {attackerRoll}</p>}
+          {attackerRoll != null && <p>{attacker} rolled a {attackerRoll}</p>}
         </div>
 
         {/* Defender Section */}
         <div className="combat-card">
           <h2>Defender</h2>
           <p className="character-name">{defender}</p>
-          {defenderGold && (
+          {defenderRoll && (
               <p>
               Gold:{" "}
               <input
@@ -174,10 +174,10 @@ const handleDefense = async () => {
               />
               </p>
           )}
-          <button className="button" onClick={handleDefense}>
+          <button className="button" disabled={defenderRoll} onClick={handleDefense}>
             Defend!
           </button>
-          {defenderRoll != 0 && <p>{defender} rolled a {defenderRoll}</p>}
+          {defenderRoll != null && <p>{defender} rolled a {defenderRoll}</p>}
         </div>
       </div>
       {/* change this to trigger dice */}

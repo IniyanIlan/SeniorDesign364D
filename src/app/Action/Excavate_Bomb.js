@@ -103,6 +103,7 @@ const Excavate_Bomb = () => {
         }
     }, [playerLost])
 
+
     return(
         <div className='center-container'>
             <div className='centered-content'>
@@ -112,10 +113,9 @@ const Excavate_Bomb = () => {
                     Attempts Remaining: {attemptsLeft}
                     {playerLost &&  <p>You failed to disengage the trap! -100 gold</p>}
                     {playerWon && <p>You defused the trap! +150 gold</p>}
-                    <button className = "button" onClick={handleAttempt}>Attempt Defuse</button>
+                    <button className = "button" disabled={playerWon || attemptsLeft<=0} onClick={handleAttempt}>Attempt Defuse</button>
                 </div>
-                
-                <button className = "button" onClick={handleBackToGame}>Back to Game</button>
+                <button className = "button" disabled={attemptsLeft>0 && !playerWon} onClick={handleBackToGame}>Back to Game</button>
             </div>
         </div>
     )

@@ -31,13 +31,19 @@ function Excavate_Treasure () {
     return(
         <div className='center-container'>
           <div className='centered-content'>
-          <h1>You found treasure!</h1>
+          <h1 className='title'>You found treasure!</h1>
+          <p>+100 Gold</p>
+          <div className='image-container'>
           <img
-                className = "chest-img"
-                src="/treasure-chest.jpg" 
+                className = 'image-container'
+                src="/treasure.png" 
                 alt="Board"
+                width={'15%'}
+                height={'auto'}
           />
-          <button onClick={handleBackToGame}>Next Player</button>
+          </div>
+          <br></br>
+          <button className='button' onClick={handleBackToGame}>Next Player</button>
           </div>
         </div>
     )
