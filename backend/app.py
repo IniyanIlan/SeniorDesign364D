@@ -101,8 +101,8 @@ shutdown[:] = tempShutdown[:]
 diceRequest[:] = tempdiceRequest[:]
 diceData[:] = tempdiceData[:]
 
-# Index 0 = Mode of LED {0 - Breathe, 1 - Waves, 2 - Explosion, 3 - Player, 4 - Off}, Index 1 = PlayerColor
-tempLEDRequest = np.array([0, 0], dtype= np.int16)
+# Index 0 = Mode of LED {0 - Breathe, 1 - Waves, 2 - Explosion, 3 - Player, 4 - Off}, Index 1 = PlayerColor, Index 2 = LED Ready
+tempLEDRequest = np.array([0, -1, 0], dtype= np.int16)
 shmLEDRequest = shared_memory.SharedMemory(create=True, size=tempLEDRequest.nbytes, name='LEDRequest')
 ledRequest = np.ndarray(tempLEDRequest.shape, dtype=tempLEDRequest.dtype, buffer=shmLEDRequest.buf)
 ledRequest[:] = tempLEDRequest[:]
@@ -159,7 +159,6 @@ matrixDataReady[:] = tempMatrixDataReady[:]
 
 @app.route("/")
 def home():
-    
     action.initialize_chests()
     print(action.chest_list)
     return jsonify({"message": "Chests initialized", "chests": action.chest_list})
@@ -237,16 +236,22 @@ def defusing():
 @app.route("/explosion_led", methods=["POST"])
 def explosion():
     ledRequest[0] = 1
+
     return jsonify({"message": "Explosion triggered"})
 
 @app.route("/player_led", methods=["POST"])
 def player_led():
     data = request.json
-    ledRequest[0] = 2
     playerIndex = int(data.get("playerIndex", 0))
-    print(playerIndex)
-    print(color_indices[playerIndex])
+    print("Player "+ str(playerIndex) + " has color " + str(color_indices[playerIndex]))
+    print(color_indices)
+    #ledRequest[2] = 1
+    #while ledRequest[2] != 0:
+    ledRequest[0] = 2
     ledRequest[1] = color_indices[playerIndex]
+    while(ledRequest[1] != color_indices[playerIndex]):
+        ledRequest[1] = color_indices[playerIndex]
+    ledRequest[2] = 1 # Ready
     return jsonify({"message": "Player LED triggered"})
 
 @app.route("/get_chest_list")

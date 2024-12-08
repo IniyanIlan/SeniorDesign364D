@@ -16,11 +16,18 @@ DELAY = 0.1
 
 COLOR_RANGE_OCEAN = [0x2000FF, 0x5911FA, 0x7e1c4a, 0xe688e3, 0x480d48, 0xFF00FF]  # Various ocean-like blues
 COLOR_RANGE_EXPLODE = [0x00ff00, 0x30ff00, 0xffff00, 0x30b500]
-COLOR_PLAYER_RANGE = [0xFF000, 0xFFA500, 0x0000FF, 0x800080, 0xFFD700, 0xFFC0CB]
+COLOR_PLAYER_RANGE = [
+    0x00FF00, # Red
+    0x30ff00, # Orange
+    0x0000FF, # Blue
+    0x0065FF, # Purple
+    0xA5FF00, # Gold
+    0x00ccdd # Pink
+]
 
 shm_LEDRequest_name = 'LEDRequest' 
 existingLEDRequest = shared_memory.SharedMemory(name=shm_LEDRequest_name)
-ledRequest = np.ndarray(2, dtype=np.int16, buffer=existingLEDRequest.buf)
+ledRequest = np.ndarray(3, dtype=np.int16, buffer=existingLEDRequest.buf)
 
 
 
@@ -122,6 +129,7 @@ if __name__ == "__main__":
     try:
 # Initialize pixel data for ocean by default
         pixel_data = initialize_pixels(NUM_PIXELS, COLOR_RANGE_OCEAN)
+        print("Starting LED Code...")
         while True:
             if ledRequest[0] == 0:  # Ripple
                 ripple(pixel_data, COLOR_RANGE_OCEAN, speed=0.003)
@@ -135,16 +143,20 @@ if __name__ == "__main__":
                     ripple(pixel_data, COLOR_RANGE_EXPLODE, speed=0.05)
                 ledRequest[0] = 0  # Reset to ripple
             
-            elif ledRequest[0] == 2:  # Player
+            #elif ledRequest[0] == 2  and ledRequest[1] != -1:  # Player
+            elif ledRequest[2] == 1:
                 print("Player effect...")
+                time.sleep(0.001)
                 timeout = time.time() + 5
+                print(f"We have color {ledRequest[1]}")
                 color_range = [COLOR_PLAYER_RANGE[ledRequest[1]]]  # Use player-specific color
                 print(COLOR_PLAYER_RANGE[ledRequest[1]])
                 #pixel_data = initialize_pixels(NUM_PIXELS, color_range)
                 while time.time() < timeout:
-                    ripple(pixel_data, color_range)
+                    ripple(pixel_data, color_range, speed=0.02)
                 ledRequest[0] = 0  # Reset to ripple
-                ledRequest[1] = 0
+                ledRequest[1] = -1
+                ledRequest[2] = 0
             
             elif ledRequest[0] == 3:  # Off
                 print("Turning LEDs off...")

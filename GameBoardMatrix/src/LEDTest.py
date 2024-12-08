@@ -123,22 +123,32 @@ def ripple(pixels_data, color_range, speed=0.01):
 
 
 BRIGHTNESS_LEVELS = [0.1, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]  # Varying brightness levels
+colors_int = ['Red','Orange', 'Blue', 'Purple','Gold', 'Pink']
+COLOR_PLAYER_RANGE = [
+    [0x00FF00], # Red Gradient
+    [0x30ff00], # Orange Gradient
+    [0x0000FF], # Blue Gradient
+    [0x0065FF], # Purple Gradient
+    [0xA5FF00], # Gold Gradient
+    [0x00ccdd] # Pink Gradient
+]
 
 if __name__ == "__main__":
         # Example: Breathe effect for pixel 10 with red color
     #breathe(pixelIndexLeft=0, pixelIndexRight=NUM_PIXELS, color=0x004b88)
-    pixels_data = initialize_pixels(NUM_PIXELS, COLOR_RANGE_EXPLODE)
+    x = 4
+    print(COLOR_PLAYER_RANGE[x])
+    pixels_data = initialize_pixels(NUM_PIXELS, COLOR_PLAYER_RANGE[x])
     # Potential defuse mode
     #raceDown([0x00ff00, 0x30ff00, 0xffff00, 0x50a500], BRIGHTNESS_LEVELS, 0.3)
     try:
         while True:
             #ripple(pixels_data, COLOR_RANGE_OCEAN, 0.003)
-            ripple(pixels_data, COLOR_RANGE_EXPLODE, 0.05)
+            ripple(pixels_data, COLOR_PLAYER_RANGE[x], 0.05)
             #time.sleep(DELAY)
-
         # Reset pixels
-            pixels.fill(0)
-            pixels.show()
+            # pixels.fill(0)
+            # pixels.show()
     except KeyboardInterrupt:
         # Clean up on exit
         pixels.fill(0)

@@ -24,12 +24,12 @@ const TurnTracking = () => {
     audio.play();
     // playWinnerSound();
   };
-
   const runPlayerLED = async () => {
     try{
       const res = await axios.post("http://localhost:5001/player_led", {
         playerIndex: currentPlayerIndex
       });
+      console.log(currentPlayerIndex)
       console.log("Player LED activated:", res.data.message);
     }
     catch(error){
@@ -96,15 +96,15 @@ const TurnTracking = () => {
         console.error("Error checking for winner:", error);
       }
     };
-
+    
     if (location.state.nextTurn) {
       checkForWinner(); // Call /get_winner if it's the next turn
     }
   }, [location.state.nextTurn]);
 
-  useEffect(()=> {
+  useEffect(() => {
     runPlayerLED()
-  },[]);
+  },[currentPlayerIndex])
 
 
   return (

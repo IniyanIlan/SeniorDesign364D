@@ -58,6 +58,7 @@ const Game = () => {
    
 
     const handleDone = () => {
+        console.log((currentPlayerIndex + 1) % playerNames.length)
         navigate('/TurnTracking', { state: { 
             playerNames, 
             chestList,
