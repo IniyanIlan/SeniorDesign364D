@@ -130,7 +130,7 @@ pastMatrix = np.ndarray(array_shape, dtype=array_dtype, buffer=existing_shmMatri
 # Get Data Request/Ready values
 existingRequest = shared_memory.SharedMemory(name='MatrixRequest')
 existingData = shared_memory.SharedMemory(name='MatrixDataReady')
-matrixRequest = np.ndarray(2, dtype=np.int64, buffer=existingRequest.buf)
+matrixRequest = np.ndarray(3, dtype=np.int64, buffer=existingRequest.buf)
 matrixDataReady = np.ndarray(6, dtype=np.int64, buffer=existingData.buf)
 existingDiceData = shared_memory.SharedMemory(name='DiceData')
 diceData = np.ndarray(1, dtype=np.int8, buffer=existingDiceData.buf)
@@ -269,9 +269,20 @@ def countRow(row):
 def scanMatrix():
     for i in range(8):
         countRow(i)
+    presentMatrix[6][2] = 0
+    presentMatrix[5][4] = 0
         
-        
-    
+# Input is a tuple with (x, y)
+def getSensorXY(coordinates):
+    for i in range(len(lookUpTableHexagon)):
+        for j in range(len(lookUpTableHexagon[i])):
+            if(isinstance(lookUpTableHexagon[i][j], Node)): # Type check so we don't error out
+                if(lookUpTableHexagon[i][j].mapping == coordinates):
+                    # We found our correct matching
+                    return (i, j)
+
+
+
 def countSpots():
     playerSpots = 0
     for i, row in enumerate(presentMatrix):
@@ -294,14 +305,12 @@ def sail(currentPlayer):
     scanMatrix()
 
     spots = countSpots()  # Initialize spots count
-    player = players[currentPlayer-1]
-    distance = 2 # Hard-coded distance for now to verfiy it works
+    player = players[currentPlayer]
+    distance = diceData[0] # Hard-coded distance for now to verfiy it works (diceData[0] when real)
     rowCount = 0
     print("Entered main while loop")
     # Scan each row to update the matrix
-    while rowCount < presentMatrix.shape[0]:
-        time.sleep(0.2)
-        countRow()
+
     # Board has been scanned. Check for valid change
     # Valid Change is confirmed by seeing if there are only 2 pieces, and that only one piece has moved (the correct player)
     validMatrix, newPos = isValidMatrixStateSail(playerNum, player)
@@ -309,13 +318,13 @@ def sail(currentPlayer):
         # Further check that it moved by a correct distance
         distanceMoved = getDistanceMoved(player, newPos)
         if distanceMoved <= distance:
-            print(f"Player {currentPlayer} moved correctly by exactly {distanceMoved} units.")
+            print(f"Player {currentPlayer + 1} moved correctly by exactly {distanceMoved} units.")
             player.x = newPos[0]
             player.y = newPos[1]
             pastMatrix[:, :] = presentMatrix[:, :]
             # ADD ANY EXTRA OUTPUT OPTIONS HERE
             matrixDataReady[0] = 1
-            matrixDataReady[1] = player.playerNumber - 1
+            matrixDataReady[1] = player.playerNumber + 1
             matrixDataReady[2] = player.x
             matrixDataReady[3] = player.y
             matrixRequest[0] = 0 # Turn off matrixRequest.
@@ -340,10 +349,11 @@ def getDistanceMoved(player, newPos):
         (1, 1)    # Bottom-right
     ]
         
-    #hexagonEndPos = lookUpTableSensors[newPos[0]][newPos[1]].mapping
-    #hexagonBeginPos = lookUpTableSensors[player.x][player.y].mapping
-    hexagonBeginPos = (0, 5)
-    hexagonEndPos = (7, 9)
+    hexagonEndPos = lookUpTableSensors[newPos[0]][newPos[1]].mapping[0]
+    hexagonBeginPos = lookUpTableSensors[player.x][player.y].mapping[1]
+    # Hard-coded begin and end for debugging
+    #hexagonBeginPos = (0, 5)
+    #hexagonEndPos = (7, 9)
     # BFS :)
     queue = deque([(hexagonBeginPos, 0)])  # (current_node, distance)
     visited = set()
@@ -397,6 +407,7 @@ def setPlayers():
             players.append(player(GOLD[0], GOLD[1], playerNumber=len(players), color="GOLD"))
         case 5: # Pink
             players.append(player(PINK[0], PINK[1], playerNumber=len(players), color="PINK"))
+    print(f"Player #{len(players)} added with color {players[len(players) - 1].color}")
     # Set request and data ready back to zero. We are done.
     matrixDataReady[0] = 0
     matrixRequest[0] = 0
@@ -405,9 +416,9 @@ def setPlayers():
             
         
 def attack(playerNum):
-    attackingPlayer = players[playerNum-1] # Assuming players are 1-indexed
+    attackingPlayer = players[playerNum] # Assuming players are 1-indexed (they're not)
     # Clear player matrixDataReady stuff
-    matrixDataReady[1] = 0
+    matrixDataReady[:] = 0
     # This just checks for a valid state in the pastMatrix for the player
     # If a player is nearby another player, attack is valid
     
@@ -421,13 +432,15 @@ def attack(playerNum):
         if abs(player.x - attackingPlayer.x) <= 1 and abs(player.y - attackingPlayer.y) <= 1:
             # If within range, the attack is considered valid for this player
             print(f"{attackingPlayer} can attack {player}")
+            matrixDataReady[player.playerNumber - 1] = 1 # Player numbers are 1 indexed Im p sure
             # Prepare data
-            matrixDataReady[1] *= 10
-            matrixDataReady[1] += player.playerNumber # store player Number
-    if(matrixDataReady[1] == 0): 
-        matrixDataReady[0] = -1 # No players were found. Invalid data
-    else:
-        matrixDataReady[0] = 2 # Valid attck
+            # matrixDataReady[1] *= 10
+            # matrixDataReady[1] += player.playerNumber # store player Number
+    # Older logic 
+    # if(matrixDataReady[1] == 0): 
+    #     matrixDataReady[0] = -1 # No players were found. Invalid data
+    # else:
+    #     matrixDataReady[0] = 2 # Valid attck
     matrixRequest[0] = 0 # Turn off matrixRequest.
 
 
@@ -457,6 +470,8 @@ def isValidMatrixStateSail(expected_num_players, currentPlayer):
         for j in range(cols):
             if presentMatrix[i][j] != pastMatrix[i][j]:
                 changed_positions.append((i, j))
+
+
     print(changed_positions)
     # Valid movement occurs if there are exactly two changed positions
     # (one cell went from 1 to 0 and another from 0 to 1)
@@ -484,17 +499,18 @@ def isValidMatrixStateSail(expected_num_players, currentPlayer):
 
 if __name__ == "__main__":
     try:
+        matrixInit()
         while True:
             #print("shared memory initialized correctly")
-            matrixInit()
-            if((matrixRequest[0] == 1)): # 1 = sail
-                sail(matrixRequest[1]) # Index 1 corresponds to which player is the one choosing to do this (player turn)
-            elif(matrixRequest[0] == 2): # 2 = attack
-                attack(matrixRequest[1])
-            elif(matrixRequest[0] == 3): # 3 = excavate
-                excavate(matrixRequest[1]) 
-            elif(matrixRequest[0] == 4): # 4 = Player position initialization
-                setPlayers()
+            if(matrixRequest[2] == 1):
+                if((matrixRequest[0] == 1)): # 1 = sail
+                    sail(matrixRequest[1]) # Index 1 corresponds to which player is the one choosing to do this (player turn)
+                elif(matrixRequest[0] == 2): # 2 = attack
+                    attack(matrixRequest[1])
+                elif(matrixRequest[0] == 3): # 3 = excavate
+                    excavate(matrixRequest[1]) 
+                elif(matrixRequest[0] == 4): # 4 = Player position initialization
+                    setPlayers()
             
             
         # while(not GPIO.input(15)):
