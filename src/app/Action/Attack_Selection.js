@@ -10,6 +10,13 @@ const playButtonSound = () => {
   // playButtonSound();
 };
 
+//Fight_effect.wav
+const playFightSound = () => {
+  const audio = new Audio('/Fight_effect.wav');
+  audio.play();
+  // playFightSound();
+};
+
 function Attack_Selection() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -81,7 +88,7 @@ const handleWinner = async () => {
 };
 
 const handleAttack = async () => {
-  playButtonSound();
+  playFightSound();
   try{
     console.log("From attack_selection.js " + defender)
     const res = await axios.get("http://localhost:5001/trigger-dice");
@@ -100,7 +107,7 @@ const handleAttack = async () => {
 }
 
 const handleDefense = async () => {
-  playButtonSound();
+  playFightSound();
   try{
     const res = await axios.get("http://localhost:5001/trigger-dice");
     setDefenderRoll(res.data.value)
